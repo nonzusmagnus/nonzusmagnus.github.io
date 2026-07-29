@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CONCEPT 1 — PORTAL // Script & Storyboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #08080b;
+    --bg-raised: #101014;
+    --line: #232329;
+    --ink: #f2f0ea;
+    --ink-dim: #8c8a94;
+    --portal: #35ffb0;
+    --portal-dim: #1c8f66;
+    --signal: #ff3d7f;
+    --amber: #ffb454;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; overflow-x:hidden;}
+
+  ::selection{ background:var(--portal); color:#08080b; }
+
+  /* ---------- ambient noise ---------- */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:50; opacity:0.035; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:relative; padding:64px 8vw 48px; border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  header::before{
+    content:""; position:absolute; top:-40%; right:-10%; width:520px; height:520px; border-radius:50%;
+    background:radial-gradient(circle, rgba(53,255,176,0.16) 0%, rgba(53,255,176,0) 70%);
+    filter:blur(10px);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.28em; text-transform:uppercase;
+    color:var(--portal); margin-bottom:22px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:""; width:7px; height:7px; border-radius:50%; background:var(--portal); box-shadow:0 0 12px var(--portal); }
+  h1{
+    font-family:'Anton',sans-serif; font-weight:400; text-transform:uppercase;
+    font-size:clamp(48px,9vw,120px); line-height:0.88; letter-spacing:0.01em;
+    background:linear-gradient(180deg,#ffffff 0%, #b9b8c2 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .sub{ font-size:15px; color:var(--ink-dim); max-width:560px; margin-top:22px; line-height:1.6; }
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:28px; margin-top:40px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-dim);
+  }
+  .meta-row div span{ display:block; color:var(--ink); font-size:14px; margin-top:4px; }
+
+  /* ---------- structure ---------- */
+  main{ position:relative; max-width:980px; margin:0 auto; padding:0 8vw 140px; }
+
+  .spine{
+    position:absolute; left:calc(8vw + 27px); top:0; bottom:120px; width:2px;
+    background:linear-gradient(180deg, var(--portal-dim) 0%, var(--line) 8%, var(--line) 92%, var(--portal-dim) 100%);
+  }
+
+  .act-label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.24em; text-transform:uppercase;
+    color:var(--amber); margin:88px 0 20px 66px; position:relative;
+  }
+  .act-label:first-of-type{ margin-top:64px; }
+
+  .beat{
+    position:relative; padding:36px 0 36px 66px; border-bottom:1px solid var(--line);
+  }
+  .beat:last-child{ border-bottom:none; }
+
+  .node{
+    position:absolute; left:19px; top:40px; width:18px; height:18px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--portal); box-shadow:0 0 0 4px var(--bg), 0 0 14px rgba(53,255,176,0.5);
+  }
+  .node::after{ content:""; position:absolute; inset:4px; border-radius:50%; background:var(--portal); }
+
+  .beat-head{ display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:14px; }
+  .beat-num{ font-family:'IBM Plex Mono',monospace; color:var(--portal); font-size:13px; letter-spacing:0.05em; }
+  .beat-title{ font-family:'Anton',sans-serif; font-weight:400; text-transform:uppercase; font-size:26px; letter-spacing:0.01em; }
+  .beat-loc{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-dim); letter-spacing:0.05em; text-transform:uppercase; margin-left:auto; }
+
+  .beat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  @media (max-width:720px){ .beat-grid{ grid-template-columns:1fr; } }
+
+  .field-label{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:8px; }
+  .field-body{ font-size:15px; line-height:1.65; color:#dcdae2; }
+  .field-body em{ color:var(--portal); font-style:normal; }
+  .vo{ color:var(--signal); }
+
+  .frame{
+    aspect-ratio:16/10; border-radius:6px; border:1px solid var(--line); background:var(--bg-raised);
+    position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px;
+  }
+  .frame svg{ width:100%; height:100%; }
+
+  .transition-tag{
+    display:inline-flex; align-items:center; gap:8px; margin-top:18px;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--portal-dim);
+  }
+  .transition-tag::before{ content:"↳"; color:var(--portal); }
+
+  /* ---------- ending card ---------- */
+  .finale{
+    margin:100px 0 0 66px; padding:44px; border:1px solid var(--line); border-radius:10px;
+    background:linear-gradient(160deg, rgba(53,255,176,0.06), rgba(255,61,127,0.04));
+    position:relative;
+  }
+  .finale h2{ font-family:'Anton',sans-serif; font-size:34px; text-transform:uppercase; margin-bottom:14px; }
+  .events{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:24px; }
+  @media (max-width:720px){ .events{ grid-template-columns:1fr; } }
+  .event-card{ border:1px solid var(--line); border-radius:8px; padding:18px; background:rgba(255,255,255,0.02); }
+  .event-card .ev-num{ font-family:'IBM Plex Mono',monospace; color:var(--amber); font-size:11px; }
+  .event-card h3{ font-family:'Anton',sans-serif; font-size:19px; text-transform:uppercase; margin:8px 0 6px; }
+  .event-card p{ font-size:13px; color:var(--ink-dim); line-height:1.5; }
+
+  footer{ text-align:center; padding:40px 0 60px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-dim); letter-spacing:0.08em; }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<header>
+  <div class="eyebrow">Concept 01 — Working Script</div>
+  <h1>The&nbsp;Signal<br>Answers&nbsp;First</h1>
+  <p class="sub">A dead flip phone finds three friends bored of their own routine — and pulls each of them, one by one, into something worth showing up for.</p>
+  <div class="meta-row">
+    <div>Runtime<span>~45–60s</span></div>
+    <div>Format<span>Vertical / Social Cut</span></div>
+    <div>Cast<span>3 Leads</span></div>
+    <div>Locations<span>Hangout · Arena · Padel Court · Bowling Alley</span></div>
+  </div>
+</header>
+
+<main>
+  <div class="spine"></div>
+
+  <div class="act-label">Act I — The Lull</div>
+
+  <div class="beat">
+    <div class="node"></div>
+    <div class="beat-head">
+      <span class="beat-num">01</span>
+      <span class="beat-title">Nothing's Happening</span>
+      <span class="beat-loc">Ext. Rooftop / Stoop — Night</span>
+    </div>
+    <div class="beat-grid">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 400 250"><rect width="400" height="250" fill="#101014"/>
+            <circle cx="120" cy="150" r="26" fill="#232329"/><circle cx="200" cy="140" r="26" fill="#232329"/><circle cx="280" cy="155" r="26" fill="#232329"/>
+            <rect x="90" y="176" width="60" height="50" fill="#1a1a1f"/><rect x="170" y="166" width="60" height="60" fill="#1a1a1f"/><rect x="250" y="181" width="60" height="45" fill="#1a1a1f"/>
+            <text x="200" y="40" fill="#8c8a94" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">WIDE — THREE UP, LOW ENERGY</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Action</div>
+        <div class="field-body">Three friends are slumped around a rooftop ledge, phones long forgotten. Half-finished snacks, string lights buzzing. The conversation has looped back to the same complaint for the third time tonight.</div>
+        <div class="field-label" style="margin-top:16px;">Dialogue (overlap, loose)</div>
+        <div class="field-body vo">"Same four walls, same three options." / "We need something to actually happen for once."</div>
+        <div class="transition-tag">Wind kicks up — SFX: low rumble</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="node"></div>
+    <div class="beat-head">
+      <span class="beat-num">02</span>
+      <span class="beat-title">Something Lands</span>
+      <span class="beat-loc">Same — Continuous</span>
+    </div>
+    <div class="beat-grid">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 400 250"><rect width="400" height="250" fill="#101014"/>
+            <line x1="0" y1="60" x2="400" y2="70" stroke="#232329" stroke-width="2" stroke-dasharray="4 6"/>
+            <line x1="0" y1="90" x2="400" y2="80" stroke="#232329" stroke-width="2" stroke-dasharray="4 6"/>
+            <rect x="175" y="130" width="50" height="70" rx="6" fill="#35ffb0" opacity="0.85"/>
+            <rect x="185" y="140" width="30" height="18" rx="2" fill="#08080b"/>
+            <text x="200" y="230" fill="#8c8a94" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">INSERT — PHONE TUMBLES IN ON THE WIND</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Action</div>
+        <div class="field-body">A battered <em>flip phone</em> cartwheels across the rooftop, caught in the same gust, and skids to a stop at Person 1's feet. It's glowing faintly at the hinge — not plugged into anything. Person 1 picks it up, turns it over, curious.</div>
+        <div class="field-label" style="margin-top:16px;">Camera</div>
+        <div class="field-body">Low insert push-in on the phone as it lands. Cut to Person 1's face — half amused, half unsure.</div>
+        <div class="transition-tag">Beat: they flip it open</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-label">Act II — First Pull</div>
+
+  <div class="beat">
+    <div class="node"></div>
+    <div class="beat-head">
+      <span class="beat-num">03</span>
+      <span class="beat-title">Pulled Through</span>
+      <span class="beat-loc">Rooftop → Super Social Arena</span>
+    </div>
+    <div class="beat-grid">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 400 250"><rect width="400" height="250" fill="#101014"/>
+            <circle cx="200" cy="125" r="70" fill="none" stroke="#35ffb0" stroke-width="3"/>
+            <circle cx="200" cy="125" r="46" fill="none" stroke="#35ffb0" stroke-width="2" opacity="0.6"/>
+            <circle cx="200" cy="125" r="22" fill="#35ffb0" opacity="0.9"/>
+            <text x="200" y="230" fill="#8c8a94" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">SCREEN BLOOM — WHIP INTO PORTAL</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Action</div>
+        <div class="field-body">The screen floods with light. Person 1 is yanked forward, feet lifting off the rooftop — a hard whip-pan through the phone's screen. Match cut: they land mid-motion, already inside <em>Super Social</em>, gripping a controller, deep in a live Arena match. Crowd noise crashes in.</div>
+        <div class="field-label" style="margin-top:16px;">Camera</div>
+        <div class="field-body">Speed-ramped pull, screen-flash whip cut, then a handheld arena shot — energy up, lights up, sound up.</div>
+        <div class="transition-tag">Snap cut back to rooftop</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="node"></div>
+    <div class="beat-head">
+      <span class="beat-num">04</span>
+      <span class="beat-title">Two Left</span>
+      <span class="beat-loc">Ext. Rooftop — Continuous</span>
+    </div>
+    <div class="beat-grid">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 400 250"><rect width="400" height="250" fill="#101014"/>
+            <circle cx="150" cy="150" r="26" fill="#232329"/><circle cx="250" cy="150" r="26" fill="#232329"/>
+            <rect x="120" y="176" width="60" height="50" fill="#1a1a1f"/><rect x="220" y="176" width="60" height="50" fill="#1a1a1f"/>
+            <rect x="175" y="200" width="50" height="30" rx="6" fill="#35ffb0" opacity="0.7"/>
+            <text x="200" y="40" fill="#8c8a94" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">TWO SHOT — SPLIT REACTIONS</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Action</div>
+        <div class="field-body">Person 1 is just gone. The phone sits alone on the ledge, still glowing. Person 2 lunges for it immediately, buzzing. Person 3 leans back, arms crossed, already shaking their head.</div>
+        <div class="field-label" style="margin-top:16px;">Dialogue</div>
+        <div class="field-body vo">Person 2: "I'm not asking twice." / Person 3: "Hard pass."</div>
+        <div class="transition-tag">Person 2 grabs the phone</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="node"></div>
+    <div class="beat-head">
+      <span class="beat-num">05</span>
+      <span class="beat-title">Return of Serve</span>
+      <span class="beat-loc">Rooftop → Padel Court</span>
+    </div>
+    <div class="beat-grid">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 400 250"><rect width="400" height="250" fill="#101014"/>
+            <rect x="40" y="40" width="320" height="170" fill="none" stroke="#232329" stroke-width="2"/>
+            <line x1="200" y1="40" x2="200" y2="210" stroke="#232329" stroke-width="2"/>
+            <circle cx="330" cy="90" r="10" fill="#ff3d7f"/>
+            <text x="200" y="230" fill="#8c8a94" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">POV — BALL RUSHES THE LENS</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Action</div>
+        <div class="field-body">Same whip-pull through the screen. Person 2 lands mid-swing on a padel court, already in motion, and drills a return dead into the lens — the ball fills frame, a hard smash-cut on impact.</div>
+        <div class="field-label" style="margin-top:16px;">Camera</div>
+        <div class="field-body">POV rig at the back wall for the ball-to-lens hit; whip-pan on impact resets the frame.</div>
+        <div class="transition-tag">Impact whites out — resets on Person 3</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-label">Act III — The Hold-Out</div>
+
+  <div class="beat">
+    <div class="node"></div>
+    <div class="beat-head">
+      <span class="beat-num">06</span>
+      <span class="beat-title">Last One Standing</span>
+      <span class="beat-loc">Ext. Rooftop — Continuous</span>
+    </div>
+    <div class="beat-grid">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 400 250"><rect width="400" height="250" fill="#101014"/>
+            <circle cx="200" cy="140" r="30" fill="#232329"/>
+            <rect x="165" y="170" width="70" height="55" fill="#1a1a1f"/>
+            <rect x="175" y="205" width="50" height="20" rx="6" fill="#35ffb0" opacity="0.5"/>
+            <text x="200" y="40" fill="#8c8a94" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">CLOSE — RELUCTANT, THEN NOT</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Action</div>
+        <div class="field-body">Person 3, alone now, stares down the phone on the ledge. A long beat of resistance — then a half-smile breaks through. They pick it up before they can talk themselves out of it and flip it open.</div>
+        <div class="field-label" style="margin-top:16px;">Performance Note</div>
+        <div class="field-body">Play the hesitation real — this is the audience's own resistance being talked down on camera.</div>
+        <div class="transition-tag">Pulled through, last time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="node"></div>
+    <div class="beat-head">
+      <span class="beat-num">07</span>
+      <span class="beat-title">Strike</span>
+      <span class="beat-loc">Rooftop → Leisure Plex Lanes</span>
+    </div>
+    <div class="beat-grid">
+      <div>
+        <div class="frame">
+          <svg viewBox="0 0 400 250"><rect width="400" height="250" fill="#101014"/>
+            <rect x="185" y="40" width="30" height="140" fill="#232329"/>
+            <circle cx="170" cy="70" r="10" fill="#f2f0ea" opacity="0.85"/><circle cx="230" cy="70" r="10" fill="#f2f0ea" opacity="0.85"/>
+            <circle cx="150" cy="45" r="10" fill="#f2f0ea" opacity="0.6"/><circle cx="200" cy="40" r="10" fill="#f2f0ea" opacity="0.6"/><circle cx="250" cy="45" r="10" fill="#f2f0ea" opacity="0.6"/>
+            <circle cx="200" cy="200" r="14" fill="#ffb454"/>
+            <text x="200" y="230" fill="#8c8a94" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">LANE — BALL RELEASE TO STRIKE</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Action</div>
+        <div class="field-body">Person 3 lands mid-approach at the lanes, releases without missing a step. Slow-motion on the ball's roll, cut to a full-speed pin strike — every pin down, no hesitation left in the frame.</div>
+        <div class="field-label" style="margin-top:16px;">Camera</div>
+        <div class="field-body">Low lane-level tracking shot on the ball; ramp to real-time on pin contact for maximum snap.</div>
+        <div class="transition-tag">Pins scatter into the end card</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finale">
+    <div class="eyebrow" style="margin-bottom:6px;">End Card</div>
+    <h2>Three Doors. One Phone.</h2>
+    <p class="sub" style="margin-top:0;">Falling pins wipe into the closing card — the three worlds we just visited, now laid out as real, bookable events.</p>
+    <div class="events">
+      <div class="event-card"><div class="ev-num">EVENT 01</div><h3>Arena Night</h3><p>Super Social — live competitive gaming, open sign-up.</p></div>
+      <div class="event-card"><div class="ev-num">EVENT 02</div><h3>Padel Social</h3><p>Court time, mixed skill, walk-ins welcome.</p></div>
+      <div class="event-card"><div class="ev-num">EVENT 03</div><h3>Lanes Night</h3><p>Leisure Plex — bowling, food, no reservation needed.</p></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>CONCEPT 01 — DRAFT SCRIPT &amp; STORYBOARD — FOR INTERNAL / CLIENT REVIEW</footer>
+
+</body>
+</html>
