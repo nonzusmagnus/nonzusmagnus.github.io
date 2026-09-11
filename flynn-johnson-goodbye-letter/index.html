@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Goodbye Letter for the World — Concept</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --black:  #080808;
+    --ash:    #111111;
+    --panel:  #181818;
+    --smoke:  #262626;
+    --dim:    #444;
+    --fog:    #777;
+    --white:  #f0ede8;
+    --gold:   #C8A96E;
+    --rust:   #B85C30;
+    --sage:   #7A9E7E;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 64px 56px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--smoke);
+  }
+
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 30% 60%, rgba(200,169,110,0.07) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(184,92,48,0.06) 0%, transparent 60%);
+    z-index: 0;
+  }
+
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 130px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+  }
+
+  .hero-title em {
+    display: block;
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    margin-top: 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--fog);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-sub span { color: var(--white); }
+
+  .hero-logline {
+    margin-top: 28px;
+    max-width: 560px;
+    font-size: 15px;
+    color: #bbb;
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+    border-left: 2px solid var(--gold);
+    padding-left: 20px;
+  }
+
+  /* ── NAV ── */
+  .doc-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--smoke);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .doc-nav::-webkit-scrollbar { display: none; }
+
+  .nav-item {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog);
+    padding: 16px 28px;
+    white-space: nowrap;
+    text-decoration: none;
+    border-right: 1px solid var(--smoke);
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .nav-item:hover { color: var(--white); background: var(--ash); }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 72px 56px;
+    border-bottom: 1px solid var(--smoke);
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--smoke);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 4vw, 52px);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 40px;
+  }
+
+  /* ── MOTIF GRID ── */
+  .motif-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .motif-card {
+    background: var(--ash);
+    padding: 28px;
+  }
+
+  .motif-icon {
+    font-size: 22px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .motif-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .motif-desc {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.65;
+  }
+
+  /* ── STORYBOARD ── */
+  .board-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .board-frame { background: var(--ash); padding: 16px 16px 20px; }
+  .board-frame img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    background: #000;
+    border: 1px solid var(--smoke);
+  }
+  .board-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .board-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  .board-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+  }
+  .board-note { font-size: 12px; color: #999; margin-top: 4px; line-height: 1.6; }
+
+  /* ── VISUAL SECTIONS ── */
+  .visual-block {
+    margin-bottom: 56px;
+  }
+
+  .visual-block:last-child { margin-bottom: 0; }
+
+  .visual-block-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--smoke);
+  }
+
+  .visual-block-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+  }
+
+  .visual-block-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: rgba(200,169,110,0.1);
+    color: var(--gold);
+  }
+
+  .visual-block-tag.rust {
+    background: rgba(184,92,48,0.1);
+    color: var(--rust);
+  }
+
+  .visual-block-tag.sage {
+    background: rgba(122,158,126,0.1);
+    color: var(--sage);
+  }
+
+  .shot-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .shot-row {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 16px;
+    align-items: start;
+    background: var(--ash);
+    padding: 16px 20px;
+  }
+
+  .shot-row-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--dim);
+    padding-top: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .shot-row-text {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.65;
+  }
+
+  .shot-row-text strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ── TONE BOX ── */
+  .tone-box {
+    background: var(--ash);
+    border-left: 3px solid var(--gold);
+    padding: 32px 36px;
+    margin-top: 40px;
+  }
+
+  .tone-box p {
+    font-size: 15px;
+    color: #bbb;
+    line-height: 1.85;
+    max-width: 680px;
+  }
+
+  .tone-box p + p { margin-top: 16px; }
+
+  /* ── SHOOT NOTES ── */
+  .shoot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .shoot-card {
+    background: var(--ash);
+    padding: 28px;
+  }
+
+  .shoot-card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fog);
+    margin-bottom: 10px;
+  }
+
+  .shoot-card-value {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  @media (max-width: 720px) {
+    .hero, .section, footer { padding-left: 24px; padding-right: 24px; }
+    .motif-grid, .shoot-grid, .board-grid { grid-template-columns: 1fr; }
+    .section { padding-top: 48px; padding-bottom: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">Flynn Johnson — Visual Treatment</div>
+  <h1 class="hero-title">
+    A Goodbye
+    <em>Letter for</em>
+    the World
+  </h1>
+  <div class="hero-sub">
+    Location: <span>Whitestown</span> &nbsp;·&nbsp;
+    Artist: <span>Flynn Johnson</span> &nbsp;·&nbsp;
+    Concept Draft: <span>v1</span>
+  </div>
+  <p class="hero-logline">
+    A memory being revisited. Warm and heavy at the same time. Not a protest. Not a tragedy. The world exhaling — laces on a wire, kids on a street, a burning car with flowers growing out of it.
+  </p>
+</div>
+
+<!-- NAV -->
+<nav class="doc-nav">
+  <a class="nav-item" href="#motifs">Core Motifs</a>
+  <a class="nav-item" href="#storyboard">Storyboard</a>
+  <a class="nav-item" href="#laces">The Laces</a>
+  <a class="nav-item" href="#letter">The Letter</a>
+  <a class="nav-item" href="#kids">The Kids</a>
+  <a class="nav-item" href="#whitestown">Whitestown</a>
+  <a class="nav-item" href="#car">Burning Car</a>
+  <a class="nav-item" href="#sign">The Sign</a>
+  <a class="nav-item" href="#additional">Additional</a>
+  <a class="nav-item" href="#tone">Tone</a>
+  <a class="nav-item" href="#shoot">Shoot Notes</a>
+</nav>
+
+
+<!-- CORE MOTIFS -->
+<div class="section" id="motifs">
+  <div class="section-label">Foundation</div>
+  <h2 class="section-title">Core Motifs</h2>
+  <div class="motif-grid">
+    <div class="motif-card">
+      <span class="motif-icon">👟</span>
+      <div class="motif-title">Laces on the Wire</div>
+      <div class="motif-desc">The spine of the video. Every section returns to them. Chrisendo stays on the laces throughout. The world changes around them — they don't.</div>
+    </div>
+    <div class="motif-card">
+      <span class="motif-icon">🔥</span>
+      <div class="motif-title">Burning Car</div>
+      <div class="motif-desc">Destruction and growth in the same frame. Flowers pushing out of the wreckage. Not alarming — normalised. Life carrying on beside it.</div>
+    </div>
+    <div class="motif-card">
+      <span class="motif-icon">🌱</span>
+      <div class="motif-title">Smokebuds</div>
+      <div class="motif-desc">Flowers growing out of the grass that look like smoke. Beauty from decay. The estate's own kind of nature.</div>
+    </div>
+    <div class="motif-card">
+      <span class="motif-icon">👦</span>
+      <div class="motif-title">The Kids</div>
+      <div class="motif-desc">Little cousins. Fighting, laughing, playing. Innocence and aggression coexisting. The world as it was before it got heavy.</div>
+    </div>
+    <div class="motif-card">
+      <span class="motif-icon">🪧</span>
+      <div class="motif-title">"Disadvantaged" Sign</div>
+      <div class="motif-desc">The one moment that breaks the frame. Direct, political, quiet. Someone holding a truth the world already knows and keeps ignoring.</div>
+    </div>
+    <div class="motif-card">
+      <span class="motif-icon">🤝</span>
+      <div class="motif-title">Flynn's Hand</div>
+      <div class="motif-desc">Opens on his hand holding the laces. Returns to his hand on the telephone wire. The body as a throughline — hanging on, or letting go.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MOTIF STORYBOARD -->
+<div class="section" id="storyboard">
+  <div class="section-label">Reference Frames</div>
+  <h2 class="section-title">Motif Storyboard</h2>
+  <div class="board-grid">
+    <div class="board-frame">
+      <img src="./Laces%20on%20the%20Wire/download.jpg" alt="Laces on the Wire — reference still">
+      <div class="board-meta"><span class="board-num">01</span><div class="board-name">Laces on the Wire</div></div>
+      <div class="board-note">The spine. Every section returns here — the world changes around them, they don't.</div>
+    </div>
+    <div class="board-frame">
+      <img src="./Burning%20Car/download.jpg" alt="Burning Car — reference still">
+      <div class="board-meta"><span class="board-num">02</span><div class="board-name">Burning Car</div></div>
+      <div class="board-note">Destruction and growth in the same frame. Flowers pushing out of the wreckage.</div>
+    </div>
+    <div class="board-frame">
+      <img src="./Smokebuds/download.jpg" alt="Smokebuds — reference still">
+      <div class="board-meta"><span class="board-num">03</span><div class="board-name">Smokebuds</div></div>
+      <div class="board-note">Flowers that look like smoke. Beauty from decay — the estate's own nature.</div>
+    </div>
+    <div class="board-frame">
+      <img src="./The%20Kids/download.jpg" alt="The Kids — reference still">
+      <div class="board-meta"><span class="board-num">04</span><div class="board-name">The Kids</div></div>
+      <div class="board-note">Little cousins — fighting, laughing, playing. Innocence and aggression coexisting.</div>
+    </div>
+    <div class="board-frame">
+      <img src="./Disadvantaged%20Sign/download.jpg" alt="Disadvantaged Sign — reference still">
+      <div class="board-meta"><span class="board-num">05</span><div class="board-name">"Disadvantaged" Sign</div></div>
+      <div class="board-note">The frame-break. Direct, political, quiet — held with dignity, not protest.</div>
+    </div>
+    <div class="board-frame">
+      <img src="./Flynn%27s%20Hand/download.jpg" alt="Flynn's Hand — reference still">
+      <div class="board-meta"><span class="board-num">06</span><div class="board-name">Flynn's Hand</div></div>
+      <div class="board-note">Opens on his hand holding the laces. The body as throughline — hanging on, or letting go.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- THE LACES -->
+<div class="section" id="laces">
+  <div class="section-label">Throughline</div>
+  <h2 class="section-title">The Laces</h2>
+  <ul class="shot-list">
+    <li class="shot-row">
+      <span class="shot-row-num">01</span>
+      <div class="shot-row-text"><strong>Opening:</strong> Flynn's hand in close-up, holding the laces. The first image. Nothing else yet.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">02</span>
+      <div class="shot-row-text"><strong>The throw:</strong> Slow-motion shot of a pair being thrown up onto the wire. The ritual of it. Satisfying and melancholic at once.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">03</span>
+      <div class="shot-row-text"><strong>Multiple pairs:</strong> Wide shot of the wire — not just one pair. Several. Each suggesting a different person, a different story hanging up there.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">04</span>
+      <div class="shot-row-text"><strong>Time passage:</strong> Same shot of the laces across different light — dawn, overcast, golden hour. Passage of time without a word.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">05</span>
+      <div class="shot-row-text"><strong>Flynn on the wire:</strong> Close-up of his hand gripping the telephone wire. Knuckles. Tension. Hanging on or letting go — the edit decides.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">06</span>
+      <div class="shot-row-text"><strong>Birds on the wire:</strong> Wide shot — birds sitting alongside the laces. Something startles them and they scatter. The laces stay.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">07</span>
+      <div class="shot-row-text"><strong>Final frame:</strong> Just the laces. No Flynn. No crew. Wind moving them slightly. The world quieted out.</div>
+    </li>
+  </ul>
+</div>
+
+
+<!-- THE LETTER -->
+<div class="section" id="letter">
+  <div class="section-label">Literal Thread</div>
+  <h2 class="section-title">The Letter</h2>
+  <ul class="shot-list">
+    <li class="shot-row">
+      <span class="shot-row-num">01</span>
+      <div class="shot-row-text"><strong>Handwritten page:</strong> Camera drifts slowly across a letter. Words visible but not fully readable. Intimate without being exposing.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">02</span>
+      <div class="shot-row-text"><strong>Burning paper:</strong> A letter held as it catches flame at the corner. Not dramatic — quiet. Someone letting something go.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">03</span>
+      <div class="shot-row-text"><strong>Left behind:</strong> Someone folding a letter and leaving it somewhere in Whitestown — tucked into a railing, placed on a wall. Unanswered.</div>
+    </li>
+  </ul>
+</div>
+
+
+<!-- THE KIDS -->
+<div class="section" id="kids">
+  <div class="section-label">Innocence</div>
+  <h2 class="section-title">The Kids</h2>
+  <ul class="shot-list">
+    <li class="shot-row">
+      <span class="shot-row-num">01</span>
+      <div class="shot-row-text"><strong>The fight:</strong> Little cousins going at it. Real, not choreographed. Let it breathe.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">02</span>
+      <div class="shot-row-text"><strong>After the fight:</strong> Two minutes later they're laughing again. The resilience of kids. The fact that they shake it off in a way adults can't.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">03</span>
+      <div class="shot-row-text"><strong>The observer:</strong> One kid sitting alone, watching the others play. Not involved. Just watching. That stillness carries weight.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">04</span>
+      <div class="shot-row-text"><strong>The smokebud:</strong> A kid picks up a flower from the grass and looks at it. Curiosity against the backdrop of decay.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">05</span>
+      <div class="shot-row-text"><strong>Hand sequence:</strong> Close-up of a kid's hands → Flynn's hands → the telephone wire. Connecting generations through the same gesture.</div>
+    </li>
+  </ul>
+</div>
+
+
+<!-- WHITESTOWN -->
+<div class="section" id="whitestown">
+  <div class="section-label">Location</div>
+  <h2 class="section-title">Whitestown</h2>
+  <ul class="shot-list">
+    <li class="shot-row">
+      <span class="shot-row-num">01</span>
+      <div class="shot-row-text"><strong>Wide establishing:</strong> The estate in full. Not aestheticised — honest. Let it be what it is.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">02</span>
+      <div class="shot-row-text"><strong>Empty playground:</strong> Swings moving with no one on them. Wind doing the work.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">03</span>
+      <div class="shot-row-text"><strong>The wall:</strong> Old faded graffiti. Layers of who was here before. Time written into the surface.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">04</span>
+      <div class="shot-row-text"><strong>People walking:</strong> Background life — not performing for camera. A woman hanging washing. Someone walking a dog. The video happens around them.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">05</span>
+      <div class="shot-row-text"><strong>Street light:</strong> Shot at dusk or dawn. A single street light flickering in and out. Understated unease.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">06</span>
+      <div class="shot-row-text"><strong>Window reflection:</strong> Flynn or another subject seen through a window — the outside world reflected over their face. Inside and outside layered.</div>
+    </li>
+  </ul>
+</div>
+
+
+<!-- BURNING CAR -->
+<div class="section" id="car">
+  <div class="section-label">Destruction & Growth</div>
+  <h2 class="section-title">The Burning Car</h2>
+  <ul class="shot-list">
+    <li class="shot-row">
+      <span class="shot-row-num">01</span>
+      <div class="shot-row-text"><strong>The puddle:</strong> Reflection of the flames in standing water on the ground — the fire inverted, softened, distorted.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">02</span>
+      <div class="shot-row-text"><strong>Flowers from the wreck:</strong> Flowers growing directly out of the car's bonnet — not just nearby grass. Growth from the thing that's burning.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">03</span>
+      <div class="shot-row-text"><strong>The watcher:</strong> Someone standing beside the burning car, calm. Not panicked. Just watching. Normalised destruction.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">04</span>
+      <div class="shot-row-text"><strong>The bicycle:</strong> A kid's bike leaning against the burning car. Nobody comes to get it.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">05</span>
+      <div class="shot-row-text"><strong>Smokebuds close-up:</strong> Flowers in the grass that look like smoke rising. The estate's own kind of bloom.</div>
+    </li>
+  </ul>
+</div>
+
+
+<!-- THE SIGN -->
+<div class="section" id="sign">
+  <div class="section-label">The Break</div>
+  <h2 class="section-title">"Disadvantaged"</h2>
+  <ul class="shot-list">
+    <li class="shot-row">
+      <span class="shot-row-num">01</span>
+      <div class="shot-row-text"><strong>The hold:</strong> Person holding the sign — they don't look at camera. They stare ahead. Quiet dignity, not protest.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">02</span>
+      <div class="shot-row-text"><strong>Multiple holders:</strong> Different people — different ages — taking turns holding it in the same spot. Community as a shared condition.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">03</span>
+      <div class="shot-row-text"><strong>Weathered:</strong> The sign slightly worn, damp. As if it's been there a long time. Because it has.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">04</span>
+      <div class="shot-row-text"><strong>The exit:</strong> They put it down and walk away. No statement. Just departure. The sign stays in frame after they've gone.</div>
+    </li>
+  </ul>
+</div>
+
+
+<!-- ADDITIONAL VISUALS -->
+<div class="section" id="additional">
+  <div class="section-label">Extra Visual Pieces</div>
+  <h2 class="section-title">Additional Shots</h2>
+  <ul class="shot-list">
+    <li class="shot-row">
+      <span class="shot-row-num">01</span>
+      <div class="shot-row-text"><strong>Clock or watch:</strong> Stopped, or ticking slowly. Time as a quiet theme — never heavy-handed, just present.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">02</span>
+      <div class="shot-row-text"><strong>Someone laughing:</strong> Cut before we find out why. Warmth the viewer can't fully access.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">03</span>
+      <div class="shot-row-text"><strong>People walking:</strong> A slow stream of people moving through Whitestown — not performing, just existing. Shot wide, from a distance.</div>
+    </li>
+    <li class="shot-row">
+      <span class="shot-row-num">04</span>
+      <div class="shot-row-text"><strong>Chrisendo cameo:</strong> Present at the end, staying on the laces. His presence anchors the video's close.</div>
+    </li>
+  </ul>
+</div>
+
+
+<!-- TONE -->
+<div class="section" id="tone">
+  <div class="section-label">Direction</div>
+  <h2 class="section-title">Tone</h2>
+  <div class="tone-box">
+    <p>This should feel like a memory being revisited, warm and heavy at the same time. The burning car, the kids playing, the smokebuds, the laces, on the same afternoon.</p>
+    <p>The "Disadvantaged" sign is the only moment that breaks the fourth wall. Everything else is part of the aesthetic.</p>
+  </div>
+</div>
+
+
+<!-- SHOOT NOTES -->
+<div class="section" id="shoot">
+  <div class="section-label">Production</div>
+  <h2 class="section-title">Shoot Notes</h2>
+  <div class="shoot-grid">
+    <div class="shoot-card">
+      <div class="shoot-card-label">Chrisendo</div>
+      <div class="shoot-card-value">On the laces throughout every significant section. The laces are the edit's anchor, his presence enforces that.</div>
+    </div>
+    <div class="shoot-card">
+      <div class="shoot-card-label">Light</div>
+      <div class="shoot-card-value">Overcast. Expect flat grey skies. Avoid harsh midday, it strips the intimacy.</div>
+    </div>
+    <div class="shoot-card">
+      <div class="shoot-card-label">Camera Kids</div>
+      <div class="shoot-card-value">Handheld. Loose and real. Let the energy come to the camera, don't chase it.</div>
+    </div>
+    <div class="shoot-card">
+      <div class="shoot-card-label">Camera Whitestown</div>
+      <div class="shoot-card-value">Locked off for wide establishing shots. The contrast in camera movement mirrors the contrast in content.</div>
+    </div>
+    <div class="shoot-card">
+      <div class="shoot-card-label">Shoot Target</div>
+      <div class="shoot-card-value">Sunday 13 Sep or Monday 22 Sep. Call pending to confirm scope, pricing and deposit.</div>
+    </div>
+    <div class="shoot-card">
+      <div class="shoot-card-label">Performance</div>
+      <div class="shoot-card-value">Minimal or none, no rapping into camera. Flynn present as a figure within the world, not performing to the viewer.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>Flynn Johnson A Goodbye Letter for the World</span>
+  <span>Concept Draft v1</span>
+  <span>Magnus Forever</span>
+</footer>
+
+</body>
+</html>
