@@ -96,6 +96,32 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .tk{display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#2e9e57;color:#fff;align-items:center;justify-content:center;font-size:14px}
 .sync{font-size:12px;color:var(--s-mute);margin-top:8px}
 .foot{max-width:960px;margin:34px auto 0;padding:0 16px;color:var(--s-mute);font-size:13px;line-height:1.5}
+
+/* CALL SHEETS */
+.tile.cs{grid-column:1/-1;min-height:0;background:var(--card);color:var(--fg);border-color:var(--line);flex-direction:row;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.tile.cs .t{font-size:clamp(44px,8vw,64px)}
+.tile.cs .d{margin-bottom:0}
+.tile.cs .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.12em;font-size:12px;text-transform:uppercase;border:1px solid var(--line);padding:5px 9px;border-radius:2px;color:var(--mute)}
+#cs{display:none;min-height:100vh;padding:0 0 56px;background:var(--bg);color:var(--fg)}
+#cs .bar{background:var(--bg);border-bottom:1px solid var(--line)}
+#cs .back{color:var(--mute)}
+#cs .tab{color:var(--mute)}
+#cs .tab[aria-selected="true"]{color:var(--fg)}
+#cs .tab .k{color:var(--mute)}
+.cs-head h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(40px,8vw,64px);line-height:.95}
+.cs-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:18px}
+.cs-facts div{background:var(--card);padding:12px 14px}
+.cs-facts span{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--mute)}
+.cs-facts b{display:block;white-space:nowrap;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:26px;letter-spacing:.02em;margin-top:2px}
+.cs-loc{color:var(--mute);line-height:1.5;font-size:15px;margin-top:14px}
+.cs-loc b{color:var(--fg);font-weight:600}
+.cs-dl{display:inline-flex;align-items:center;gap:8px;margin-top:18px;min-height:48px;padding:0 18px;background:var(--fg);color:var(--bg);border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.14em;font-size:14px;text-transform:uppercase;text-decoration:none}
+.cs-dl:disabled{opacity:.5}.cs-msg{margin-left:12px;font-size:13px;color:var(--mute)}
+.cs-pages{margin-top:24px;display:grid;gap:18px}
+.cs-pages figure{background:#fff;border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:0 1px 0 var(--line)}
+.cs-pages img{display:block;width:100%;height:auto}
+.cs-pages figcaption{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.14em;font-size:12px;text-transform:uppercase;color:#6f6d63;padding:8px 12px;border-top:1px solid #e4e2da;background:#faf9f5}
 </style>
 
 </head><body>
@@ -112,8 +138,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
       <div><div class="eyebrow">White tee &middot; the return</div><div class="t">CLARITY</div><div class="d">Quiet, settled, elevated. The same people on the other side of it.</div></div>
       <div class="go">Open storyboard &rarr;</div>
     </button>
+    <button class="tile cs" data-cs-open="1" aria-label="Open call sheets">
+      <div style="flex:1 1 320px"><div class="eyebrow">Production &middot; shoot days</div><div class="t">CALL SHEETS</div><div class="d">Times, locations, cast, crew and pack lists for every shoot day.</div>
+      <div class="meta"><span class="chip">Wed 7 Oct &middot; Football</span><span class="chip">Sat 10 Oct &middot; Boxer + Studio</span><span class="chip">Sun 11 Oct &middot; Content Creator</span></div></div>
+      <div class="go">Open call sheets &rarr;</div>
+    </button>
   </div>
-  <div class="chain">Footballer <i>&rsaquo;</i> Rapper <i>&rsaquo;</i> Tattoo Artist <i>&rsaquo;</i> Content Creator <i>&rsaquo;</i> Boxer</div>
+  <div class="chain">Footballer <i>&rsaquo;</i> Rapper <i>&rsaquo;</i> Content Creator <i>&rsaquo;</i> Boxer</div>
 </div>
 
 <div id="sb">
@@ -186,15 +217,10 @@ movement:{title:'MOVEMENT',tee:'Black tee',subjects:[
    F('pitch','8mm','He jogs to the goalpost where the ball landed.'),
    F('bagcu','8mm','Close-up of him at the corner of frame, holding up the black EMD bag: a pondering “Hmm.” In the far background, in the negative space, the Rapper (AC3) in hi-vis and black hoodie sits in the stadium seats.',[['Footballer','Hmm.']])]),
   Sc(5,'The Tunnel',[F('walkpast','25/35mm','Final shot from inside the tunnel. The man in hi-vis (Rapper AC3) walks through and past the camera. Football kick-off sounds, far, faint and distant.')])]},
- {id:'Rapper',log:'Stadium janitor by day. The idea lands at a bus stop; the grind plays out at Simba’s studio.',out:'His track carries under the Tattoo Artist’s walk →',scenes:[
+ {id:'Rapper',log:'Stadium janitor by day. The idea lands at a bus stop; the grind plays out at Simba’s studio.',out:'Hand-off to the Content Creator →',scenes:[
   Sc(1,'Stadium — Shift',[F('seats','As shot','Janitor shift in the stands. Headphones on, lyrics open on his phone, working while he cleans.')]),
   Sc(2,'Bus Stop',[F('bus','As shot','The idea hits at the bus stop. He catches it before it goes.')]),
   Sc(3,'Simba’s Studio',[F('phone','As shot','He writes, scraps, and writes again. Pages and screens pile up.'),F('mic','As shot','Booth montage: takes layered on top of each other until something sticks.',[['Rapper','If you thought that was good, let me show you this new one.']]),F('door','As shot','Engineer reacts through the glass.',[['Engineer','Oh swear, so that’s how you’re moving now? Different.']])])]},
- {id:'Tattoo Artist',log:'A newly reopened shop. The Rapper’s track plays under the walk in.',out:'She spots the EMD bag. Hand-off to the Content Creator →',scenes:[
-  Sc(1,'The Walk In',[F('shop','As shot','She walks to her newly reopened shop. The Rapper’s track plays underneath.')]),
-  Sc(2,'The Shop',[F('chair','As shot','The client sits in the chair and looks around the space.',[['Client','You did all this yourself?'],['Tattoo Artist','Had to.']]),
-   F('skin','As shot','He knows what he wants.',[['Client','I want the tee. On me. Permanent.'],['Tattoo Artist','Ouu bold.'],['Client','Yeahh different! But do it different!']]),
-   F('bagcu','As shot','She goes to start, then pauses and spots the EMD bag.',[['Tattoo Artist','Okay, one sec — need to find mine.']])])]},
  {id:'Content Creator',log:'A friend’s story sparks it. The room, the rig, and Mum.',out:'Camera follows him out →',scenes:[
   Sc(1,'The Spark',[F('phone','As shot','He sees a friend’s story and rushes to his bedroom.')]),
   Sc(2,'The Setup',[F('laptop','As shot','Laptop goes up, framing is tested, he tries again.')]),
@@ -212,14 +238,10 @@ clarity:{title:'CLARITY',tee:'White tee',subjects:[
   Sc(3,'Foot On Ball / Set-up',[F('low','8mm, low angle','He has his foot on the ball.',[['Footballer','Yeah... different.']]),F('back','25mm, from behind','He stands ready to take a shot, CR7 style.')]),
   Sc(4,'Crossbar Challenge',[F('side','Side angle, from the goalposts','The ball repeatedly hits the goalposts as he does the crossbar challenge.')]),
   Sc(5,'Close',[F('pitch','50mm','He kicks the ball again, this time it goes in, and walks to the goal.'),F('line','25mm tripod','As he walks, the tripod camera pans down to the white line on the pitch: the transition into the Rapper.')])]},
- {id:'Rapper',log:'Transition off the white line. Upbeat, mid-verse, and the engineer is enjoying it.',out:'Crumpled page transition → Tattoo Artist',scenes:[
+ {id:'Rapper',log:'Transition off the white line. Upbeat, mid-verse, and the engineer is enjoying it.',out:'Crumpled page transition → Content Creator',scenes:[
   Sc(1,'Off The Line',[F('line','As shot','The white line carries us into the studio.')]),
   Sc(2,'The Booth',[F('mic','As shot','Upbeat, mid-verse. The engineer is enjoying it.'),F('door','As shot','He pulls his headphones off, near the hook.')]),
-  Sc(3,'Crumpled Page',[F('crumple','As shot','Crumpled page transition into the Tattoo Artist.')])]},
- {id:'Tattoo Artist',log:'Locked in. The tee goes on, and so does the line.',out:'Client leaves, top high-angle → Content Creator',scenes:[
-  Sc(1,'Start',[F('chair','As shot','She settles in.',[['Tattoo Artist','Okay, got it.']])]),
-  Sc(2,'The Chair',[F('skin','Angle A','Montage, angle one.'),F('skin','Angle B','Montage, angle two.'),F('swing','Close-up','Face close-up. Focused.')]),
-  Sc(3,'Reveal',[F('top','Top-down','Top-down: the logo on the shirt.'),F('chair','As shot','The client sees it.',[['Client','Ouu, I love it! Now this is different!']]),F('top','High angle','Client leaves, high angle.')])]},
+  Sc(3,'Crumpled Page',[F('crumple','As shot','Crumpled page transition into the Content Creator.')])]},
  {id:'Content Creator',log:'Top angle in, bag in hand. The tee comes out on webcam, and the chat reacts.',out:'Third head swing → duck-and-roll → Boxer',scenes:[
   Sc(1,'Top Angle In',[F('top','Top angle','Top angle in, bag in hand.')]),
   Sc(2,'Webcam',[F('laptop','Webcam, close-up','He pulls the white tee from the bag.'),F('chat','Chat','The chat reacts.',[['Chat','Guy, your mom’s giving you bars cuz 😭'],['Chat','Iwl, that tee’s cold tho. Different. 🔥🔥 100']])]),
@@ -317,4 +339,54 @@ document.addEventListener('keydown',function(e){
 })();
 </script>
 
+<div id="cs">
+  <div class="bar"><div class="bar-in">
+    <button class="back" id="cs-back">&larr; All</button>
+    <div class="ctitle">CALL SHEETS <b>/</b> Shoot days</div>
+  </div>
+  <div class="tabs" id="cs-tabs" role="tablist"></div></div>
+  <div class="stage" id="cs-stage"></div>
+</div>
+<script>
+(function(){
+var CS=[
+ {id:'football-stadium-shoot',tab:'Football',day:'Wed 7 Oct',title:'Football Stadium Shoot',
+  facts:[['Call','12:00'],['Meal','14:30 – 15:30'],['Wrap','17:00'],['Capture','Video + Stills']],
+  loc:'<b>Home Farm Football Club</b> &middot; 97A Swords Road, Dublin 9, D09 AX52',
+  cast:'Eric, Darren, Richie (Footballers) &middot; Demeji (Rapper)'},
+ {id:'boxer-studio-shoot',tab:'Boxer + Studio',day:'Sat 10 Oct',title:'Boxer + Studio Shoot',
+  facts:[['Boxer call','10:30'],['Boxer shoot','11:00 – 13:00'],['Break','13:00 – 15:00'],['Studio call','15:30'],['Studio shoot','16:00 – 19:00']],
+  loc:'<b>Boxing club</b> &middot; 24 St. Dominic\'s Avenue / St. Dominic\'s Road, Tallaght, Dublin 24, D24 K3HF<br><b>Rapper studio</b> &middot; Unit 6, Glenview Industrial Estate, Herberton Road, Rialto (Drimnagh), Dublin, D12',
+  cast:'Boxer (TBC) &middot; Ryan (Coach) &middot; AC3 (Rapper)'},
+ {id:'content-creator-shoot',tab:'Content Creator',day:'Sun 11 Oct',title:'Content Creator Shoot',
+  facts:[['Meet','10:30'],['Call','11:00'],['Wrap','13:00 – 14:00'],['Capture','Video + Stills']],
+  loc:'<b>Bedroom set</b> &middot; Godfrey\'s House',
+  cast:'SPRKZ (Content Creator) &middot; Auntie (Mum)'}
+];
+var dl=null;
+if(window.claude&&claude.use)claude.use('downloads').then(function(d){dl=d;if(d&&document.getElementById('cs').style.display==='block')render();}).catch(function(){});
+var cur=0,$=function(id){return document.getElementById(id);};
+function render(){
+  var c=CS[cur];
+  $('cs-tabs').innerHTML=CS.map(function(x,n){return '<button class="tab" role="tab" data-cs-tab="'+n+'" aria-selected="'+(n===cur)+'"><span class="n">'+(n+1)+'</span>'+x.tab+'<span class="k">'+x.day+'</span></button>';}).join('');
+  $('cs-stage').innerHTML='<div class="eyebrow">Call sheet '+(cur+1)+' &middot; '+c.day+'</div><div class="cs-head"><h2>'+c.title.toUpperCase()+'</h2></div>'+
+   '<div class="cs-facts">'+c.facts.map(function(f){return '<div><span>'+f[0]+'</span><b>'+f[1]+'</b></div>';}).join('')+'</div>'+
+   '<div class="cs-loc">'+c.loc+'<br>Cast: '+c.cast+'</div>'+
+   (dl?'<button class="cs-dl" id="cs-dl">Download PDF &darr;</button><span class="cs-msg" id="cs-msg"></span>':(window.claude?'':'<a class="cs-dl" href="callsheets/'+c.id+'.pdf" download="EMD_'+c.title.replace(/[^A-Za-z]+/g,'-')+'_Call-Sheet.pdf">Download PDF &darr;</a>'))+
+   '<div class="cs-pages">'+[1,2].map(function(p){return '<figure><img src="callsheets/'+c.id+'-'+p+'.jpg" alt="'+c.title+' call sheet, page '+p+'" loading="lazy"><figcaption>Page '+p+' of 2 &middot; '+(p===1?'Call sheet':'Pack list')+'</figcaption></figure>';}).join('')+'</div>';
+}
+function open(){$('home').style.display='none';$('sb').style.display='none';$('cs').style.display='block';render();window.scrollTo(0,0);}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('button'); if(!t)return;
+  if(t.dataset.csOpen){open();}
+  else if(t.id==='cs-back'){$('cs').style.display='none';$('home').style.display='block';window.scrollTo(0,0);}
+  else if(t.dataset.csTab!==undefined){cur=+t.dataset.csTab;render();}
+  else if(t.id==='cs-dl'&&dl){var c=CS[cur],m=$('cs-msg');t.disabled=true;m.textContent='';
+    fetch('callsheets/'+c.id+'.pdf').then(function(r){if(!r.ok)throw 0;return r.blob();})
+    .then(function(b){return dl.save({filename:'EMD_'+c.title.replace(/[^A-Za-z]+/g,'-')+'_Call-Sheet.pdf',data:b});})
+    .then(function(){m.textContent='Saved';},function(e){m.textContent=(e&&e.code==='declined')?'':'Download unavailable here';})
+    .then(function(){t.disabled=false;});}
+});
+})();
+</script>
 </body></html>
