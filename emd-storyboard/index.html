@@ -92,7 +92,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @media(max-width:560px){.pair{grid-template-columns:1fr}}
 .shot-img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .th.dn .tk{display:flex}
-.th.dn svg{opacity:.45}
+.th.dn svg,.th.dn .shot-img{opacity:.45}
 .tk{display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#2e9e57;color:#fff;align-items:center;justify-content:center;font-size:14px}
 .sync{font-size:12px;color:var(--s-mute);margin-top:8px}
 .foot{max-width:960px;margin:34px auto 0;padding:0 16px;color:var(--s-mute);font-size:13px;line-height:1.5}
@@ -196,6 +196,10 @@ var S={
  bagthrow:function(){return svg('<circle cx="90" cy="110" r="14" opacity=".7"/><path d="M90 124 v30 M90 134 q-30 -30 30 -50" opacity=".7"/><circle cx="240" cy="96" r="12"/><path d="M240 108 v40 M240 118 h-40" /><rect x="152" y="60" width="34" height="32" stroke="'+acc+'" transform="rotate(-18 169 76)"/><path d="M130 100 q20 -50 56 -34" stroke-dasharray="3 6" opacity=".5"/>');},
  back:function(){return svg('<circle cx="160" cy="62" r="18"/><path d="M110 170 q10 -80 50 -86 q40 6 50 86"/><path d="M60 40 h200" opacity=".3"/><path d="M60 24 h200 M60 56 h200" opacity=".25"/><path d="M160 30 v8" opacity=".3"/>');},
  text:function(){return svg('<rect x="100" y="20" width="120" height="140" rx="6" opacity=".4"/><line x1="128" y1="60" x2="192" y2="60" stroke="'+acc+'" stroke-width="3"/><line x1="138" y1="76" x2="182" y2="76" stroke="'+acc+'" stroke-width="3"/><path d="M110 150 h100" opacity=".4"/><line x1="40" y1="30" x2="76" y2="30" opacity=".5"/>');},
+ street:function(){return svg('<path d="M0 150 Q160 120 320 150" opacity=".5"/><path d="M0 40 Q160 70 320 40" opacity=".3"/><path d="M20 44 v100 M60 52 v88 M260 52 v88 M300 44 v100" opacity=".3"/><circle cx="160" cy="62" r="16" stroke="'+acc+'"/><path d="M160 78 v52 l-14 40 M160 130 l14 40 M160 92 l-18 16 l14 8" stroke="'+acc+'"/><rect x="150" y="108" width="10" height="16" stroke="'+acc+'"/><circle cx="226" cy="98" r="5"/><path d="M226 103 v14 l-8 12 M226 117 l9 10 M226 108 l10 -4"/><path d="M244 108 h18 M256 103 l6 5 l-6 5" opacity=".5"/>');},
+ wrap:function(){return svg('<path d="M90 150 q-10 -60 30 -84 l60 -14 q30 0 34 26 l4 40 q0 30 -30 40z"/><path d="M112 78 l96 30 M104 100 l110 26 M100 124 l104 22" stroke="'+acc+'"/><path d="M214 126 q50 -10 70 -60" stroke="'+acc+'" stroke-dasharray="4 6"/>');},
+ hbag:function(){return svg('<line x1="0" y1="14" x2="320" y2="14" opacity=".5"/><path d="M196 14 l10 22 M224 14 l-10 22" opacity=".6"/><rect x="186" y="36" width="48" height="110" rx="14" transform="rotate(8 210 36)"/><circle cx="100" cy="70" r="14" stroke="'+acc+'"/><path d="M100 84 v44 l-16 36 M100 128 l18 36 M100 96 l70 -8 M100 100 l34 14" stroke="'+acc+'"/>');},
+ logo:function(){return svg('<rect x="30" y="16" width="260" height="148" opacity=".4"/><rect x="118" y="66" width="84" height="48" stroke="'+acc+'"/><path d="M132 80 h-0 v20 h14 M132 90 h10 M132 80 h14 M156 100 v-20 l8 12 l8 -12 v20 M182 80 v20 q14 0 14 -10 q0 -10 -14 -10" stroke="'+acc+'"/><circle cx="246" cy="130" r="9"/><path d="M236 142 q10 -8 20 0" /><path d="M214 110 l18 12" opacity=".5" stroke-dasharray="3 5"/>');},
  crumple:function(){return svg('<path d="M110 40 l40 -14 l36 18 l16 38 l-14 40 l-44 14 l-36 -22 l-10 -36z"/><path d="M150 26 l-10 50 l50 -32 M140 76 l-4 58 M190 44 l-14 54 l30 14" opacity=".5"/><path d="M60 150 q100 30 200 0" opacity=".3"/>');}
 };
 function F(t,lens,act,d){return {t:t,lens:lens,act:act,d:d||null};}
@@ -217,19 +221,34 @@ movement:{title:'MOVEMENT',tee:'Black tee',subjects:[
    F('pitch','8mm','He jogs to the goalpost where the ball landed.'),
    F('bagcu','8mm','Close-up of him at the corner of frame, holding up the black EMD bag: a pondering “Hmm.” In the far background, in the negative space, the Rapper (AC3) in hi-vis and black hoodie sits in the stadium seats.',[['Footballer','Hmm.']])]),
   Sc(5,'The Tunnel',[F('walkpast','25/35mm','Final shot from inside the tunnel. The man in hi-vis (Rapper AC3) walks through and past the camera. Football kick-off sounds, far, faint and distant.')])]},
- {id:'Rapper',log:'Stadium janitor by day. The idea lands at a bus stop; the grind plays out at Simba’s studio.',out:'Hand-off to the Content Creator →',scenes:[
-  Sc(1,'Stadium — Shift',[F('seats','As shot','Janitor shift in the stands. Headphones on, lyrics open on his phone, working while he cleans.')]),
-  Sc(2,'Bus Stop',[F('bus','As shot','The idea hits at the bus stop. He catches it before it goes.')]),
-  Sc(3,'Simba’s Studio',[F('phone','As shot','He writes, scraps, and writes again. Pages and screens pile up.'),F('mic','As shot','Booth montage: takes layered on top of each other until something sticks.',[['Rapper','If you thought that was good, let me show you this new one.']]),F('door','As shot','Engineer reacts through the glass.',[['Engineer','Oh swear, so that’s how you’re moving now? Different.']])])]},
+ {id:'Rapper',log:'He leaves the stadium, runs the final song at the bus stop, then the grind plays out at Playground HQ.',out:'Hand-off to the Content Creator →',scenes:[
+  Sc(1,'Leaving The Stadium',[F('walkpast','8mm','He leaves the football stadium through the doors and the tunnel, in his hi-vis and black hoodie.')]),
+  Sc(2,'Bus Stop',[F('bus','25mm','Headphones on at the bus stop, he raps the lyrics to the final song under his breath while he waits for the bus to the studio.')]),
+  Sc(3,'Playground HQ',[
+   F('tunnel','25mm, gimbal, slow push in','Slow gimbal movement into the studio room. Ace stands at the back with a paper and pen in his hand while the engineer sits at the desk, bopping his head to the music.'),
+   F('phone','25mm, tripod, close-ups','Close-up on the paper and pen as he writes. Then a close-up of his face from a side diagonal angle, backlit for a cinematic finish. Then he scraps the paper, still on tripod close-ups.'),
+   F('mic','8mm, booth, top high angle (corner)','Music-video style: top high angle from the corner of the booth with him rapping. Shot in multiple takes and cut between three of them. At one point there is a clone effect.'),
+   F('laptop','25mm/50mm, engineer reaction','The engineer likes it but only gently enjoys the music, bopping his head. Not too much excitement. No dialogue. About 1 second.'),
+   F('walkpast','25mm, handheld','Handheld, following Ace as he comes out of the booth and approaches the sound engineer.',[['Rapper','That\u2019s nothing. Play the next beat.'],['Engineer','Say no more.']]),
+   F('wide','8mm, mid-low angle, slow track','They play the music and both react with heavy head bops. 8mm wide, mid-low angle, with an object in the foreground as the camera slowly tracks left or right, carrying the shot into the next sequence, the Content Creator.',[['Engineer','Oh, so that\u2019s how you\u2019re moving now? Different.']])])]},
  {id:'Content Creator',log:'A friend’s story sparks it. The room, the rig, and Mum.',out:'Camera follows him out →',scenes:[
   Sc(1,'The Spark',[F('phone','As shot','He sees a friend’s story and rushes to his bedroom.')]),
   Sc(2,'The Setup',[F('laptop','As shot','Laptop goes up, framing is tested, he tries again.')]),
   Sc(3,'Mum',[F('door','As shot','Mum bursts in. Nigerian Pidgin, full force.',[['Mum','These dishes have been waiting for you since yesterday. What is going on? Back when you were younger, you used to listen, but now you’re moving different.']]),
    F('door','As shot','She leaves. He watches the door. She comes back.',[['Mum','No, because I don’t understand. Are you normal? And this thing you’re doing on your phone, you better do it well.']])])]},
- {id:'Boxer',log:'Distant, then closer. The pads, the fall, and the coach who hands him the answer.',out:'END MOVEMENT',scenes:[
-  Sc(1,'Walk To The Gym',[F('back','As shot','A faint voice off-screen.',[['Boxer (off-screen)','Hey guys, wait up.']]),F('phone','As shot','He walks to the gym, commenting on the chat as he goes.')]),
-  Sc(2,'The Pads',[F('pads','As shot','On the pads he stops, loses it and falls.'),F('fall','As shot','He stays down.')]),
-  Sc(3,'The Bag',[F('bagthrow','As shot','Coach throws the EMD bag onto his chest.',[['Coach','This is what it takes.'],['Coach','Here, take this.']]),F('belt','As shot','Belt shots. The title is within reach.'),F('ring','As shot','Closing beat.',[['Line','This is what different is.']])])]}
+ {id:'Boxer',log:'He walks in watching the stream, misses Eric behind him, then the gym. Wraps, heavy bag, pads, the fall, and the coach who hands him the answer.',out:'END MOVEMENT',scenes:[
+  Sc(1,'Street',[F('phone','25mm, handheld, over the shoulder','Match cut from the Content Creator onto a phone screen playing his stream. We’re behind the Boxer as he walks, EMD bag on his left shoulder, moving screen left to right.')]),
+  Sc(2,'Street — Wide',[F('street','8mm ultra wide, tripod, locked off','An empty street, the whole block in frame, edges bending. The Boxer enters frame left, eyes on his phone, and stops at centre frame, close to the lens. He smirks at the stream. Behind him, in the mid-ground, the Footballer (Eric) runs through, screen left to right, chasing after his friends further up the road. The Boxer never notices. Cut straight to the gym.',[['Boxer (to the phone)','Go on, bro.']])]),
+  Sc(3,'Boxing Gym',[
+   F('door','25mm, wide, locked off','The gym is dark and moody, pools of light over the ring and bags. The door opens and the Boxer steps in, backlit, a silhouette in the doorway with daylight blowing out behind him. A subtle fill catches his face (reflector if needed). He spots his Coach and smirks.'),
+   F('ring','25mm, reverse angle, slow dolly in','The Coach, waiting by the ring, head down. As the camera pushes in, he lifts his head and looks at the Boxer.',[['Coach','There you are. Let’s get to work.']]),
+   F('wrap','25mm, close-up','The Boxer rolls the wrap around his hand. Tight, methodical.'),
+   F('hbag','25mm, handheld','Heavy bag. He works through drills, the camera moving with him, the bag swinging through frame.'),
+   F('pads','25mm, handheld','Shot 7, beat 1. Cut to pads with the Coach. Combination after combination. The Boxer slows, stops, gassed.',[['Coach','This is what it takes.']]),
+   F('fall','25mm, handheld, side profile','Shot 7, beat 2. The Boxer drops to the canvas, flat on his back, chest heaving.'),
+   F('bagthrow','25mm, handheld','Shot 7, beat 3. The Coach picks up the EMD bag and throws it onto his chest.',[['Coach','Here. Take this.']]),
+   F('belt','25mm, handheld','Shot 7, beat 4. The belts on the gym walls, one after another.',[['Coach (V.O.)','This is what different is.']]),
+   F('logo','8mm or 25mm, overhead top down (decide on the day)','The Boxer on the floor, bag on his chest. He pushes himself up and steps out of frame. The EMD logo is revealed on the floor where he was lying. Cut to black.')])]}
 ]},
 clarity:{title:'CLARITY',tee:'White tee',subjects:[
  {id:'Footballer',log:'The return, in white. Smoother, controlled, elevated. Out on the white line.',out:'Tripod pans down to the white line → Rapper',scenes:[
@@ -238,10 +257,12 @@ clarity:{title:'CLARITY',tee:'White tee',subjects:[
   Sc(3,'Foot On Ball / Set-up',[F('low','8mm, low angle','He has his foot on the ball.',[['Footballer','Yeah... different.']]),F('back','25mm, from behind','He stands ready to take a shot, CR7 style.')]),
   Sc(4,'Crossbar Challenge',[F('side','Side angle, from the goalposts','The ball repeatedly hits the goalposts as he does the crossbar challenge.')]),
   Sc(5,'Close',[F('pitch','50mm','He kicks the ball again, this time it goes in, and walks to the goal.'),F('line','25mm tripod','As he walks, the tripod camera pans down to the white line on the pitch: the transition into the Rapper.')])]},
- {id:'Rapper',log:'Transition off the white line. Upbeat, mid-verse, and the engineer is enjoying it.',out:'Crumpled page transition → Content Creator',scenes:[
-  Sc(1,'Off The Line',[F('line','As shot','The white line carries us into the studio.')]),
-  Sc(2,'The Booth',[F('mic','As shot','Upbeat, mid-verse. The engineer is enjoying it.'),F('door','As shot','He pulls his headphones off, near the hook.')]),
-  Sc(3,'Crumpled Page',[F('crumple','As shot','Crumpled page transition into the Content Creator.')])]},
+ {id:'Rapper',log:'He wraps the song without the paper. The speakers boom, the engineer claps.',out:'Transition into the Content Creator (TBC)',scenes:[
+  Sc(1,'Into The Studio',[F('crumple','8mm, extreme close-up','Wide-angle extreme close-up of his hand crumpling the paper and letting it go. We follow the paper down into the white of the studio. (Transition TBC: this, or a whip pan from the last stadium shot to a high corner of the studio.)')]),
+  Sc(2,'The Booth',[
+   F('mic','25mm','Straight into AC3 rapping in the booth, rounding off the song. No paper this time.'),
+   F('laptop','8mm, rack focus','Cut to the engineer outside the booth, enjoying it as he adjusts his headphones. AC3 is in focus in the foreground, then the focus pulls to the engineer. The speakers are booming with a pulsating effect.'),
+   F('laptop','As shot','The engineer starts clapping.',[['Engineer','That\u2019s the one. Run it back. It\u2019s different, different, different.']])])]},
  {id:'Content Creator',log:'Top angle in, bag in hand. The tee comes out on webcam, and the chat reacts.',out:'Third head swing → duck-and-roll → Boxer',scenes:[
   Sc(1,'Top Angle In',[F('top','Top angle','Top angle in, bag in hand.')]),
   Sc(2,'Webcam',[F('laptop','Webcam, close-up','He pulls the white tee from the bag.'),F('chat','Chat','The chat reacts.',[['Chat','Guy, your mom’s giving you bars cuz 😭'],['Chat','Iwl, that tee’s cold tho. Different. 🔥🔥 100']])]),
@@ -262,6 +283,7 @@ var CLA=[['cla-1a','cla-1b'],['cla-2'],['cla-3'],['cla-4'],['cla-5'],['cla-6'],[
 function im(f,a){return '<img class="shot-img" src="img/'+f+'.jpg" alt="'+a+'" loading="lazy">';}
 function pic(s,x,n,full){
   if(s.id==='Footballer'&&st.c==='movement')return im('mov-'+(n+1),'Footballer Movement frame '+(n+1));
+  if(s.id==='Boxer'&&st.c==='movement'&&n<11)return im('box-mov-'+(n+1),'Boxer Movement frame '+(n+1));
   if(s.id==='Footballer'&&st.c==='clarity'&&CLA[n]){var l=full?CLA[n]:[CLA[n][0]];var h=l.map(function(f,k){return im(f,'Footballer Clarity frame '+(n+1)+(l.length>1?' image '+(k+1):''));}).join('');return l.length>1?'<div class="pair">'+h+'</div>':h;}
   return s.id==='Footballer'?blank(s,n+1):S[x.f.t]();}
 var st={c:null,s:0,i:0};
