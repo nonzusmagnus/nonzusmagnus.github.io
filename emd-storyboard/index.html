@@ -91,6 +91,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .viewer.wide{grid-template-columns:1fr}
 @media(max-width:560px){.pair{grid-template-columns:1fr}}
 .shot-img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.shot-img.sk{object-fit:contain;background:#fff}
 .th.dn .tk{display:flex}
 .th.dn svg,.th.dn .shot-img{opacity:.45}
 .tk{display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#2e9e57;color:#fff;align-items:center;justify-content:center;font-size:14px}
@@ -232,10 +233,13 @@ movement:{title:'MOVEMENT',tee:'Black tee',subjects:[
    F('walkpast','25mm, handheld','Handheld, following Ace as he comes out of the booth and approaches the sound engineer.',[['Rapper','That\u2019s nothing. Play the next beat.'],['Engineer','Say no more.']]),
    F('wide','8mm, mid-low angle, slow track','They play the music and both react with heavy head bops. 8mm wide, mid-low angle, with an object in the foreground as the camera slowly tracks left or right, carrying the shot into the next sequence, the Content Creator.',[['Engineer','Oh, so that\u2019s how you\u2019re moving now? Different.']])])]},
  {id:'Content Creator',log:'A friend’s story sparks it. The room, the rig, and Mum.',out:'Camera follows him out →',scenes:[
-  Sc(1,'The Spark',[F('phone','As shot','He sees a friend’s story and rushes to his bedroom.')]),
-  Sc(2,'The Setup',[F('laptop','As shot','Laptop goes up, framing is tested, he tries again.')]),
+  Sc(1,'The Spark',[F('phone','As shot','He sees a friend’s story on his phone.'),
+   F('phone','As shot','SPRKZ, phone in hand, black EMD tee.'),
+   F('door','As shot','He rushes in from the balcony, through the door to his bedroom.')]),
+  Sc(2,'The Setup',[F('laptop','As shot','In the bedroom, the phone goes up on the selfie stick on the table. Framing is tested, he tries again. Room door and bed in the background.')]),
   Sc(3,'Mum',[F('door','As shot','Mum bursts in. Nigerian Pidgin, full force.',[['Mum','These dishes have been waiting for you since yesterday. What is going on? Back when you were younger, you used to listen, but now you’re moving different.']]),
-   F('door','As shot','She leaves. He watches the door. She comes back.',[['Mum','No, because I don’t understand. Are you normal? And this thing you’re doing on your phone, you better do it well.']])])]},
+   F('door','As shot','She leaves. He watches the door. She comes back.',[['Mum','No, because I don’t understand. Are you normal? And this thing you’re doing on your phone, you better do it well.']]),
+   F('laptop','As shot','Back at the table, EMD bag in front of him, selfie stick up. He’s live, with 2 viewers.')])]},
  {id:'Boxer',log:'He walks in watching the stream, misses Eric behind him, then the gym. Wraps, heavy bag, pads, the fall, and the coach who hands him the answer.',out:'END MOVEMENT',scenes:[
   Sc(1,'Street',[F('phone','25mm, handheld, over the shoulder','Match cut from the Content Creator onto a phone screen playing his stream. We’re behind the Boxer as he walks, EMD bag on his left shoulder, moving screen left to right.')]),
   Sc(2,'Street — Wide',[F('street','8mm ultra wide, tripod, locked off','An empty street, the whole block in frame, edges bending. The Boxer enters frame left, eyes on his phone, and stops at centre frame, close to the lens. He smirks at the stream. Behind him, in the mid-ground, the Footballer (Eric) runs through, screen left to right, chasing after his friends further up the road. The Boxer never notices. Cut straight to the gym.',[['Boxer (to the phone)','Go on, bro.']])]),
@@ -290,6 +294,8 @@ var CLA=[['cla-1a','cla-1b'],['cla-2'],['cla-3'],['cla-4'],['cla-5'],['cla-6'],[
 function im(f,a){return '<img class="shot-img" src="img/'+f+'.jpg" alt="'+a+'" loading="lazy">';}
 function pic(s,x,n,full){
   if(s.id==='Footballer'&&st.c==='movement')return im('mov-'+(n+1),'Footballer Movement frame '+(n+1));
+  if(s.id==='Content Creator'&&st.c==='movement'&&n<7)return im('cc-mov-'+(n+1),'Content Creator Movement frame '+(n+1)).replace('shot-img','shot-img sk');
+  if(s.id==='Content Creator'&&st.c==='clarity')return im('cc-cla-'+Math.min(n+1,9),'Content Creator Clarity frame '+(n+1)).replace('shot-img','shot-img sk');
   if(s.id==='Boxer'&&st.c==='movement'&&n<11)return im('box-mov-'+(n+1),'Boxer Movement frame '+(n+1));
   if(s.id==='Footballer'&&st.c==='clarity'&&CLA[n]){var l=full?CLA[n]:[CLA[n][0]];var h=l.map(function(f,k){return im(f,'Footballer Clarity frame '+(n+1)+(l.length>1?' image '+(k+1):''));}).join('');return l.length>1?'<div class="pair">'+h+'</div>':h;}
   return s.id==='Footballer'?blank(s,n+1):S[x.f.t]();}
