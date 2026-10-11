@@ -323,7 +323,7 @@ var CLA=[['cla-1a','cla-1b'],['cla-2'],['cla-3'],['cla-4'],['cla-5'],['cla-6'],[
 function im(f,a){return '<img class="shot-img" src="img/'+f+'.jpg" alt="'+a+'" loading="lazy">';}
 function pic(s,x,n,full){
   if(s.id==='Footballer'&&st.c==='movement')return im('mov-'+(n+1),'Footballer Movement frame '+(n+1));
-  if(s.id==='Content Creator'&&st.c==='movement'&&n<7)return im('cc-mov-'+(n+1),'Content Creator Movement frame '+(n+1)).replace('shot-img','shot-img sk');
+  if(s.id==='Content Creator'&&st.c==='movement'&&n<7)return im('cc-mov-'+(n+1)+'.jpg?v=2','Content Creator Movement frame '+(n+1));
   if(s.id==='Content Creator'&&st.c==='clarity')return im('cc-cla-'+Math.min(n+1,9),'Content Creator Clarity frame '+(n+1)).replace('shot-img','shot-img sk');
   if(s.id==='Boxer'&&st.c==='movement'&&n<11)return im('box-mov-'+(n+1),'Boxer Movement frame '+(n+1));
   if(s.id==='Footballer'&&st.c==='clarity'&&CLA[n]){var l=full?CLA[n]:[CLA[n][0]];var h=l.map(function(f,k){return im(f,'Footballer Clarity frame '+(n+1)+(l.length>1?' image '+(k+1):''));}).join('');return l.length>1?'<div class="pair">'+h+'</div>':h;}
