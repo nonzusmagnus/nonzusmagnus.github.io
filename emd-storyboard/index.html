@@ -92,6 +92,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @media(max-width:560px){.pair{grid-template-columns:1fr}}
 .shot-img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .shot-img.sk{object-fit:contain;background:#fff}
+.shot-img.lb{object-fit:contain;background:#000}
 .th.dn .tk{display:flex}
 .th.dn svg,.th.dn .shot-img{opacity:.45}
 .tk{display:none;position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:#2e9e57;color:#fff;align-items:center;justify-content:center;font-size:14px}
@@ -325,6 +326,8 @@ function pic(s,x,n,full){
   if(s.id==='Footballer'&&st.c==='movement')return im('mov-'+(n+1),'Footballer Movement frame '+(n+1));
   if(s.id==='Content Creator'&&st.c==='movement'&&n<7)return im('cc-mov-'+(n+1)+'.jpg?v=2','Content Creator Movement frame '+(n+1));
   if(s.id==='Content Creator'&&st.c==='clarity')return im('cc-cla-'+Math.min(n+1,9),'Content Creator Clarity frame '+(n+1)).replace('shot-img','shot-img sk');
+  if(s.id==='Rapper'&&st.c==='movement'&&n===0)return im('rap-mov-1','Rapper Movement frame 1');
+  if(s.id==='Rapper'&&st.c==='movement'&&n===1)return im('rap-mov-2.gif?v=1','Rapper Movement frame 2').replace('shot-img','shot-img lb');
   if(s.id==='Boxer'&&st.c==='movement'&&n<11)return im('box-mov-'+(n+1),'Boxer Movement frame '+(n+1));
   if(s.id==='Footballer'&&st.c==='clarity'&&CLA[n]){var l=full?CLA[n]:[CLA[n][0]];var h=l.map(function(f,k){return im(f,'Footballer Clarity frame '+(n+1)+(l.length>1?' image '+(k+1):''));}).join('');return l.length>1?'<div class="pair">'+h+'</div>':h;}
   return s.id==='Footballer'?blank(s,n+1):S[x.f.t]();}
