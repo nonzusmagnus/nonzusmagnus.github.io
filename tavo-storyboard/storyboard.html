@@ -63,9 +63,28 @@
   .shot a:hover img { transform: scale(1.03); }
   .shot figcaption { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-top: 6px; }
   .back { display:inline-block; margin-top:18px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); font-weight:700; text-decoration:none; }
+
+  .checks li { cursor:pointer; user-select:none; transition:opacity .15s ease; }
+  .checks li:hover:before { border-color: var(--gold); }
+  .checks li.done { color:var(--muted); text-decoration:line-through; }
+  .checks li.done:before { background: var(--accent); }
+  .checks li.done:after { content:'✓'; position:absolute; left:2px; top:5px; font-size:13px; font-weight:800; color:#2b0f4c; }
+  .shot figcaption { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .shot-check { font:inherit; font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; cursor:pointer; background:transparent; color:var(--muted); border:1px solid var(--line); padding:6px 10px; display:inline-flex; align-items:center; gap:6px; }
+  .shot-check:before { content:''; width:12px; height:12px; border:2px solid var(--accent); display:inline-block; }
+  .shot-check:hover { border-color: var(--accent); color: var(--ink); }
+  .shot.done .shot-check { background: var(--accent); color:#2b0f4c; border-color: var(--accent); }
+  .shot.done .shot-check:before { content:'✓'; border-color:#2b0f4c; font-size:10px; line-height:9px; text-align:center; }
+  .shot.done a { opacity:.5; }
+  .progress { position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--bg); padding:12px 0; margin-top:18px; border-bottom:1px solid var(--line); }
+  .progress .bar { flex:1; min-width:120px; height:8px; background:var(--surface); border-radius:999px; overflow:hidden; }
+  .progress .fill { height:100%; width:0; background:linear-gradient(90deg, var(--accent), var(--gold)); transition:width .2s ease; }
+  .progress .count { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .progress button { font:inherit; font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; background:transparent; color:var(--muted); border:1px solid var(--line); padding:6px 10px; cursor:pointer; }
+  .progress button:hover { color:var(--ink); border-color:var(--accent); }
 </style>
 </head>
-<body>
+<body data-page="storyboard">
 <div class="wrap">
   <header class="top">
     <div class="brand">MAGNUS FOREVER</div>
@@ -87,6 +106,7 @@
     <p class="treatment">The film has a charismatic young lead in a bright, modern kitchen. I want to bring Tavo's story to life through playful interactions with the product, either wordless or with very few words. It opens on an instant hook and follows the brand from a single homemade batch to a No.1 Amazon bestseller, with the kitchen changing as Tavo grows. It'll have fast editing, snap zooms, match cuts and a mix of shots to give it that fresh Gen Z energy. I'll use subtle VFX to lift the visuals a bit, like five-star reviews floating around the glass, sachets multiplying across the counter, and bold text slamming in on the beat to mark each milestone. I want to keep it polished, with good pacing, so it has the credibility investors expect. It'll close on a premium product shot announcing the fundraise, with a clear call to invest in Tavo's next chapter.</p>
   </section>
 
+  <div class="progress"><span class="count"></span><div class="bar"><div class="fill"></div></div><button type="button">Reset</button></div>
   <section>
     <h2>Beat Outline · ~45s</h2>
     <div class="timeline" aria-hidden="true"><span style="flex:2;background:var(--accent)"></span><span style="flex:3;background:var(--gold)"></span><span style="flex:7;background:var(--accent)"></span><span style="flex:10;background:var(--gold)"></span><span style="flex:5;background:var(--accent)"></span><span style="flex:11;background:var(--gold)"></span><span style="flex:7;background:var(--ink)"></span></div>
@@ -178,5 +198,44 @@
     <span>@magnusforever</span>
   </footer>
 </div>
+<script>
+(function(){
+  var KEY='tavo-checks-'+(document.body.getAttribute('data-page')||'page');
+  var state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ state={}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  var items=[];
+  document.querySelectorAll('.checks li').forEach(function(li,i){
+    var id='li-'+i; items.push({el:li,id:id});
+    li.setAttribute('role','checkbox'); li.tabIndex=0;
+  });
+  document.querySelectorAll('.shot').forEach(function(fig,i){
+    var cap=fig.querySelector('figcaption'); if(!cap) return;
+    var b=document.createElement('button'); b.type='button'; b.className='shot-check'; b.textContent='Got it';
+    cap.appendChild(b); items.push({el:fig,id:'shot-'+i,btn:b});
+  });
+  function paint(){
+    var n=0;
+    items.forEach(function(it){
+      var on=!!state[it.id]; it.el.classList.toggle('done',on);
+      if(it.btn){ it.btn.textContent=on?'Done':'Got it'; it.btn.setAttribute('aria-pressed',on); }
+      else it.el.setAttribute('aria-checked',on);
+      if(on) n++;
+    });
+    var c=document.querySelector('.progress .count'), f=document.querySelector('.progress .fill');
+    if(c) c.textContent=n+' / '+items.length+' checked';
+    if(f) f.style.width=(items.length? n/items.length*100:0)+'%';
+  }
+  function toggle(id){ state[id]=!state[id]; if(!state[id]) delete state[id]; save(); paint(); }
+  items.forEach(function(it){
+    var t=it.btn||it.el;
+    t.addEventListener('click',function(e){ e.preventDefault(); toggle(it.id); });
+    if(!it.btn) t.addEventListener('keydown',function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(it.id);} });
+  });
+  var r=document.querySelector('.progress button');
+  if(r) r.addEventListener('click',function(){ state={}; save(); paint(); });
+  paint();
+})();
+</script>
 </body>
 </html>
