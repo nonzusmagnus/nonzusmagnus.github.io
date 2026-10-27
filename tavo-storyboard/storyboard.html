@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tavo Launch Film</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #2b0f4c; --surface: #3a1766; --ink: #fff3ea; --muted: #cbb5ea; --line: #54298c;
+    --accent: #ff4fa3; --accent-soft: #5a1f6e; --gold: #ff8a3d; --frame: #33125a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1f0a38; --surface: #2e1252; --ink: #fff3ea; --muted: #c2abe3; --line: #4a2380;
+      --accent: #ff5aab; --accent-soft: #4d1a60; --gold: #ff9248; --frame: #280e47;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1f0a38; --surface: #2e1252; --ink: #fff3ea; --muted: #c2abe3; --line: #4a2380;
+      --accent: #ff5aab; --accent-soft: #4d1a60; --gold: #ff9248; --frame: #280e47;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 40px 16px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--ink); padding-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+  .brand { font-weight: 700; letter-spacing: .32em; font-size: 12px; }
+  .meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .kicker { margin-top: 44px; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+  h1 { display: inline-block; background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 35%, var(--gold) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; font-family: 'Inter Tight', 'Inter', sans-serif; font-weight: 800; font-size: clamp(40px, 8vw, 76px); line-height: .95; letter-spacing: -.03em; margin: 10px 0 14px; }
+  .specs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .chip { font-size: 12px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); padding: 6px 12px; border-radius: 999px; }
+  section { margin-top: 48px; }
+  h2 { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; margin: 0 0 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .treatment { font-size: clamp(17px, 2.2vw, 20px); line-height: 1.7; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); box-shadow: inset 0 0 0 0 transparent; padding: 24px 26px; margin: 0; }
+  .timeline { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 4px 0 6px; }
+  .timeline span { display: block; height: 100%; }
+  .tl-labels { display: flex; font-size: 10px; color: var(--muted); letter-spacing: .06em; margin-bottom: 24px; }
+  .tl-labels span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .beat { display: grid; grid-template-columns: 220px 1fr; gap: 22px; background: var(--surface); border: 1px solid var(--line); padding: 20px; margin-bottom: 14px; }
+  .frame { aspect-ratio: 16/9; background: var(--frame); border: 1px dashed var(--accent); display: flex; align-items: center; justify-content: center; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .bhead { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .num { font-family: 'Inter Tight', sans-serif; font-weight: 800; font-size: 28px; color: var(--accent); line-height: 1; }
+  .btitle { font-family: 'Inter Tight', sans-serif; font-weight: 700; font-size: 20px; }
+  .time { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .label { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 10px 0 2px; }
+  .visual { margin: 0; }
+  .ost { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .slam { background: var(--gold); color: #2b0f4c; font-family: 'Inter Tight', sans-serif; font-weight: 800; font-size: clamp(18px, 2.6vw, 24px); line-height: 1.25; padding: 8px 14px; }
+  .note { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  footer { margin-top: 56px; border-top: 1px solid var(--line); padding-top: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 11px; color: var(--muted); letter-spacing: .08em; }
+  @media (max-width: 680px) {
+    .beat { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
+    .treatment { padding: 18px; }
+    .time { margin-left: 0; width: 100%; }
+  }
+
+  .beat { grid-template-columns: 1fr !important; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 16px; margin-top: 6px; }
+  .shot { margin: 0; }
+  .shot a { display: block; aspect-ratio: 16/9; background: var(--frame); border: 1px solid var(--line); overflow: hidden; }
+  .shot img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .25s ease; }
+  .shot a:hover img { transform: scale(1.03); }
+  .shot figcaption { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-top: 6px; }
+  .back { display:inline-block; margin-top:18px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); font-weight:700; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">MAGNUS FOREVER</div>
+    <div class="meta">Tavo Ireland · Launch Film Campaign</div>
+  </header>
+
+  <a class="back" href="./">← Menu</a>
+  <div class="kicker">Treatment, Script &amp; Storyboard</div>
+  <h1>From One Batch<br>to No.1</h1>
+  <div class="specs">
+    <span class="chip">~45s</span>
+    <span class="chip">16:9 + 9:16</span>
+    <span class="chip">Kitchen set · Daytime</span>
+    <span class="chip">LinkedIn · TikTok · Instagram</span>
+  </div>
+
+  <section>
+    <h2>Treatment</h2>
+    <p class="treatment">The film has a charismatic young lead in a bright, modern kitchen. I want to bring Tavo's story to life through playful interactions with the product, either wordless or with very few words. It opens on an instant hook and follows the brand from a single homemade batch to a No.1 Amazon bestseller, with the kitchen changing as Tavo grows. It'll have fast editing, snap zooms, match cuts and a mix of shots to give it that fresh Gen Z energy. I'll use subtle VFX to lift the visuals a bit, like five-star reviews floating around the glass, sachets multiplying across the counter, and bold text slamming in on the beat to mark each milestone. I want to keep it polished, with good pacing, so it has the credibility investors expect. It'll close on a premium product shot announcing the fundraise, with a clear call to invest in Tavo's next chapter.</p>
+  </section>
+
+  <section>
+    <h2>Beat Outline · ~45s</h2>
+    <div class="timeline" aria-hidden="true"><span style="flex:2;background:var(--accent)"></span><span style="flex:3;background:var(--gold)"></span><span style="flex:7;background:var(--accent)"></span><span style="flex:10;background:var(--gold)"></span><span style="flex:5;background:var(--accent)"></span><span style="flex:11;background:var(--gold)"></span><span style="flex:7;background:var(--ink)"></span></div>
+    <div class="tl-labels" aria-hidden="true"><span style="flex:2">01</span><span style="flex:3">02</span><span style="flex:7">03</span><span style="flex:10">04</span><span style="flex:5">05</span><span style="flex:11">06</span><span style="flex:7">07</span></div>
+
+    <article class="beat">
+      <div>
+        <div class="bhead"><span class="num">01</span><span class="btitle">Hook</span><span class="time">0:00 – 0:02</span></div>
+        <div class="label">Visual</div>
+        <p class="visual">A macro shot: powder hits the water and the colour explodes through the glass, landing on the first beat.</p>
+        <div class="label">Text + VO</div>
+        <div class="ost"><span class="slam">Tavo just raised €100k.</span></div>
+      </div>
+      <div class="shots"><figure class="shot"><a href="img/1.1.jpg" target="_blank" rel="noopener"><img src="img/1.1.jpg" alt="Scene 1 reference 1.1" loading="lazy"></a><figcaption>Shot 1.1</figcaption></figure><figure class="shot"><a href="img/1.2.jpg" target="_blank" rel="noopener"><img src="img/1.2.jpg" alt="Scene 1 reference 1.2" loading="lazy"></a><figcaption>Shot 1.2</figcaption></figure><figure class="shot"><a href="img/1.3.webp" target="_blank" rel="noopener"><img src="img/1.3.webp" alt="Scene 1 reference 1.3" loading="lazy"></a><figcaption>Shot 1.3 · GIF</figcaption></figure></div>
+    </article>
+
+    <article class="beat">
+      <div>
+        <div class="bhead"><span class="num">02</span><span class="btitle">Credibility</span><span class="time">0:02 – 0:05</span></div>
+        <div class="label">Visual</div>
+        <p class="visual">A snap cut to the lead holding the product, looking straight at camera.</p>
+        <div class="label">Text + VO</div>
+        <div class="ost"><span class="slam">At a seven-figure valuation.</span><span class="slam">Now we're raising more.</span></div>
+      </div>
+      <div class="shots"><figure class="shot"><a href="img/2.1.jpg" target="_blank" rel="noopener"><img src="img/2.1.jpg" alt="Scene 2 reference 2.1" loading="lazy"></a><figcaption>Shot 2.1</figcaption></figure><figure class="shot"><a href="img/2.2.webp" target="_blank" rel="noopener"><img src="img/2.2.webp" alt="Scene 2 reference 2.2" loading="lazy"></a><figcaption>Shot 2.2 · GIF</figcaption></figure></div>
+    </article>
+
+    <article class="beat">
+      <div>
+        <div class="bhead"><span class="num">03</span><span class="btitle">Origin &amp; Experiment</span><span class="time">0:05 – 0:12</span></div>
+        <div class="label">Visual</div>
+        <p class="visual">A wide shot over the counter. The lead tastes, reacts, tweaks and tries again in quick match cuts, then takes a final sip and gives a small nod of approval.</p>
+        <div class="label">On-screen text</div>
+        <div class="ost"><span class="slam">Built at 17 in Dundalk.</span><span class="slam">A drink that lowers cortisol.</span></div>
+      </div>
+      <div class="shots"><figure class="shot"><a href="img/3.1.webp" target="_blank" rel="noopener"><img src="img/3.1.webp" alt="Scene 3 reference 3.1" loading="lazy"></a><figcaption>Shot 3.1 · GIF</figcaption></figure><figure class="shot"><a href="img/3.2.jpg" target="_blank" rel="noopener"><img src="img/3.2.jpg" alt="Scene 3 reference 3.2" loading="lazy"></a><figcaption>Shot 3.2</figcaption></figure></div>
+    </article>
+
+    <article class="beat">
+      <div>
+        <div class="bhead"><span class="num">04</span><span class="btitle">The Build</span><span class="time">0:12 – 0:22</span></div>
+        <div class="label">Visual</div>
+        <p class="visual">A pack drops into the lead's hand. Five-star reviews fly around him as he drinks.</p>
+        <div class="label">On-screen text · slams on beat</div>
+        <div class="ost"><span class="slam">No.1 on Amazon Ireland</span><span class="slam">300+ five-star reviews</span></div>
+        <p class="note">VFX: pack drop, flying review text.</p>
+      </div>
+      <div class="shots"><figure class="shot"><a href="img/4.1.webp" target="_blank" rel="noopener"><img src="img/4.1.webp" alt="Scene 4 reference 4.1" loading="lazy"></a><figcaption>Shot 4.1 · GIF</figcaption></figure><figure class="shot"><a href="img/4.2.jpg" target="_blank" rel="noopener"><img src="img/4.2.jpg" alt="Scene 4 reference 4.2" loading="lazy"></a><figcaption>Shot 4.2</figcaption></figure></div>
+    </article>
+
+    <article class="beat">
+      <div>
+        <div class="bhead"><span class="num">05</span><span class="btitle">The Vision</span><span class="time">0:22 – 0:27</span></div>
+        <div class="label">Visual</div>
+        <p class="visual">Green screen: a 3D Tavo pack spins as the lead reacts.</p>
+        <div class="label">On-screen text</div>
+        <div class="ost"><span class="slam">5 launches in 3 months.</span><span class="slam">Then one every month.</span></div>
+        <p class="note">VFX: 3D rotating pack on green screen.</p>
+      </div>
+      <div class="shots"><figure class="shot"><a href="img/5.1.jpg" target="_blank" rel="noopener"><img src="img/5.1.jpg" alt="Scene 5 reference 5.1" loading="lazy"></a><figcaption>Shot 5.1</figcaption></figure></div>
+    </article>
+
+    <article class="beat">
+      <div>
+        <div class="bhead"><span class="num">06</span><span class="btitle">The Raise</span><span class="time">0:27 – 0:38</span></div>
+        <div class="label">Visual</div>
+        <p class="visual">The room lights go off and the practicals take over. Slow-motion close-ups of the product.</p>
+        <div class="label">On-screen text</div>
+        <div class="ost"><span class="slam">The next generation of wellness.</span></div>
+      </div>
+      <div class="shots"><figure class="shot"><a href="img/6.1.webp" target="_blank" rel="noopener"><img src="img/6.1.webp" alt="Scene 6 reference 6.1" loading="lazy"></a><figcaption>Shot 6.1 · GIF</figcaption></figure><figure class="shot"><a href="img/6.2.webp" target="_blank" rel="noopener"><img src="img/6.2.webp" alt="Scene 6 reference 6.2" loading="lazy"></a><figcaption>Shot 6.2 · GIF</figcaption></figure></div>
+    </article>
+
+    <article class="beat">
+      <div>
+        <div class="bhead"><span class="num">07</span><span class="btitle">CTA</span><span class="time">0:38 – 0:45</span></div>
+        <div class="label">Visual</div>
+        <p class="visual">A final hero shot of the pack, then the end card.</p>
+        <div class="label">Text + VO</div>
+        <div class="ost"><span class="slam">Crowdfunding opens January.</span><span class="slam">Join the waitlist.</span></div>
+        <p class="note">End card: waitlist link + Tavo logo.</p>
+      </div>
+      <div class="shots"><figure class="shot"><a href="img/7.1.jpg" target="_blank" rel="noopener"><img src="img/7.1.jpg" alt="Scene 7 reference 7.1" loading="lazy"></a><figcaption>Shot 7.1</figcaption></figure></div>
+    </article>
+  </section>
+
+  <footer>
+    <span>MAGNUS FOREVER · Creative Production Studio · Dublin</span>
+    <span>@magnusforever</span>
+  </footer>
+</div>
+</body>
+</html>
