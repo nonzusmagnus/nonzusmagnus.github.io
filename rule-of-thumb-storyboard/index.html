@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Rule of Thumb: Launch Film</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: one scrolling page. Short hero → key facts → one row per shot, grouped by act → compact shoot-order checklist. Palette from the golden-hour reference frame. */
+:root{
+  --dusk:#12181d; --slate:#1a2228; --slate2:#222b31; --line:#2e363b;
+  --cloud:#f1dfc4; --dust:#a6927c; --sun:#d79c62; --ember:#a85c3c; --shirt:#c25596; --grass:#86994a;
+  --display:"Bebas Neue",Impact,"Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,sans-serif;
+  --label:"Barlow Condensed","Arial Narrow",sans-serif;
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--dusk);color:var(--cloud);font-family:var(--body);font-size:16px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--dusk)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.lab{font-family:var(--label);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--dust)}
+
+/* Sticky bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--dusk);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:10px;min-height:54px;padding-block:4px}
+.top strong{font-family:var(--display);font-weight:400;font-size:24px;line-height:1;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jump{display:flex;overflow-x:auto}
+.jump a{flex:none;color:var(--dust);text-decoration:none;font-family:var(--label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px;padding:0 9px;min-height:44px;display:flex;align-items:center}
+.jump a:hover{color:var(--cloud)}
+.prog{font-family:var(--label);font-weight:700;font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+.bar{width:64px;height:6px;background:var(--line)}
+.bar i{display:block;height:100%;background:var(--grass);width:0;transition:width .3s}
+
+/* Hero */
+.hero{position:relative;overflow:hidden}
+.hero img{display:block;width:100%;height:clamp(220px,34vw,400px);object-fit:cover;object-position:center 45%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,24,29,0) 35%,var(--dusk) 100%)}
+.hero .wrap{position:absolute;left:0;right:0;bottom:0;z-index:1;padding-block:0 18px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(52px,10vw,112px);line-height:.85;margin:0;text-shadow:0 2px 20px rgba(0,0,0,.45)}
+.hero h1 span{color:var(--sun)}
+
+/* Facts */
+.facts{display:flex;flex-wrap:wrap;gap:8px 28px;padding-block:20px 14px;border-bottom:1px solid var(--line)}
+.facts div{display:grid}
+.facts b{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.05;color:var(--sun)}
+.notes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding-block:16px 0;font-size:14px;color:var(--dust)}
+.notes b{display:block;color:var(--cloud);font-family:var(--label);letter-spacing:.1em;text-transform:uppercase;font-size:13px}
+
+/* Acts */
+.act{padding-block:36px 0}
+.act-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;padding-bottom:8px;border-bottom:3px solid var(--cloud)}
+.act-head .t{font-family:var(--label);font-weight:700;color:var(--sun);font-size:14px;letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.act-head h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,6vw,48px);line-height:.95;margin:0}
+.act-head p{margin:0;flex-basis:100%;color:var(--dust);font-size:15px}
+
+/* Shot row */
+.shot{display:grid;grid-template-columns:200px minmax(0,1fr) 48px;gap:16px;align-items:start;padding-block:16px;border-bottom:1px solid var(--line)}
+.shot.on .info,.shot.on .frame{opacity:.45}
+.frame{position:relative;aspect-ratio:16/9;max-width:100%;background:linear-gradient(160deg,#1f2a31,#2c2a27 60%,#3a2e25);border:1px solid var(--line);display:grid;place-items:center}
+.frame svg{position:absolute;inset:0;width:100%;height:100%}
+.frame b{position:relative;font-family:var(--display);font-weight:400;font-size:44px;line-height:1;opacity:.8}
+.info{display:grid;gap:6px;min-width:0}
+.hd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.hd h3{font-family:var(--display);font-weight:400;font-size:28px;line-height:1;margin:0;letter-spacing:.01em}
+.lens{background:var(--sun);color:#1a120a;font-family:var(--label);font-weight:700;letter-spacing:.06em;font-size:14px;padding:2px 8px}
+.sec{font-family:var(--label);font-weight:700;font-size:14px;color:var(--dust);font-variant-numeric:tabular-nums}
+.what{margin:0;font-size:17px}
+.kv{display:flex;flex-wrap:wrap;gap:2px 18px;font-size:14px;color:var(--dust);margin:0}
+.kv span b{font-family:var(--label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--cloud);margin-right:6px}
+.kv .snd b{color:var(--shirt)}
+.tick{width:48px;height:48px;border:2px solid var(--line);background:transparent;display:grid;place-items:center;font-size:20px;font-weight:700;color:transparent}
+.tick:hover{border-color:var(--cloud)}
+.shot.on .tick{background:var(--grass);border-color:var(--grass);color:#10150a}
+.subs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:6px}
+.sub{background:var(--slate);padding:10px 12px;display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start}
+.sub .k{width:28px;height:28px;background:var(--cloud);color:var(--dusk);font-family:var(--display);font-size:20px;display:grid;place-items:center;line-height:1}
+.sub strong{font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:14px}
+.sub p{margin:2px 0 0;font-size:15px}
+.sub .kv{font-size:13px;margin-top:4px}
+@media (max-width:640px){.subs{grid-template-columns:1fr}}
+.edit{margin:0;padding:14px 0 0 22px;display:grid;gap:6px;font-size:16px}
+.edit li::marker{color:var(--sun);font-family:var(--label);font-weight:700}
+.edit em{color:var(--dust);font-style:normal;font-size:14px}
+
+/* Shoot order */
+.so{padding-block:48px 0}
+.so h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,6vw,48px);line-height:.95;margin:2px 0 0}
+.blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-block:16px 0}
+.block{background:var(--slate);border:1px solid var(--line);min-width:0}
+.block h3{font-family:var(--display);font-weight:400;font-size:26px;line-height:1;margin:0;padding:12px 14px 10px;border-bottom:1px solid var(--line)}
+.block h3 small{display:block;font-family:var(--label);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);margin-top:4px}
+.lensbar{background:var(--slate2);color:var(--sun);font-family:var(--label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:12px;padding:5px 14px}
+.lensbar.swap{background:var(--ember);color:var(--cloud)}
+.row{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:6px;padding-right:12px;border-bottom:1px solid var(--line);min-height:46px}
+.row button{width:44px;height:44px;border:0;background:transparent;display:grid;place-items:center;padding:0}
+.row button span{width:18px;height:18px;border:2px solid var(--dust);display:grid;place-items:center;font-size:12px;font-weight:700}
+.row.on button span{background:var(--grass);border-color:var(--grass);color:#10150a}
+.row.on a{opacity:.45;text-decoration:line-through}
+.row a{color:inherit;text-decoration:none;font-size:15px}
+.row a b{font-family:var(--label);color:var(--sun);margin-right:6px;font-variant-numeric:tabular-nums}
+.move{color:var(--sun);font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;padding:10px 14px}
+footer{padding-block:36px 48px;color:var(--dust);font-size:13px}
+
+@media (max-width:860px){.blocks{grid-template-columns:1fr}.notes{grid-template-columns:1fr}}
+@media (max-width:640px){
+  .jump{display:none}
+  .shot{grid-template-columns:96px minmax(0,1fr) 44px;gap:12px}
+  .frame b{font-size:30px}
+  .hd h3{font-size:24px}
+  .tick{width:44px;height:44px}
+}
+</style>
+
+<div class="top"><div class="wrap">
+  <strong>Rule of Thumb: Launch Film</strong>
+  <nav class="jump" aria-label="Sections"><a href="#act1">I</a><a href="#act2">II</a><a href="#act3">III</a><a href="#act4">IV</a><a href="#act5">V</a><a href="#shoot">Shoot</a></nav>
+  <span class="prog"><span class="bar"><i id="barFill"></i></span><span id="count">0 / 18</span></span>
+</div></div>
+
+<header class="hero">
+  <img src="img/hero.jpg" alt="Golden-hour reference frame: a figure on a hilltop above the clouds">
+  <div class="wrap"><div class="lab" style="color:var(--cloud)">Magnus Forever × Rule of Thumb · Don't Say It</div><h1>Rule of Thumb: <span>Launch Film</span></h1></div>
+</header>
+
+<section class="wrap">
+  <div class="facts">
+    <div><span class="lab">Runtime</span><b>45–55s</b></div>
+    <div><span class="lab">Shots</span><b>18</b></div>
+    <div><span class="lab">Studio A</span><b>2 hrs</b></div>
+    <div><span class="lab">Lenses</span><b>8 · 25 · 50</b></div>
+    <div><span class="lab">Cast</span><b>Sam · Kay · Eva · Ruler</b></div>
+  </div>
+  <div class="notes">
+    <div><b>Tone</b>Nobody models. Everyone just lives in the jumper. Play it straight.</div>
+    <div><b>Light</b>Warm practicals and shadows. Nothing glossy.</div>
+    <div><b>On set</b>Take, reset, go again. No chatting between takes.</div>
+  </div>
+</section>
+
+<main class="wrap" id="acts"></main>
+
+<section class="wrap so" id="shoot">
+  <span class="lab">Shoot order</span>
+  <h2>On the Day</h2>
+  <div class="blocks" id="blocks"></div>
+</section>
+
+<footer class="wrap" id="foot">Music: C.R.E.A.M. is the reference only. Clear rights or use a licensed soundalike.</footer>
+
+<script>
+// [title, lens, secs, what, camera, light, sound]
+const SHOTS = {
+  1:["Sam walks in","8mm",4,"Sam walks in, pulls out the bench, sits.","Slow push in","Warm practicals, soft key on bench","Footsteps, bench scrape"],
+  2:["Settling in","50mm",2,"Adjusts sleeves, rolls shoulders, hands on keys.","Locked off","Reflector lifts hands","Sleeves brushing"],
+  3:["Jumper 4-up","50mm",3,"Four details, layered and cropped in post. Roll about 5s on each and leave room around the subject for cropping.","See each panel","Hard raking side light","Each panel cuts on a prep sound",[
+    ["A","Knit texture","Extreme close-up on the chest or upper sleeve.","Slow slide across the knit","Rake light low and hard so the alpaca fibres read"],
+    ["B","Cuff on the wrist","Close-up as his hand reaches for the keys, cuff sitting over the wrist.","Static, rack from keys to cuff logo","Side kick on the cuff"],
+    ["C","Fit and silhouette","Medium from a three-quarter back angle as he settles on the bench. Show the drape and cropped hem.","Slight push in","Edge light to separate the shape from the room"],
+    ["D","Branding","Extreme close-up on the logo. This panel holds longest, so give it 2 extra seconds.","Locked off","Clean, even key so the logo is crisp"]]],
+  4:["First notes","50mm",2,"Deep breath. Opening notes.","Slow push in","Key on far cheek","Breath, first notes"],
+  5:["Something's off","25mm",4,"Stops. Checks hands. Fixes the jumper. Nods. Restarts.","Locked off, one take","Opened up a touch","Music stops, then restarts"],
+  6:["Kay and Eva","25mm",3,"In their world. Kay on the mixer, Eva on the gear. A knowing look.","Slow lateral track","Softbox key, board glow","Music building"],
+  7:["Dial on the beat","50mm",1.5,"Kay turns a dial on the beat, cuff in frame.","Static insert","Side kick on cuff","Cut on the beat"],
+  8:["Sleeves down","50mm",1.5,"Eva pulls the sleeves over her hands.","Tilt down","Soft side light","Fabric brush"],
+  9:["Nodding along","50mm",2,"Each nods to the music. Grab Eva laughing too.","Subtle handheld","Same softbox","Music"],
+  10:["Fully immersed","25mm",4,"Sam playing with confidence, enjoying it.","Slow handheld arc","Warm the room up","Piano in full flow"],
+  11:["The card","25mm",3,"Card slapped down with too much confidence. A look back.","Locked off","Lamp over the table","Card slap"],
+  12:["Crew locked in","25mm",3,"Sam at piano, Kay and Eva either side, nodding.","Locked off master","Full warm room","Full swing"],
+  13:["Enter the Ruler","25mm",3,"White tee, calm walk to the mic. No face.","Follow from behind","Cooler and flatter on him","Music cuts dead"],
+  14:["Everyone freezes","25mm",3,"Kay stops. Eva turns her head. All eyes on him.","Static, over shoulder","Hold the master","Silence"],
+  15:["Hands hover","50mm",1.5,"Sam's hands frozen above the keys.","Static insert","As shot 2","Silence"],
+  16:["\"What?\"","25mm",2.5,"Raises a hand, confused. Leans to the mic.","Static, from behind","Hold","Mic bump"],
+  17:["The shush","50mm",2,"A hand with the jumper: SHHH. A beat.","Static insert","Clean key on jumper","Held silence"],
+  18:["Room breaks","25mm",2.5,"Everyone laughs. Ruler stays facing away.","Static wide","Hold the master","Laugh, music crashes back"]
+};
+const ACTS = [
+  {id:"act1",name:"Set the Tone",time:"0:00–0:07",log:"Sam arrives and gets ready to play.",shots:[1,2,3,4]},
+  {id:"act2",name:"Everyone Knows the Vibe",time:"0:07–0:20",log:"The false start, then Kay and Eva in another room.",shots:[5,6,7,8,9]},
+  {id:"act3",name:"The Vibe Spreads",time:"0:20–0:30",log:"Cutting gets more expressive.",shots:[10,11]},
+  {id:"act4",name:"The Golden Rule",time:"0:30–0:44",log:"Enter the Ruler. The music cut is the biggest edit moment.",shots:[12,13,14,15,16,17,18]},
+  {id:"act5",name:"Don't Say It",time:"0:44–0:55",log:"No new setups. Cut from what you already have.",edit:[
+    ["Sam on the keys","from 10"],["Kay on the mixer","from 7"],["Eva laughing","from 9"],["Jumper texture and logo","from 3"],["Freeze on the crew","from 18"],["Logo. DON'T SAY IT. Black. Hold.",""]]}
+];
+const BLOCKS = [
+  {name:"A · Sam Solo",room:"Small live room",shots:[1,5,10,2,3,4],move:"To the large room, stay on 50mm"},
+  {name:"B · Kay and Eva",room:"Large live room",shots:[7,8,9,6,11],move:"Everyone to the piano room, stay on 25mm"},
+  {name:"C · The Ruler",room:"Piano room, full crew",shots:[12,14,16,18,13,15,17],move:null}
+];
+const TOTAL = Object.keys(SHOTS).length;
+const $ = id=>document.getElementById(id);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const GRID = `<svg viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><g stroke="#f1dfc4" stroke-width=".35" opacity=".2" fill="none"><line x1="53.3" y1="0" x2="53.3" y2="90"/><line x1="106.7" y1="0" x2="106.7" y2="90"/><line x1="0" y1="30" x2="160" y2="30"/><line x1="0" y1="60" x2="160" y2="60"/></g></svg>`;
+
+let done = new Set(), db = null, localOnly = true;
+try{done=new Set(JSON.parse(localStorage.getItem("rot_done")||"[]"))}catch(e){}
+function saveLocal(){try{localStorage.setItem("rot_done",JSON.stringify([...done]))}catch(e){}}
+
+function shotRow(n){
+  const [t,lens,sec,what,cam,light,snd,sub]=SHOTS[n], on=done.has(n);
+  return `<div class="shot ${on?"on":""}" id="shot-${n}">
+    <div class="frame">${GRID}<b>${n}</b></div>
+    <div class="info">
+      <div class="hd"><h3>${esc(t)}</h3><span class="lens">${lens}</span><span class="sec">${sec}s</span></div>
+      <p class="what">${esc(what)}</p>
+      <p class="kv"><span><b>Cam</b>${esc(cam)}</span><span><b>Light</b>${esc(light)}</span><span class="snd"><b>Sound</b>${esc(snd)}</span></p>
+      ${sub?`<div class="subs">${sub.map(([k,st,w,c,l])=>`<div class="sub"><span class="k">${k}</span><div><strong>${esc(st)}</strong><p>${esc(w)}</p><p class="kv"><span><b>Cam</b>${esc(c)}</span><span><b>Light</b>${esc(l)}</span></p></div></div>`).join("")}</div>`:""}
+    </div>
+    <button class="tick" type="button" data-t="${n}" aria-label="Mark shot ${n} done" aria-pressed="${on}">✓</button>
+  </div>`;
+}
+
+function render(){
+  $("acts").innerHTML = ACTS.map((a,i)=>`
+    <section class="act" id="${a.id}">
+      <div class="act-head"><span class="t">ACT ${["I","II","III","IV","V"][i]} · ${a.time}</span><h2>${esc(a.name)}</h2><p>${esc(a.log)}</p></div>
+      ${a.edit?`<ol class="edit">${a.edit.map(([x,f])=>`<li>${esc(x)} ${f?`<em>(${f})</em>`:""}</li>`).join("")}</ol>`:a.shots.map(shotRow).join("")}
+    </section>`).join("");
+
+  $("blocks").innerHTML = BLOCKS.map(b=>{
+    let prev=null, rows="";
+    b.shots.forEach(n=>{
+      const lens=SHOTS[n][1];
+      if(prev!==lens) rows+=`<div class="lensbar ${prev?"swap":""}">${prev?`Swap → ${lens}`:`Start on ${lens}`}</div>`;
+      prev=lens;
+      rows+=`<div class="row ${done.has(n)?"on":""}"><button type="button" data-t="${n}" aria-label="Mark shot ${n} done"><span>${done.has(n)?"✓":""}</span></button><a href="#shot-${n}"><b>${n}</b>${esc(SHOTS[n][0])}</a></div>`;
+    });
+    return `<div class="block"><h3>${esc(b.name)}<small>${esc(b.room)}</small></h3>${rows}${b.move?`<div class="move">${esc(b.move)} →</div>`:""}</div>`;
+  }).join("");
+
+  $("count").textContent=`${done.size} / ${TOTAL}`;
+  $("barFill").style.width=(done.size/TOTAL*100)+"%";
+  $("foot").textContent = "Music: C.R.E.A.M. is the reference only. Clear rights or use a licensed soundalike." + (localOnly?" Ticks saved on this device only.":"");
+}
+
+async function toggle(n){
+  const on=!done.has(n);
+  on?done.add(n):done.delete(n); render();
+  if(db && !localOnly){
+    try{const ref=db.collection("done").doc("s"+n); on?await ref.set({done:true}):await ref.delete();}
+    catch(e){localOnly=true;saveLocal();render();}
+  } else saveLocal();
+}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-t]"); if(t) toggle(Number(t.dataset.t));});
+
+render();
+(async()=>{
+  try{
+    if(!window.claude||!window.claude.use) return;
+    const d=await window.claude.use("db"); if(!d) return;
+    db=d; localOnly=false;
+    db.collection("done").onSnapshot(snap=>{
+      done=new Set(snap.docs.filter(x=>x.data()&&x.data().done).map(x=>Number(x.id.slice(1))));
+      render();
+    },()=>{localOnly=true;render();});
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>
