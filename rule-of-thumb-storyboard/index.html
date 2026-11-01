@@ -62,11 +62,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--sun);outline-offset
 .act-head p{margin:0;flex-basis:100%;color:var(--dust);font-size:15px}
 
 /* Shot row */
-.shot{display:grid;grid-template-columns:200px minmax(0,1fr) 48px;gap:16px;align-items:start;padding-block:16px;border-bottom:1px solid var(--line)}
+.shot{display:grid;grid-template-columns:300px minmax(0,1fr) 48px;gap:16px;align-items:start;padding-block:16px;border-bottom:1px solid var(--line)}
 .shot.on .info,.shot.on .frame{opacity:.45}
-.frame{position:relative;aspect-ratio:16/9;max-width:100%;background:linear-gradient(160deg,#1f2a31,#2c2a27 60%,#3a2e25);border:1px solid var(--line);display:grid;place-items:center}
+.frame{position:relative;aspect-ratio:16/9;max-width:100%;background:linear-gradient(160deg,#1f2a31,#2c2a27 60%,#3a2e25);border:1px solid var(--line);overflow:hidden}
+.frame .num{position:absolute;top:6px;left:6px;background:var(--cloud);color:var(--dusk);font-family:var(--label);font-weight:700;font-size:13px;padding:1px 7px;font-variant-numeric:tabular-nums}
 .frame svg{position:absolute;inset:0;width:100%;height:100%}
-.frame b{position:relative;font-family:var(--display);font-weight:400;font-size:44px;line-height:1;opacity:.8}
 .info{display:grid;gap:6px;min-width:0}
 .hd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .hd h3{font-family:var(--display);font-weight:400;font-size:28px;line-height:1;margin:0;letter-spacing:.01em}
@@ -109,11 +109,12 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--sun);outline-offset
 .move{color:var(--sun);font-family:var(--label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;padding:10px 14px}
 footer{padding-block:36px 48px;color:var(--dust);font-size:13px}
 
+@media (max-width:860px){.shot{grid-template-columns:220px minmax(0,1fr) 48px}}
 @media (max-width:860px){.blocks{grid-template-columns:1fr}.notes{grid-template-columns:1fr}}
 @media (max-width:640px){
   .jump{display:none}
-  .shot{grid-template-columns:96px minmax(0,1fr) 44px;gap:12px}
-  .frame b{font-size:30px}
+  .shot{grid-template-columns:minmax(0,1fr) 44px;gap:12px}
+  .shot .frame{grid-column:1 / -1}
   .hd h3{font-size:24px}
   .tick{width:44px;height:44px}
 }
@@ -194,6 +195,131 @@ const BLOCKS = [
   {name:"B · Kay and Eva",room:"Large live room",shots:[7,8,9,6,11],move:"Everyone to the piano room, stay on 25mm"},
   {name:"C · The Ruler",room:"Piano room, full crew",shots:[12,14,16,18,13,15,17],move:null}
 ];
+// ---- Composition sketches (viewBox 160x90). Rough reference only. ----
+const C = {ink:"#f1dfc4", dim:"rgba(241,223,196,.35)", faint:"rgba(241,223,196,.14)", jump:"#c98a55", tee:"#ece6da", skin:"#8c6c57", hair:"#15191c", wood:"#3b2a1f", dark:"#0d1113", acc:"#d79c62", key:"#e9e2d3"};
+const sw = 0.7;
+function pool(x,y,rx,ry,o=.5){return `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="url(#pool)" opacity="${o}"/>`;}
+function room(floor=64){ // back wall + floor + practicals
+  return `<rect x="0" y="${floor}" width="160" height="${90-floor}" fill="rgba(0,0,0,.28)"/>
+  <line x1="0" y1="${floor}" x2="160" y2="${floor}" stroke="${C.faint}" stroke-width="${sw}"/>`;
+}
+function lamp(x,y){return `<g><line x1="${x}" y1="${y}" x2="${x}" y2="${y+18}" stroke="${C.dim}" stroke-width=".6"/><path d="M${x-4} ${y} L${x+4} ${y} L${x+2.5} ${y-4} L${x-2.5} ${y-4}Z" fill="${C.acc}" opacity=".8"/>${pool(x,y+2,9,7,.35)}</g>`;}
+function door(x,y,w,h){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="rgba(0,0,0,.35)" stroke="${C.dim}" stroke-width="${sw}"/>`;}
+function piano(x,y,w=34){ // upright piano, front-ish; y = floor
+  const h=w*.62;
+  return `<g><rect x="${x}" y="${y-h}" width="${w}" height="${h}" fill="${C.wood}" stroke="${C.dim}" stroke-width="${sw}"/>
+  <rect x="${x-1}" y="${y-h*.48}" width="${w+2}" height="${h*.12}" fill="${C.key}" opacity=".85"/>
+  <line x1="${x+3}" y1="${y}" x2="${x+3}" y2="${y-h*.36}" stroke="${C.dim}" stroke-width="${sw}"/><line x1="${x+w-3}" y1="${y}" x2="${x+w-3}" y2="${y-h*.36}" stroke="${C.dim}" stroke-width="${sw}"/></g>`;
+}
+function bench(x,y,w=14){return `<rect x="${x}" y="${y-8}" width="${w}" height="2" fill="${C.wood}" stroke="${C.dim}" stroke-width=".5"/><line x1="${x+1.5}" y1="${y-6}" x2="${x+1.5}" y2="${y}" stroke="${C.dim}" stroke-width=".6"/><line x1="${x+w-1.5}" y1="${y-6}" x2="${x+w-1.5}" y2="${y}" stroke="${C.dim}" stroke-width=".6"/>`;}
+function mixer(x,y,w=40){ // desk on floor y
+  let k=""; for(let i=0;i<8;i++) k+=`<circle cx="${x+5+i*(w-10)/7}" cy="${y-17}" r=".9" fill="${C.acc}"/>`;
+  return `<g><path d="M${x} ${y-14} L${x+w} ${y-14} L${x+w-3} ${y-19} L${x+3} ${y-19}Z" fill="#2a2f33" stroke="${C.dim}" stroke-width="${sw}"/>${k}
+  <rect x="${x+2}" y="${y-14}" width="${w-4}" height="14" fill="#1c2024" stroke="${C.faint}" stroke-width=".5"/>${pool(x+w/2,y-18,w*.55,6,.4)}</g>`;
+}
+function mic(x,y,h=30){return `<g><line x1="${x}" y1="${y}" x2="${x}" y2="${y-h}" stroke="${C.ink}" stroke-width=".8"/><line x1="${x-4}" y1="${y}" x2="${x+4}" y2="${y}" stroke="${C.ink}" stroke-width=".8"/><rect x="${x-1.6}" y="${y-h-5}" width="3.2" height="6" rx="1.6" fill="${C.ink}"/></g>`;}
+// person: x centre, y feet, h height. o: {shirt, seat, dir, back, armUp, look}
+function person(x,y,h,o={}){
+  const shirt=o.shirt||C.jump, r=h*.085, dir=o.dir||1;
+  const top = o.seat ? y-h*.74 : y-h;
+  const hy=top+r, ty=top+2*r+.5, tw=h*.27, th=h*.36, hip=ty+th;
+  let s="";
+  // legs
+  if(o.seat){
+    s+=`<path d="M${x-tw*.25} ${hip} L${x-tw*.25+dir*h*.2} ${hip} L${x-tw*.25+dir*h*.2} ${y}" stroke="${C.hair}" stroke-width="${h*.08}" fill="none" stroke-linecap="round"/>`;
+    s+=`<path d="M${x+tw*.25} ${hip} L${x+tw*.25+dir*h*.2} ${hip} L${x+tw*.25+dir*h*.2} ${y}" stroke="${C.hair}" stroke-width="${h*.08}" fill="none" stroke-linecap="round"/>`;
+  } else {
+    const sp=o.walk?h*.09:h*.05;
+    s+=`<line x1="${x-tw*.22}" y1="${hip}" x2="${x-sp}" y2="${y}" stroke="${C.hair}" stroke-width="${h*.08}" stroke-linecap="round"/>`;
+    s+=`<line x1="${x+tw*.22}" y1="${hip}" x2="${x+sp}" y2="${y}" stroke="${C.hair}" stroke-width="${h*.08}" stroke-linecap="round"/>`;
+  }
+  // torso
+  s+=`<rect x="${x-tw/2}" y="${ty}" width="${tw}" height="${th}" rx="${tw*.3}" fill="${shirt}" stroke="${C.dark}" stroke-width=".4"/>`;
+  // arms
+  const ax=tw/2-.3, aw=h*.07;
+  if(o.armUp){ s+=`<path d="M${x+ax} ${ty+2} L${x+ax+h*.12} ${ty-h*.08} L${x+ax+h*.14} ${ty-h*.2}" stroke="${shirt}" stroke-width="${aw}" fill="none" stroke-linecap="round"/>`; }
+  else if(o.reach){ s+=`<line x1="${x+dir*ax}" y1="${ty+2}" x2="${x+dir*(ax+h*.2)}" y2="${ty+th*.55}" stroke="${shirt}" stroke-width="${aw}" stroke-linecap="round"/>`; }
+  else s+=`<line x1="${x+ax}" y1="${ty+2}" x2="${x+ax+.5}" y2="${ty+th*.85}" stroke="${shirt}" stroke-width="${aw}" stroke-linecap="round"/>`;
+  s+= o.reach ? `<line x1="${x-dir*ax}" y1="${ty+2}" x2="${x-dir*ax+dir*h*.15}" y2="${ty+th*.6}" stroke="${shirt}" stroke-width="${aw}" stroke-linecap="round"/>`
+              : `<line x1="${x-ax}" y1="${ty+2}" x2="${x-ax-.5}" y2="${ty+th*.85}" stroke="${shirt}" stroke-width="${aw}" stroke-linecap="round"/>`;
+  // head
+  s+= o.back ? `<circle cx="${x}" cy="${hy}" r="${r}" fill="${C.hair}" stroke="${C.dim}" stroke-width=".4"/>`
+             : `<circle cx="${x}" cy="${hy}" r="${r}" fill="${C.skin}"/><path d="M${x-r} ${hy} A${r} ${r} 0 0 1 ${x+r} ${hy} Z" fill="${C.hair}"/>`;
+  if(o.look) s+=`<circle cx="${x+o.look*r*.55}" cy="${hy+r*.15}" r="${r*.18}" fill="${C.dark}"/>`;
+  return `<g>${s}</g>`;
+}
+function arrow(x1,y1,x2,y2,label,lx,ly){
+  const a=Math.atan2(y2-y1,x2-x1), L=3.2;
+  const p1=[x2-L*Math.cos(a-.5),y2-L*Math.sin(a-.5)], p2=[x2-L*Math.cos(a+.5),y2-L*Math.sin(a+.5)];
+  return `<g><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${C.acc}" stroke-width=".9" stroke-dasharray="2.5 1.6"/><path d="M${x2} ${y2} L${p1[0]} ${p1[1]} L${p2[0]} ${p2[1]}Z" fill="${C.acc}"/>${label?txt(label,lx??(x1+x2)/2,ly??Math.min(y1,y2)-2):""}</g>`;
+}
+function arc(cx,cy,rx,ry,label){return `<g><path d="M${cx-rx} ${cy} A${rx} ${ry} 0 0 0 ${cx+rx} ${cy}" stroke="${C.acc}" stroke-width=".9" fill="none" stroke-dasharray="2.5 1.6"/><path d="M${cx+rx} ${cy} l-1.2 -3.4 l3 1.2Z" fill="${C.acc}"/>${label?txt(label,cx,cy+ry+5):""}</g>`;}
+function pushIn(label="PUSH IN"){ // corner brackets moving inward
+  const b=(x,y,dx,dy)=>`<path d="M${x} ${y+dy*6} L${x} ${y} L${x+dx*6} ${y}" stroke="${C.acc}" stroke-width=".9" fill="none"/>`;
+  return `<g opacity=".9">${b(20,14,1,1)}${b(140,14,-1,1)}${b(20,76,1,-1)}${b(140,76,-1,-1)}${txt(label,80,10)}</g>`;
+}
+function txt(t,x,y,size=4.6,col=C.acc,anchor="middle"){return `<text x="${x}" y="${y}" fill="${col}" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="700" font-size="${size}" letter-spacing=".5" text-anchor="${anchor}">${t}</text>`;}
+function keys(y,h=14,x0=0,x1=160){ // close-up keyboard band
+  let s=`<rect x="${x0}" y="${y}" width="${x1-x0}" height="${h}" fill="${C.key}"/>`;
+  for(let x=x0;x<x1;x+=9) s+=`<line x1="${x}" y1="${y}" x2="${x}" y2="${y+h}" stroke="#9a9184" stroke-width=".4"/>`;
+  for(let x=x0+6;x<x1;x+=9){ if(((x-x0-6)/9)%7===2||((x-x0-6)/9)%7===6) continue; s+=`<rect x="${x}" y="${y}" width="5" height="${h*.6}" fill="${C.dark}"/>`;}
+  return s;
+}
+function hand(x,y,s=1,rot=0){ // simple hand blob with fingers, pointing down-right
+  return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${s})"><ellipse cx="0" cy="0" rx="9" ry="6" fill="${C.skin}"/>${[-6,-2,2,6].map(f=>`<rect x="${f-1.4}" y="2" width="2.8" height="9" rx="1.4" fill="${C.skin}"/>`).join("")}<rect x="7" y="-3" width="2.6" height="7" rx="1.3" fill="${C.skin}" transform="rotate(-30 8 0)"/></g>`;
+}
+function cuff(x,y,w,h,rot=0,logo=true){ // knit sleeve end with logo tab
+  let rib=""; for(let i=2;i<w;i+=2.4) rib+=`<line x1="${x+i}" y1="${y}" x2="${x+i}" y2="${y+h}" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>`;
+  return `<g transform="rotate(${rot} ${x+w/2} ${y+h/2})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${C.jump}"/>${rib}${logo?`<rect x="${x+w*.55}" y="${y+h*.25}" width="${h*.55}" height="${h*.5}" fill="${C.dark}" stroke="${C.ink}" stroke-width=".4"/>`:""}</g>`;
+}
+function knit(x,y,w,h){ // texture field
+  let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${C.jump}"/>`;
+  for(let j=0;j<h;j+=3.2) for(let i=0;i<w;i+=3.2) s+=`<path d="M${x+i} ${y+j} l1.6 2.6 l1.6 -2.6" stroke="rgba(60,30,10,.45)" stroke-width=".5" fill="none"/>`;
+  return s;
+}
+function lightglyph(x,y,label="KEY"){return `<g><circle cx="${x}" cy="${y}" r="2.2" fill="${C.acc}"/>${[0,45,90,135,180,225,270,315].map(a=>`<line x1="${x+3.3*Math.cos(a*Math.PI/180)}" y1="${y+3.3*Math.sin(a*Math.PI/180)}" x2="${x+4.8*Math.cos(a*Math.PI/180)}" y2="${y+4.8*Math.sin(a*Math.PI/180)}" stroke="${C.acc}" stroke-width=".5"/>`).join("")}${txt(label,x,y+9,3.6)}</g>`;}
+function marks(x,y,n=3,len=4){let s="";for(let i=0;i<n;i++){const a=-120+i*30;s+=`<line x1="${x+len*.6*Math.cos(a*Math.PI/180)}" y1="${y+len*.6*Math.sin(a*Math.PI/180)}" x2="${x+len*1.4*Math.cos(a*Math.PI/180)}" y2="${y+len*1.4*Math.sin(a*Math.PI/180)}" stroke="${C.ink}" stroke-width=".6"/>`;}return s;}
+function table(x,y,w=46){return `<g><ellipse cx="${x+w/2}" cy="${y-12}" rx="${w/2}" ry="5" fill="${C.wood}" stroke="${C.dim}" stroke-width="${sw}"/><line x1="${x+w/2}" y1="${y-8}" x2="${x+w/2}" y2="${y}" stroke="${C.dim}" stroke-width="1.2"/></g>`;}
+function card(x,y,rot=0){return `<rect x="${x}" y="${y}" width="4.6" height="6.4" rx=".6" fill="${C.key}" stroke="${C.dark}" stroke-width=".3" transform="rotate(${rot} ${x+2.3} ${y+3.2})"/>`;}
+
+const SKETCH = {
+  1:()=>room(66)+door(122,22,18,44)+lamp(16,30)+lamp(92,26)+pool(36,62,20,5,.6)+piano(18,66,34)+bench(30,66)+person(116,66,40,{walk:1,look:-1})+arrow(112,72,62,72,"WALKS TO BENCH",87,80)+pushIn(),
+  2:()=>`<rect x="0" y="62" width="160" height="28" fill="${C.wood}"/>`+keys(58,10,60,160)+person(52,104,110,{seat:1,dir:1,reach:1,look:1})+cuff(76,52,12,6,8)+lightglyph(18,16)+txt("LOCKED OFF",142,10),
+  3:()=>{
+    const q=(x,y,inner,l)=>`<svg x="${x}" y="${y}" width="79" height="44" viewBox="0 0 160 90" overflow="hidden"><rect width="160" height="90" fill="#1d2328"/>${inner}${txt(l,8,14,10,C.ink,"start")}</svg>`;
+    return `<rect width="160" height="90" fill="${C.line||'#2e363b'}"/>`+
+      q(.5,.5,knit(0,0,160,90)+arrow(20,80,140,80,"",0,0),"A")+
+      q(80.5,.5,keys(52,38)+cuff(10,30,70,30,-6)+hand(98,52,2.4,10),"B")+
+      q(.5,45.5,room(70)+piano(96,70,52)+person(70,86,78,{seat:1,dir:1,back:1})+pushIn(""),"C")+
+      q(80.5,45.5,knit(0,0,160,90)+`<rect x="56" y="28" width="48" height="34" fill="${C.dark}" stroke="${C.ink}" stroke-width="1.2"/>`+txt("LOGO",80,50,12,C.ink),"D");
+  },
+  4:()=>`<rect x="0" y="0" width="160" height="90" fill="rgba(0,0,0,.25)"/>`+
+     `<path d="M40 90 L40 70 Q30 64 34 50 Q30 40 36 30 Q40 14 62 12 Q84 10 88 30 Q92 40 88 46 L94 54 L88 56 Q90 64 82 66 L80 74 L70 76 L70 90Z" fill="${C.skin}"/>`+
+     `<path d="M36 30 Q40 10 62 10 Q86 10 88 30 Q70 22 50 34 Z" fill="${C.hair}"/>`+
+     `<path d="M20 90 L30 78 Q55 74 80 78 L96 90Z" fill="${C.jump}"/>`+
+     `<rect x="60" y="0" width="100" height="90" fill="url(#falloff)"/>`+lightglyph(140,20,"KEY (FAR SIDE)")+pushIn(),
+  5:()=>room(70)+lamp(140,22)+piano(36,70,58)+bench(56,70,20)+person(66,70,46,{seat:1,dir:-1,look:-1})+txt("?",78,28,9,C.ink)+marks(66,40,3,4)+txt("STOPS · CHECKS · FIXES · RESTARTS",80,84,4.4)+txt("LOCKED OFF · ONE TAKE",142,10,4,C.acc,"end"),
+  6:()=>room(66)+lamp(20,20)+lamp(146,24)+mixer(50,66,58)+person(64,66,40,{look:1})+person(96,66,38,{look:-1})+`<rect x="128" y="34" width="20" height="32" fill="#202528" stroke="${C.dim}" stroke-width="${sw}"/>`+lightglyph(12,46,"SOFTBOX")+arrow(30,82,130,82,"TRACK",80,80),
+  7:()=>`<rect width="160" height="90" fill="#1c2024"/>`+[30,60,90,120].map(x=>`<circle cx="${x}" cy="62" r="7" fill="#2f3439" stroke="${C.dim}" stroke-width=".6"/><line x1="${x}" y1="62" x2="${x+4}" y2="57" stroke="${C.acc}" stroke-width="1"/>`).join("")+cuff(40,18,46,22,18)+hand(96,44,2.2,30)+txt("ON THE BEAT",140,12,5),
+  8:()=>`<rect width="160" height="90" fill="#22272b"/>`+knit(46,0,62,70)+cuff(46,58,62,14,0,false)+`<path d="M60 72 Q78 86 96 72" fill="${C.skin}"/>`+arrow(140,14,140,70,"TILT DOWN",140,10),
+  9:()=>room(90)+lamp(140,18)+person(76,205,185,{look:1})+marks(76,22,3,8)+txt("x2 · ONE EACH",140,84,5),
+  10:()=>room(68)+lamp(18,24)+lamp(142,22)+pool(80,62,40,8,.6)+piano(56,68,48)+bench(70,68,20)+person(80,68,44,{seat:1,dir:-1,reach:1})+arc(80,70,56,10,"HANDHELD ARC"),
+  11:()=>room(70)+lamp(80,10)+table(57,70,46)+person(42,70,42,{seat:1,dir:1,look:1})+person(118,70,42,{seat:1,dir:-1,look:-1})+card(70,55,-10)+card(76,55,4)+card(85,48,25)+arrow(70,40,84,48,"SLAP",72,38),
+  12:()=>room(68)+lamp(14,22)+lamp(146,22)+pool(80,62,46,8,.7)+piano(60,68,40)+bench(72,68,16)+person(80,68,40,{seat:1,dir:-1})+person(48,68,42,{look:1})+person(112,68,40,{look:-1})+mic(140,80,34)+txt("LEAVE DEPTH FOR THE ENTRANCE",80,86,4.2),
+  13:()=>room(60)+pool(80,56,30,6,.6)+piano(66,60,26)+person(80,60,22,{seat:1,dir:-1})+person(62,60,24)+person(98,60,23)+mic(118,62,22)+person(94,96,82,{shirt:C.tee,back:1,walk:1})+arrow(94,86,114,64,"FOLLOW",130,80)+txt("NO FACE",30,14,5,C.ink),
+  14:()=>room(62)+pool(96,58,34,7,.6)+piano(84,62,28)+person(98,62,26,{seat:1,dir:-1,look:-1})+person(78,62,28,{look:-1})+person(118,62,27,{look:-1})+person(28,150,150,{shirt:C.tee,back:1})+txt("SILENCE",120,12,6,C.ink)+txt("ALL EYES ON HIM",120,20,4.2),
+  15:()=>`<rect width="160" height="90" fill="#1b1f22"/>`+keys(62,28)+hand(52,34,2.2,10)+hand(108,34,2.2,-10)+cuff(14,22,30,14,8)+cuff(118,22,30,14,-8)+`<line x1="40" y1="54" x2="120" y2="54" stroke="${C.ink}" stroke-width=".5" stroke-dasharray="1.5 1.5"/>`+txt("FROZEN · NO TOUCH",80,58,4.4,C.ink),
+  16:()=>room(66)+mic(96,66,38)+person(96,66,30,{look:-1})+person(118,66,30,{look:-1})+person(70,140,130,{shirt:C.tee,back:1,armUp:1})+txt("\"WHAT?\"",126,14,7,C.ink)+txt("LEANS TO THE MIC",126,84,4.6),
+  17:()=>`<rect width="160" height="90" fill="#1c2125"/>`+mic(40,90,60)+`<path d="M160 40 L110 36 Q96 38 98 50 Q100 62 116 62 L160 66Z" fill="${C.jump}"/>`+`<rect x="114" y="44" width="10" height="7" fill="${C.dark}" stroke="${C.ink}" stroke-width=".5"/>`+`<rect x="94" y="18" width="5" height="22" rx="2.5" fill="${C.skin}"/>`+hand(104,40,1.6,0)+txt("SHHHH",62,22,9,C.ink)+arrow(156,74,118,74,"HAND ENTERS",136,84),
+  18:()=>room(66)+lamp(14,22)+lamp(146,22)+pool(84,62,46,8,.7)+piano(66,66,36)+bench(76,66,14)+person(84,66,36,{seat:1,dir:-1})+person(56,66,38)+person(112,66,36)+marks(56,30,3,5)+marks(84,36,3,5)+marks(112,32,3,5)+person(20,150,140,{shirt:C.tee,back:1})+txt("LAUGH · MUSIC CRASHES BACK",100,84,4.4)
+};
+function sketch(n){
+  const defs=`<defs><radialGradient id="pool"><stop offset="0" stop-color="#f3c58f" stop-opacity=".9"/><stop offset="1" stop-color="#f3c58f" stop-opacity="0"/></radialGradient><linearGradient id="falloff" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".6" stop-color="#000" stop-opacity=".05"/></linearGradient></defs>`;
+  const thirds=`<g stroke="${C.ink}" stroke-width=".3" opacity=".14"><line x1="53.3" y1="0" x2="53.3" y2="90"/><line x1="106.7" y1="0" x2="106.7" y2="90"/><line x1="0" y1="30" x2="160" y2="30"/><line x1="0" y1="60" x2="160" y2="60"/></g>`;
+  const body = SKETCH[n] ? SKETCH[n]() : "";
+  return `<svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Rough composition sketch for shot ${n}">${defs}<svg x="0" y="0" width="160" height="90" overflow="hidden">${body}</svg>${thirds}</svg>`;
+}
+
 const TOTAL = Object.keys(SHOTS).length;
 const $ = id=>document.getElementById(id);
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -206,7 +332,7 @@ function saveLocal(){try{localStorage.setItem("rot_done",JSON.stringify([...done
 function shotRow(n){
   const [t,lens,sec,what,cam,light,snd,sub]=SHOTS[n], on=done.has(n);
   return `<div class="shot ${on?"on":""}" id="shot-${n}">
-    <div class="frame">${GRID}<b>${n}</b></div>
+    <div class="frame">${sketch(n)}<span class="num">${n}</span></div>
     <div class="info">
       <div class="hd"><h3>${esc(t)}</h3><span class="lens">${lens}</span><span class="sec">${sec}s</span></div>
       <p class="what">${esc(what)}</p>
