@@ -67,6 +67,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--sun);outline-offset
 .frame{position:relative;aspect-ratio:16/9;max-width:100%;background:linear-gradient(160deg,#1f2a31,#2c2a27 60%,#3a2e25);border:1px solid var(--line);overflow:hidden}
 .frame .num{position:absolute;top:6px;left:6px;background:var(--cloud);color:var(--dusk);font-family:var(--label);font-weight:700;font-size:13px;padding:1px 7px;font-variant-numeric:tabular-nums}
 .frame svg{position:absolute;inset:0;width:100%;height:100%}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .info{display:grid;gap:6px;min-width:0}
 .hd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
 .hd h3{font-family:var(--display);font-weight:400;font-size:28px;line-height:1;margin:0;letter-spacing:.01em}
@@ -332,7 +333,7 @@ function saveLocal(){try{localStorage.setItem("rot_done",JSON.stringify([...done
 function shotRow(n){
   const [t,lens,sec,what,cam,light,snd,sub]=SHOTS[n], on=done.has(n);
   return `<div class="shot ${on?"on":""}" id="shot-${n}">
-    <div class="frame">${sketch(n)}<span class="num">${n}</span></div>
+    <div class="frame"><img src="img/shot${String(n).padStart(2,"0")}.jpg" alt="Frame for shot ${n}: ${esc(t)}" loading="lazy" decoding="async"><span class="num">${n}</span></div>
     <div class="info">
       <div class="hd"><h3>${esc(t)}</h3><span class="lens">${lens}</span><span class="sec">${sec}s</span></div>
       <p class="what">${esc(what)}</p>
