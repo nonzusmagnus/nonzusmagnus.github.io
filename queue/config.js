@@ -7,5 +7,5 @@
 window.MFQ_CONFIG = {
   studio: 'Magnus Forever',
   apiUrl: 'https://script.google.com/macros/s/AKfycby3pf7CGJ5ZMt8oaCXfNvokzAHbsweUqeon7kPdf65zonVnRtjOum6NFwUzd0TFZxha/exec',
-  contactUrl: ''
+  contactUrl: 'https://wa.me/353833667717'
 };
