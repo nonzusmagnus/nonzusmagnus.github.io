@@ -7,7 +7,7 @@
 <title>Queue admin · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 <main class="wrap wide">
@@ -50,7 +50,7 @@
       <div class="error" id="addError" role="alert" hidden></div>
       <div><button class="btn" type="submit">Add client and make login</button></div>
       <div class="creds" id="creds" hidden>
-        <div style="font-weight:600">Send this to the client. The password is only shown once.</div>
+        <div style="font-weight:600">Send this to the client. You can copy their password again any time with the copy button in their row.</div>
         <pre id="credsText"></pre>
         <div><button class="btn sm ghost" type="button" id="copyCreds">Copy message</button></div>
       </div>
@@ -60,7 +60,7 @@
       <div class="top"><div class="eyebrow">All jobs</div><div class="small">Drag the handle to reorder the line. Changes save straight away and clients see them within about 20 seconds.</div></div>
       <div class="tablebox">
         <table class="admin">
-          <colgroup><col style="width:52px"><col style="width:48px"><col style="width:112px"><col><col><col style="width:160px"><col style="width:160px"><col style="width:56px"><col style="width:140px"></colgroup>
+          <colgroup><col style="width:52px"><col style="width:48px"><col style="width:112px"><col><col><col style="width:160px"><col style="width:160px"><col style="width:56px"><col style="width:186px"></colgroup>
           <thead><tr>
             <th scope="col"><span class="sr">Drag</span></th><th scope="col">Place</th><th scope="col">Reference</th><th scope="col">Business</th><th scope="col">Project</th>
             <th scope="col">Stage</th><th scope="col">Draft due</th><th scope="col">Rush</th><th scope="col"><span class="sr">Actions</span></th>
@@ -73,8 +73,8 @@
 </main>
 <div class="toast" id="toast" hidden></div>
 
-<script src="config.js?v=8"></script>
-<script src="api.js?v=8"></script>
+<script src="config.js?v=9"></script>
+<script src="api.js?v=9"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
@@ -134,7 +134,7 @@
     document.getElementById('summary').textContent = data.inLine + ' in line · ' + data.jobs.length + ' jobs in total. Only you can see this page.';
     var html = data.jobs.map(function (j) {
       var dot = j.stage === 7 ? 'done' : (j.stage === 3 ? 'on' : 'ring');
-      return '<tr data-ref="' + esc(j.ref) + '" data-biz="' + esc(j.business) + '"' + (j.place ? ' data-line' : '') + '>' +
+      return '<tr data-ref="' + esc(j.ref) + '" data-biz="' + esc(j.business) + '" data-pw="' + esc(j.password || '') + '"' + (j.place ? ' data-line' : '') + '>' +
         '<td class="c-drag">' + (j.place
           ? '<button class="handle" data-drag type="button" aria-label="Drag to reorder ' + esc(j.ref) + ' (or use the arrow keys)" title="Drag to reorder">' +
             '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><circle cx="6.5" cy="4" r="1.5"/><circle cx="11.5" cy="4" r="1.5"/><circle cx="6.5" cy="9" r="1.5"/><circle cx="11.5" cy="9" r="1.5"/><circle cx="6.5" cy="14" r="1.5"/><circle cx="11.5" cy="14" r="1.5"/></svg></button>'
@@ -148,6 +148,7 @@
           (j.draftDue && !M.isoDate(j.draftDue) ? ' title="Was: ' + esc(j.draftDue) + '"' : '') + '></td>' +
         '<td class="c-rush" data-label="Rush"><input type="checkbox" data-f="rush"' + (j.rush ? ' checked' : '') + ' aria-label="Rush for ' + esc(j.ref) + '" style="width:18px;height:18px;accent-color:#111"></td>' +
         '<td class="c-act"><div class="actions"><button class="iconbtn" data-a="view" type="button" title="View as client" aria-label="View ' + esc(j.ref) + ' as the client sees it"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6S1.5 10 1.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg></button>' +
+        '<button class="iconbtn" data-a="copy" type="button" title="Copy password" aria-label="Copy password for ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/></svg></button>' +
         '<button class="iconbtn" data-a="reset" type="button" title="New password" aria-label="New password for ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="12" r="3.5"/><path d="M9.5 9.5L16 3M13.5 5.5l2 2M11.5 7.5l1.5 1.5"/></svg></button>' +
         '<button class="iconbtn" data-a="remove" type="button" title="Remove" aria-label="Remove ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5h13M8 5.5V3.5h4v2M5.5 5.5l.8 11h7.4l.8-11M8.5 8.5v5M11.5 8.5v5"/></svg></button></div></td></tr>';
     }).join('');
@@ -207,10 +208,27 @@
     }
   });
 
+  function copyText(text, done) {
+    function fallback() {
+      var t = document.createElement('textarea');
+      t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(t);
+      if (ok) toast(done); else { showCredsText(text); toast('Copy the message from the box above'); }
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(function () { toast(done); }, fallback);
+    else fallback();
+  }
+
+  function showCredsText(text) {
+    document.getElementById('credsText').textContent = text;
+    document.getElementById('creds').hidden = false;
+    document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' });
+  }
+
   document.getElementById('copyCreds').addEventListener('click', function () {
-    var text = document.getElementById('credsText').textContent;
-    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { toast('Copied'); },
-      function () { toast('Select the text and copy it'); });
+    copyText(document.getElementById('credsText').textContent, 'Copied');
   });
 
   var rows = document.getElementById('rows');
@@ -226,6 +244,17 @@
     var b = e.target.closest('button[data-a]');
     if (!b) return;
     var tr = b.closest('tr'), ref = tr.getAttribute('data-ref'), a = b.getAttribute('data-a'), res;
+    if (a === 'copy') {
+      var pw = tr.getAttribute('data-pw');
+      if (!pw) {
+        if (!confirm(ref + " was added before passwords were saved, so there's nothing to copy. Make a new password and copy that? Their old one stops working.")) return;
+        res = await api({ action: 'resetPassword', ref: ref });
+        if (!res.ok) return;
+        pw = res.password; tr.setAttribute('data-pw', pw);
+      }
+      copyText(pw, 'Password for ' + ref + ' copied');
+      return;
+    }
     if (a === 'view') {
       try { localStorage.setItem('mfq-preview', JSON.stringify({ key: adminKey, ref: ref, at: Date.now() })); } catch (x) {}
       window.open(clientUrl() + '?preview=' + encodeURIComponent(ref), '_blank');
@@ -234,7 +263,7 @@
     if (a === 'reset') {
       if (!confirm('Make a new password for ' + ref + '? The old one stops working.')) return;
       res = await api({ action: 'resetPassword', ref: ref });
-      if (res.ok) { showCreds(tr.getAttribute('data-biz'), res.ref, res.password); document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' }); }
+      if (res.ok) { showCreds(tr.getAttribute('data-biz'), res.ref, res.password); load(); document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' }); }
     }
     if (a === 'remove') {
       if (!confirm('Remove ' + ref + ' (' + tr.getAttribute('data-biz') + ')? This can\'t be undone.')) return;

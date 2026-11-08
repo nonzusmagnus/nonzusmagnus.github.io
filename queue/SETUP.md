@@ -39,5 +39,5 @@ Only jobs at stage 2 (In queue) or 3 (Editing) are in line, in the order you dra
 ## Privacy notes
 
 - Clients never see names, or how many jobs there are in total. The board shows 3 codes and then faded placeholder rows.
-- Passwords are stored hashed in the sheet. You only see a password once, when you make it. Use **New password** on the admin page if a client loses theirs.
+- Passwords are kept in your private sheet so you can copy a client's login again from the admin page (copy button). Only someone with your admin key can see them. Use the key button to give a client a new password.
 - After 8 wrong passwords, that reference code is locked for 15 minutes.

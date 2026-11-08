@@ -7,11 +7,12 @@
  * The sheet stays private. Clients only ever get back:
  *   - the top 3 reference codes in line (no names), and
  *   - their own job, after the right reference code + password.
- * The full list and the count are only returned with the admin key.
+ * The full list, the count and the passwords (so you can re-send a login)
+ * are only returned with the admin key.
  */
 
 var SHEET_NAME = 'Jobs';
-var HEAD = ['ref', 'hash', 'salt', 'business', 'project', 'stage', 'order', 'rush', 'draftDue', 'created', 'updated'];
+var HEAD = ['ref', 'hash', 'salt', 'business', 'project', 'stage', 'order', 'rush', 'draftDue', 'created', 'updated', 'password'];
 var STAGES = ['Booked', 'In queue', 'Editing', 'Draft sent', 'Revisions', 'Final ready', 'Delivered'];
 var REF_PREFIX = 'MF-';
 var MAX_FAILS = 8;          // wrong passwords allowed per reference code...
@@ -128,7 +129,8 @@ function adminList_() {
     inLine: line.length,
     jobs: line.concat(others).map(function (j) {
       return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush,
-               draftDue: j.draftDue, place: placeOf[j.ref] || null, created: j.created };
+               draftDue: j.draftDue, place: placeOf[j.ref] || null, created: j.created,
+               password: j.password || '' };
     })
   };
 }
@@ -147,7 +149,7 @@ function add_(req) {
   var order = (stage === 3 || req.rush) ? frontOrder_(jobs) : backOrder_(jobs);
   var now = new Date().toISOString();
   sheet_().appendRow([ref, hash_(password, salt), salt, business, clean_(req.project, 160),
-    stage, order, !!req.rush, clean_(req.draftDue, 60), now, now]);
+    stage, order, !!req.rush, clean_(req.draftDue, 60), now, now, password]);
   touch_();
   return { ok: true, ref: ref, password: password };
 }
@@ -197,6 +199,7 @@ function resetPassword_(ref) {
   var password = randomString_(10, 'abcdefghjkmnpqrstuvwxyz23456789');
   found.job.salt = randomString_(16, 'abcdefghijklmnopqrstuvwxyz0123456789');
   found.job.hash = hash_(password, found.job.salt);
+  found.job.password = password;
   writeJob_(found.row, found.job);
   return { ok: true, ref: found.job.ref, password: password };
 }
@@ -232,6 +235,9 @@ function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
   if (sh.getLastRow() === 0) sh.appendRow(HEAD);
+  else if (sh.getRange(1, HEAD.length).getValue() !== HEAD[HEAD.length - 1]) {
+    sh.getRange(1, 1, 1, HEAD.length).setValues([HEAD]); // add columns added in later versions
+  }
   return sh;
 }
 
@@ -246,14 +252,15 @@ function readJobs_() {
       business: String(r[3]), project: String(r[4]),
       stage: stageNum_(r[5], 1), order: Number(r[6]) || 0,
       rush: r[7] === true || String(r[7]).toUpperCase() === 'TRUE',
-      draftDue: String(r[8] || ''), created: String(r[9] || ''), updated: String(r[10] || '')
+      draftDue: String(r[8] || ''), created: String(r[9] || ''), updated: String(r[10] || ''),
+      password: String(r[11] || '')
     };
   }).filter(function (j) { return j.ref; });
 }
 
 function writeJob_(row, j) {
   sheet_().getRange(row, 1, 1, HEAD.length).setValues([[j.ref, j.hash, j.salt, j.business, j.project,
-    j.stage, j.order, j.rush, j.draftDue, j.created, new Date().toISOString()]]);
+    j.stage, j.order, j.rush, j.draftDue, j.created, new Date().toISOString(), j.password || '']]);
 }
 
 function findRow_(ref) {

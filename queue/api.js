@@ -139,7 +139,7 @@
           line.forEach(function (j, i) { place[j.ref] = i + 1; });
           var others = s.jobs.filter(function (j) { return !place[j.ref]; }).sort(function (a, b) { return a.stage - b.stage || a.order - b.order; });
           return { ok: true, updated: s.updated, inLine: line.length, jobs: line.concat(others).map(function (j) {
-            return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush, draftDue: j.draftDue, place: place[j.ref] || null, created: j.created };
+            return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush, draftDue: j.draftDue, place: place[j.ref] || null, created: j.created, password: j.password || '' };
           }) };
         case 'add':
           if (!String(req.business || '').trim()) return { ok: false, error: 'business_required' };
