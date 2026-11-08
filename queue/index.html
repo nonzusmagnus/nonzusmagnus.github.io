@@ -185,12 +185,12 @@
       });
       pb.innerHTML = '<div class="top" style="align-items:baseline"><div class="eyebrow">Your place in line</div><div class="small">' +
         (j.place === 1 && cur === 3 ? 'Being edited now' : M.ordinal(j.place) + ' in line') +
-        (j.draftDue ? ' · draft due <b style="color:#111">' + esc(j.draftDue) + '</b>' : '') +
+        (j.draftDue ? ' · draft due <b style="color:#111">' + esc(M.fmtDate(j.draftDue)) + '</b>' : '') +
         '</div></div><div class="chips"><div class="chips-row">' + chips + '</div></div>';
     } else {
       var msg = cur === 1 ? "You'll join the line as soon as your deposit and footage are in."
         : cur === 7 ? 'Your edit is finished and your files have been released. Thank you!'
-        : 'Your edit is out of the line while it\'s with you. ' + (j.draftDue && cur === 4 ? 'Draft sent · ' + esc(j.draftDue) : '');
+        : 'Your edit is out of the line while it\'s with you. ' + (j.draftDue && cur === 4 ? 'Draft sent · ' + esc(M.fmtDate(j.draftDue)) : '');
       pb.innerHTML = '<div class="eyebrow">Your place in line</div><div class="small" style="font-size:16px">' + msg + '</div>';
     }
 

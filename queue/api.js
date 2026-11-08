@@ -29,6 +29,17 @@
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 
+  function isoDate(v) { return /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')); }
+
+  // "2026-11-14" -> "Fri 14 Nov"; anything else is shown as typed.
+  function fmtDate(v) {
+    if (!isoDate(v)) return String(v || '');
+    var d = new Date(v + 'T12:00:00');
+    var opts = { weekday: 'short', day: 'numeric', month: 'short' };
+    if (d.getFullYear() !== new Date().getFullYear()) opts.year = 'numeric';
+    return d.toLocaleDateString('en-GB', opts).replace(',', '');
+  }
+
   function timeAgo(iso) {
     if (!iso) return '';
     var d = new Date(iso);
@@ -50,13 +61,14 @@
 
   /* ---------- demo store: same rules as backend/Code.gs, kept in this browser ---------- */
   var Demo = (function () {
-    var KEY = 'mfq-demo-v1';
+    var KEY = 'mfq-demo-v2';
     var ADMIN = 'demo-admin';
     function seed() {
       var now = new Date().toISOString();
+      var soon = new Date(Date.now() + 6 * 864e5).toISOString().slice(0, 10);
       var j = function (ref, business, project, stage, order, rush, password) {
         return { ref: ref, business: business, project: project, stage: stage, order: order, rush: !!rush,
-          draftDue: stage <= 3 ? 'Fri 14 Nov' : '', password: password || 'demo', created: now };
+          draftDue: stage <= 3 ? soon : '', password: password || 'demo', created: now };
       };
       return { updated: now, jobs: [
         j('MF-4HQ9', 'Sample Barbers', 'Launch reel', 3, 1),
@@ -77,10 +89,11 @@
       try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
     }
     function queue(jobs) {
-      return jobs.filter(function (j) { return j.stage === 2 || j.stage === 3; }).sort(function (a, b) {
-        return (b.stage === 3) - (a.stage === 3) || (b.rush ? 1 : 0) - (a.rush ? 1 : 0) || a.order - b.order;
-      });
+      return jobs.filter(inLine).sort(function (a, b) { return a.order - b.order; });
     }
+    function inLine(j) { return j.stage === 2 || j.stage === 3; }
+    function front(jobs) { return jobs.reduce(function (m, j) { return Math.min(m, j.order); }, 1) - 1; }
+    function back(jobs) { return jobs.reduce(function (m, j) { return Math.max(m, j.order); }, 0) + 1; }
     function rand(n, abc) {
       var a = new Uint8Array(n * 2), out = '';
       crypto.getRandomValues(a);
@@ -120,9 +133,9 @@
           var ref;
           do { ref = 'MF-' + rand(4, 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'); } while (find(ref));
           var pw = rand(10, 'abcdefghjkmnpqrstuvwxyz23456789');
-          var maxOrder = s.jobs.reduce(function (m, j) { return Math.max(m, j.order); }, 0);
+          var st = Number(req.stage) || 1;
           s.jobs.push({ ref: ref, business: String(req.business).trim(), project: String(req.project || '').trim(),
-            stage: Number(req.stage) || 1, order: maxOrder + 1, rush: !!req.rush, draftDue: String(req.draftDue || '').trim(),
+            stage: st, order: (st === 3 || req.rush) ? front(s.jobs) : back(s.jobs), rush: !!req.rush, draftDue: String(req.draftDue || '').trim(),
             password: pw, created: new Date().toISOString() });
           save(s);
           return { ok: true, ref: ref, password: pw };
@@ -130,19 +143,20 @@
           var j = find(req.ref);
           if (!j) return { ok: false, error: 'not_found' };
           var f = req.fields || {};
+          var wasIn = inLine(j), wasEd = j.stage === 3, wasRush = j.rush;
           if ('business' in f && String(f.business).trim()) j.business = String(f.business).trim();
           if ('project' in f) j.project = String(f.project).trim();
           if ('stage' in f) j.stage = Math.min(7, Math.max(1, Number(f.stage) || j.stage));
           if ('rush' in f) j.rush = !!f.rush;
           if ('draftDue' in f) j.draftDue = String(f.draftDue).trim();
+          if ((j.stage === 3 && !wasEd) || (j.rush && !wasRush)) j.order = front(s.jobs);
+          else if (inLine(j) && !wasIn) j.order = back(s.jobs);
           save(s);
           return { ok: true };
-        case 'move':
-          var i = line.findIndex(function (x) { return x.ref === norm(req.ref); });
-          if (i < 0) return { ok: false, error: 'not_in_line' };
-          var t = req.dir === 'up' ? i - 1 : i + 1;
-          if (t < 0 || t >= line.length) return { ok: true };
-          var tmp = line[i].order; line[i].order = line[t].order; line[t].order = tmp;
+        case 'reorder':
+          var refs = (req.refs || []).map(norm), n = 0;
+          refs.forEach(function (r) { var x = find(r); if (x && inLine(x)) x.order = ++n; });
+          line.forEach(function (x) { if (refs.indexOf(x.ref) < 0) x.order = ++n; });
           save(s);
           return { ok: true };
         case 'resetPassword':
@@ -163,6 +177,6 @@
 
   window.MFQ = {
     call: call, demo: demo, cfg: cfg, STAGES: STAGES, WAIT: WAIT, DESC: DESC,
-    esc: esc, ordinal: ordinal, timeAgo: timeAgo, demoKey: Demo.KEY
+    esc: esc, ordinal: ordinal, timeAgo: timeAgo, isoDate: isoDate, fmtDate: fmtDate, demoKey: Demo.KEY
   };
 })();

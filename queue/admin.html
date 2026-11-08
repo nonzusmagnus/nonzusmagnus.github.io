@@ -44,7 +44,7 @@
         <div class="field"><label for="aBiz">Business name</label><input id="aBiz" type="text" required></div>
         <div class="field"><label for="aProj">Project</label><input id="aProj" type="text" placeholder="e.g. Launch reel"></div>
         <div class="field"><label for="aStage">Starts at</label><select id="aStage"></select></div>
-        <div class="field"><label for="aDue">Draft due</label><input id="aDue" type="text" placeholder="e.g. Fri 14 Nov"></div>
+        <div class="field"><label for="aDue">Draft due</label><input id="aDue" type="date" class="datebtn"></div>
       </div>
       <label class="check"><input type="checkbox" id="aRush"> Rush job (goes to the front of the line)</label>
       <div class="error" id="addError" role="alert" hidden></div>
@@ -57,12 +57,12 @@
     </form>
 
     <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="top"><div class="eyebrow">All jobs</div><div class="small">Changes save straight away and clients see them within about 20 seconds.</div></div>
+      <div class="top"><div class="eyebrow">All jobs</div><div class="small">Drag the handle to reorder the line. Changes save straight away and clients see them within about 20 seconds.</div></div>
       <div class="tablebox">
         <table class="admin">
           <thead><tr>
-            <th scope="col">Place</th><th scope="col">Reference</th><th scope="col">Business</th><th scope="col">Project</th>
-            <th scope="col">Stage</th><th scope="col">Draft due</th><th scope="col">Rush</th><th scope="col">Order</th><th scope="col"><span class="sr">Actions</span></th>
+            <th scope="col"><span class="sr">Drag</span></th><th scope="col">Place</th><th scope="col">Reference</th><th scope="col">Business</th><th scope="col">Project</th>
+            <th scope="col">Stage</th><th scope="col">Draft due</th><th scope="col">Rush</th><th scope="col"><span class="sr">Actions</span></th>
           </tr></thead>
           <tbody id="rows"><tr><td colspan="9" class="small">Loading…</td></tr></tbody>
         </table>
@@ -133,17 +133,19 @@
     document.getElementById('summary').textContent = data.inLine + ' in line · ' + data.jobs.length + ' jobs in total. Only you can see this page.';
     var html = data.jobs.map(function (j) {
       var dot = j.stage === 7 ? 'done' : (j.stage === 3 ? 'on' : 'ring');
-      return '<tr data-ref="' + esc(j.ref) + '" data-biz="' + esc(j.business) + '">' +
+      return '<tr data-ref="' + esc(j.ref) + '" data-biz="' + esc(j.business) + '"' + (j.place ? ' data-line' : '') + '>' +
+        '<td>' + (j.place
+          ? '<button class="handle" data-drag type="button" aria-label="Drag to reorder ' + esc(j.ref) + ' (or use the arrow keys)" title="Drag to reorder">' +
+            '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><circle cx="6.5" cy="4" r="1.5"/><circle cx="11.5" cy="4" r="1.5"/><circle cx="6.5" cy="9" r="1.5"/><circle cx="11.5" cy="9" r="1.5"/><circle cx="6.5" cy="14" r="1.5"/><circle cx="11.5" cy="14" r="1.5"/></svg></button>'
+          : '') + '</td>' +
         '<td class="place">' + (j.place || '–') + '</td>' +
         '<td><span class="status"><span class="dot ' + dot + '"></span><span class="mono">' + esc(j.ref) + '</span></span></td>' +
         '<td><input type="text" data-f="business" value="' + esc(j.business) + '" aria-label="Business name"></td>' +
         '<td><input type="text" data-f="project" value="' + esc(j.project) + '" aria-label="Project"></td>' +
         '<td>' + stageSelect(j) + '</td>' +
-        '<td><input type="text" data-f="draftDue" value="' + esc(j.draftDue) + '" aria-label="Draft due" style="width:130px"></td>' +
+        '<td><input type="date" class="datebtn" data-f="draftDue" value="' + esc(M.isoDate(j.draftDue) ? j.draftDue : '') + '" aria-label="Draft due for ' + esc(j.ref) + '"' +
+          (j.draftDue && !M.isoDate(j.draftDue) ? ' title="Was: ' + esc(j.draftDue) + '"' : '') + '></td>' +
         '<td><input type="checkbox" data-f="rush"' + (j.rush ? ' checked' : '') + ' aria-label="Rush" style="width:18px;height:18px;accent-color:#111"></td>' +
-        '<td><div class="actions">' + (j.place
-          ? '<button class="btn sm ghost" data-a="up" type="button" aria-label="Move up">↑</button><button class="btn sm ghost" data-a="down" type="button" aria-label="Move down">↓</button>'
-          : '') + '</div></td>' +
         '<td><div class="actions"><button class="btn sm ghost" data-a="reset" type="button">New password</button>' +
         '<button class="btn sm ghost" data-a="remove" type="button">Remove</button></div></td></tr>';
     }).join('');
@@ -162,7 +164,7 @@
 
   function editing() {
     var a = document.activeElement;
-    return a && a.closest && a.closest('#rows') && (a.tagName === 'INPUT' || a.tagName === 'SELECT');
+    return !!drag || !!saving || (a && a.closest && a.closest('#rows') && (a.tagName === 'INPUT' || a.tagName === 'SELECT'));
   }
 
   async function open() {
@@ -222,7 +224,6 @@
     var b = e.target.closest('button[data-a]');
     if (!b) return;
     var tr = b.closest('tr'), ref = tr.getAttribute('data-ref'), a = b.getAttribute('data-a'), res;
-    if (a === 'up' || a === 'down') { res = await api({ action: 'move', ref: ref, dir: a }); if (res.ok) load(); }
     if (a === 'reset') {
       if (!confirm('Make a new password for ' + ref + '? The old one stops working.')) return;
       res = await api({ action: 'resetPassword', ref: ref });
@@ -233,6 +234,79 @@
       res = await api({ action: 'remove', ref: ref });
       if (res.ok) { toast('Removed'); load(); }
     }
+  });
+
+  /* ---------- date buttons: open the calendar on any click ---------- */
+  document.addEventListener('click', function (e) {
+    var d = e.target.closest && e.target.closest('input.datebtn');
+    if (d && d.showPicker) { try { d.showPicker(); } catch (x) {} }
+  });
+
+  /* ---------- drag to reorder ---------- */
+  var drag = null, saving = null;
+
+  function lineRows() { return Array.prototype.slice.call(rows.querySelectorAll('tr[data-line]')); }
+  function lineOrder() { return lineRows().map(function (r) { return r.getAttribute('data-ref'); }).join(','); }
+  function renumber() { lineRows().forEach(function (r, i) { r.querySelector('.place').textContent = i + 1; }); }
+
+  async function saveOrder(before) {
+    var now = lineOrder();
+    if (now === before) return;
+    saving = true;
+    var res = await api({ action: 'reorder', refs: now.split(',') });
+    saving = false;
+    if (res.ok) toast('Order saved'); else load();
+  }
+
+  rows.addEventListener('pointerdown', function (e) {
+    var h = e.target.closest('[data-drag]');
+    if (!h || e.button > 0) return;
+    e.preventDefault();
+    var tr = h.closest('tr');
+    drag = { tr: tr, handle: h, before: lineOrder() };
+    tr.classList.add('dragging');
+    document.body.classList.add('is-dragging');
+    try { h.setPointerCapture(e.pointerId); } catch (x) {}
+  });
+  rows.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var y = e.clientY;
+    var list = lineRows();
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i];
+      if (r === drag.tr) continue;
+      var b = r.getBoundingClientRect();
+      if (y > b.top && y < b.bottom) {
+        if (y < b.top + b.height / 2) r.before(drag.tr); else r.after(drag.tr);
+        renumber();
+        break;
+      }
+    }
+    if (y < 70) window.scrollBy(0, -12); else if (y > innerHeight - 70) window.scrollBy(0, 12);
+  });
+  function endDrag() {
+    if (!drag) return;
+    var d = drag; drag = null;
+    d.tr.classList.remove('dragging');
+    document.body.classList.remove('is-dragging');
+    saveOrder(d.before);
+  }
+  rows.addEventListener('pointerup', endDrag);
+  rows.addEventListener('pointercancel', endDrag);
+
+  var keyTimer = null, keyBefore = null;
+  rows.addEventListener('keydown', function (e) {
+    var h = e.target.closest('[data-drag]');
+    if (!h || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+    e.preventDefault();
+    var tr = h.closest('tr');
+    if (keyBefore === null) keyBefore = lineOrder();
+    var list = lineRows(), i = list.indexOf(tr);
+    if (e.key === 'ArrowUp' && i > 0) list[i - 1].before(tr);
+    if (e.key === 'ArrowDown' && i < list.length - 1) list[i + 1].after(tr);
+    renumber(); h.focus();
+    clearTimeout(keyTimer);
+    keyTimer = setTimeout(function () { var b = keyBefore; keyBefore = null; saveOrder(b); }, 700);
   });
 
   if (M.demo) window.addEventListener('storage', function (e) { if (e.key === M.demoKey && adminKey && !editing()) load(); });

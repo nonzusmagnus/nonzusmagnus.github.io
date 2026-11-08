@@ -5,7 +5,7 @@ Two pages live in this folder:
 - **Client page:** `https://nonzusmagnus.github.io/queue/`
   This is the link you send clients. They see the top 3 reference codes, then sign in with their reference code and password to see their own timeline and place in line.
 - **Your admin page:** `https://nonzusmagnus.github.io/queue/admin.html`
-  Here you add clients (it makes their reference code and password), change their stage, set draft dates, mark rush jobs and reorder the line. Clients see changes within about 20 seconds.
+  Here you add clients (it makes their reference code and password), change their stage, set draft dates, mark rush jobs and drag the line into order. Clients see changes within about 20 seconds.
 
 Until step 3 below is done, both pages run in **demo mode** with sample data saved only in your browser. Demo logins: client `MF-7KX2` / `demo-pass`, admin key `demo-admin`.
 
@@ -34,7 +34,7 @@ Use **Deploy › Manage deployments › Edit (pencil) › Version: New version �
 
 ## How the line is ordered
 
-Only jobs at stage 2 (In queue) or 3 (Editing) are in line. Editing jobs come first, then rush jobs, then everyone else in the order you set with the arrows. Jobs at other stages (Booked, Draft sent, Revisions, Final ready, Delivered) are out of the line, so a client you're waiting on never holds anyone up.
+Only jobs at stage 2 (In queue) or 3 (Editing) are in line, in the order you drag them on the admin page. A job jumps to the front when you mark it Rush or move it to Editing, and goes to the back when it joins the line from another stage. You can always drag it somewhere else afterwards. Jobs at other stages (Booked, Draft sent, Revisions, Final ready, Delivered) are out of the line, so a client you're waiting on never holds anyone up.
 
 ## Privacy notes
 

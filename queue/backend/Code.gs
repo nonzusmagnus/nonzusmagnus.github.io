@@ -42,7 +42,7 @@ function handle_(req) {
       case 'adminList': return adminList_();
       case 'add': return withLock_(function () { return add_(req); });
       case 'update': return withLock_(function () { return update_(req); });
-      case 'move': return withLock_(function () { return move_(req.ref, req.dir); });
+      case 'reorder': return withLock_(function () { return reorder_(req.refs); });
       case 'resetPassword': return withLock_(function () { return resetPassword_(req.ref); });
       case 'remove': return withLock_(function () { return remove_(req.ref); });
     }
@@ -130,10 +130,11 @@ function add_(req) {
   do { ref = REF_PREFIX + randomString_(4, 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'); } while (taken[ref]);
   var password = randomString_(10, 'abcdefghjkmnpqrstuvwxyz23456789');
   var salt = randomString_(16, 'abcdefghijklmnopqrstuvwxyz0123456789');
-  var maxOrder = jobs.reduce(function (m, j) { return Math.max(m, j.order); }, 0);
+  var stage = stageNum_(req.stage, 1);
+  var order = (stage === 3 || req.rush) ? frontOrder_(jobs) : backOrder_(jobs);
   var now = new Date().toISOString();
   sheet_().appendRow([ref, hash_(password, salt), salt, business, clean_(req.project, 160),
-    stageNum_(req.stage, 1), maxOrder + 1, !!req.rush, clean_(req.draftDue, 60), now, now]);
+    stage, order, !!req.rush, clean_(req.draftDue, 60), now, now]);
   touch_();
   return { ok: true, ref: ref, password: password };
 }
@@ -143,29 +144,36 @@ function update_(req) {
   if (!found) return { ok: false, error: 'not_found' };
   var f = req.fields || {};
   var j = found.job;
+  var jobs = readJobs_();
+  var wasInLine = inLine_(j), wasEditing = j.stage === 3, wasRush = j.rush;
   if ('business' in f) j.business = clean_(f.business, 120) || j.business;
   if ('project' in f) j.project = clean_(f.project, 160);
   if ('stage' in f) j.stage = stageNum_(f.stage, j.stage);
   if ('rush' in f) j.rush = !!f.rush;
   if ('draftDue' in f) j.draftDue = clean_(f.draftDue, 60);
+  // Starting the edit or marking rush puts a job at the front; joining the line puts it at the back.
+  if ((j.stage === 3 && !wasEditing) || (j.rush && !wasRush)) j.order = frontOrder_(jobs);
+  else if (inLine_(j) && !wasInLine) j.order = backOrder_(jobs);
   writeJob_(found.row, j);
   touch_();
   return { ok: true };
 }
 
-function move_(ref, dir) {
+// refs = the reference codes in line, in the order you dragged them.
+function reorder_(refs) {
+  if (!refs || !refs.length) return { ok: false, error: 'no_refs' };
   var jobs = readJobs_();
-  var line = queue_(jobs);
-  var i = -1;
-  for (var k = 0; k < line.length; k++) if (line[k].ref === normRef_(ref)) i = k;
-  if (i < 0) return { ok: false, error: 'not_in_line' };
-  var t = dir === 'up' ? i - 1 : i + 1;
-  if (t < 0 || t >= line.length) return { ok: true };
-  var a = line[i], b = line[t];
-  var tmp = a.order; a.order = b.order; b.order = tmp;
-  if (a.order === b.order) { a.order += dir === 'up' ? -1 : 1; }
-  writeJob_(a._row, a);
-  writeJob_(b._row, b);
+  var byRef = {};
+  jobs.forEach(function (j) { byRef[j.ref] = j; });
+  var n = 0;
+  refs.forEach(function (r) {
+    var j = byRef[normRef_(r)];
+    if (j && inLine_(j)) { n++; if (j.order !== n) { j.order = n; writeJob_(j._row, j); } }
+  });
+  // Anything in line that wasn't in the list goes after, keeping its order.
+  queue_(jobs).forEach(function (j) {
+    if (refs.map(normRef_).indexOf(j.ref) < 0) { n++; j.order = n; writeJob_(j._row, j); }
+  });
   touch_();
   return { ok: true };
 }
@@ -190,13 +198,19 @@ function remove_(ref) {
 
 /* ---------- queue order ---------- */
 
-// In line = stage 2 (In queue) or 3 (Editing). Editing jobs sit at the front,
-// then rush jobs, then everyone else in the order you set.
+// In line = stage 2 (In queue) or 3 (Editing), in the order you set by dragging.
 function queue_(jobs) {
-  return jobs.filter(function (j) { return j.stage === 2 || j.stage === 3; })
-    .sort(function (a, b) {
-      return (b.stage === 3) - (a.stage === 3) || (b.rush ? 1 : 0) - (a.rush ? 1 : 0) || a.order - b.order;
-    });
+  return jobs.filter(inLine_).sort(function (a, b) { return a.order - b.order; });
+}
+
+function inLine_(j) { return j.stage === 2 || j.stage === 3; }
+
+function frontOrder_(jobs) {
+  return jobs.reduce(function (m, j) { return Math.min(m, j.order); }, 1) - 1;
+}
+
+function backOrder_(jobs) {
+  return jobs.reduce(function (m, j) { return Math.max(m, j.order); }, 0) + 1;
 }
 
 /* ---------- sheet helpers ---------- */

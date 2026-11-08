@@ -130,3 +130,17 @@ tr:last-child td { border-bottom: 0; }
 .admin .mono { white-space: nowrap; }
 .admin select { min-width: 170px; }
 .admin td input[data-f=business], .admin td input[data-f=project] { min-width: 150px; }
+.handle { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--muted); cursor: grab; touch-action: none; }
+.handle:hover { background: var(--soft); color: var(--text); }
+.is-dragging, .is-dragging * { cursor: grabbing !important; user-select: none; }
+tr.dragging td { background: #fff8f0; }
+tr.dragging { box-shadow: 0 8px 24px rgba(0,0,0,.12); position: relative; }
+tr.dragging .handle { border-color: var(--orange); color: var(--orange-text); }
+input.datebtn { height: 48px; border: 1px solid var(--line-strong); border-radius: 12px; padding: 0 12px; font: 600 15px Inter, system-ui, sans-serif; color: var(--text); background: #fff; width: 100%; cursor: pointer; }
+input.datebtn:hover { background: var(--soft); }
+input.datebtn::-webkit-calendar-picker-indicator { cursor: pointer; }
+.admin input.datebtn { height: 40px; font-size: 14px; border-radius: 10px; width: 150px; }
+.admin select { min-width: 140px; }
+.admin input.datebtn { width: 140px; }
+.admin td input[data-f=business], .admin td input[data-f=project] { min-width: 130px; }
+.admin td:first-child, .admin th:first-child { padding-right: 0; width: 52px; }
