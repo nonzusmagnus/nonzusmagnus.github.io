@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Edit queue · Magnus Forever</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div class="brand" id="brand">Magnus Forever</div>
+    <div class="meta" id="topMeta"></div>
+  </div>
+
+  <div class="demo-banner" id="demoBanner" hidden>Demo mode: sample data saved in this browser only. Try reference <b class="mono">MF-7KX2</b> with password <b class="mono">demo-pass</b>.</div>
+
+  <!-- PUBLIC BOARD -->
+  <section id="boardView" hidden>
+    <div style="display:flex;flex-direction:column;gap:40px">
+      <div>
+        <h1>Edit queue</h1>
+        <p class="lede">Every job is listed by its reference code only. Names and details stay private until you enter your code and password.</p>
+      </div>
+      <div class="split">
+        <div class="main">
+          <div class="top">
+            <div class="eyebrow">Next up</div>
+            <div class="legend">
+              <span><span class="dot on"></span>Being edited</span>
+              <span><span class="dot ring"></span>Waiting in line</span>
+            </div>
+          </div>
+          <div class="tablebox">
+            <table>
+              <thead><tr><th scope="col" style="width:72px">Place</th><th scope="col">Reference</th><th scope="col">Stage</th></tr></thead>
+              <tbody id="boardRows"><tr><td colspan="3" class="small">Loading…</td></tr></tbody>
+            </table>
+          </div>
+          <div class="small">Jobs waiting on a client's notes or payment step out of the line, so they never hold anyone up.</div>
+        </div>
+        <div class="side">
+          <form class="card" id="loginForm" novalidate>
+            <div>
+              <h2>View my job</h2>
+              <div class="small" style="margin-top:6px">Use the reference code and password Magnus Forever gave you.</div>
+            </div>
+            <div class="field">
+              <label for="ref">Reference code</label>
+              <input id="ref" class="code" type="text" placeholder="MF-XXXX" autocomplete="username" autocapitalize="characters" spellcheck="false" required>
+            </div>
+            <div class="field">
+              <label for="pw">Password</label>
+              <input id="pw" type="password" autocomplete="current-password" required>
+            </div>
+            <label class="check"><input type="checkbox" id="remember" checked> Keep me signed in on this device</label>
+            <div class="error" id="loginError" role="alert" hidden></div>
+            <button class="btn" type="submit" id="loginBtn">View my job</button>
+            <div class="small" style="text-align:center" data-contact>Lost your code? <a href="#" data-contact-link>Message Magnus Forever</a></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MY JOB -->
+  <section id="jobView" hidden>
+    <div style="display:flex;flex-direction:column;gap:44px">
+      <div class="top" style="align-items:flex-end;gap:24px 48px">
+        <div>
+          <div class="small" id="hello"></div>
+          <h1 id="project" style="margin-top:6px"></h1>
+        </div>
+        <div class="status" id="statusNow"></div>
+      </div>
+
+      <div id="placeBlock" style="display:flex;flex-direction:column;gap:14px"></div>
+
+      <div class="timeline"><div class="tl" id="timeline"></div></div>
+
+      <div class="foot">
+        <div class="small" data-contact>Need it sooner, or have a question? <a href="#" data-contact-link style="font-weight:600">Message Magnus Forever</a></div>
+        <div class="legend">
+          <span><span class="dot done"></span>Done</span>
+          <span><span class="dot on"></span>Waiting</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+(function () {
+  var M = window.MFQ, esc = M.esc;
+  var LOGIN_KEY = 'mfq-login';
+  var POLL_MS = 20000;
+  var session = null, timer = null, lastErrorShown = false;
+
+  document.getElementById('brand').textContent = M.cfg.studio || 'Magnus Forever';
+  if (M.demo) document.getElementById('demoBanner').hidden = false;
+  document.querySelectorAll('[data-contact]').forEach(function (el) {
+    var a = el.querySelector('[data-contact-link]');
+    if (M.cfg.contactUrl) a.href = M.cfg.contactUrl; else el.hidden = true;
+  });
+
+  function readLogin() {
+    try { return JSON.parse(localStorage.getItem(LOGIN_KEY)) || JSON.parse(sessionStorage.getItem(LOGIN_KEY)); } catch (e) { return null; }
+  }
+  function saveLogin(s, remember) {
+    try {
+      localStorage.removeItem(LOGIN_KEY); sessionStorage.removeItem(LOGIN_KEY);
+      (remember ? localStorage : sessionStorage).setItem(LOGIN_KEY, JSON.stringify(s));
+    } catch (e) {}
+  }
+  function clearLogin() {
+    try { localStorage.removeItem(LOGIN_KEY); sessionStorage.removeItem(LOGIN_KEY); } catch (e) {}
+  }
+
+  function setMeta(updated) {
+    var html = '';
+    if (session) html += '<span>Signed in as <span class="mono" style="color:#111">' + esc(session.ref) + '</span></span><button class="linkbtn" id="signOut" type="button">Sign out</button>';
+    else if (updated) html += '<span>Updated ' + esc(M.timeAgo(updated)) + '</span>';
+    document.getElementById('topMeta').innerHTML = html;
+    var so = document.getElementById('signOut');
+    if (so) so.onclick = signOut;
+  }
+
+  /* ---------- board ---------- */
+  function renderBoard(data) {
+    var rows = '';
+    (data.top || []).forEach(function (j, i) {
+      var editing = j.stage === 3;
+      rows += '<tr><td class="place">' + (i + 1) + '</td><td><span class="mono">' + esc(j.ref) + '</span>' +
+        (j.rush ? '<span class="tag">Rush</span>' : '') + '</td><td><span class="status">' +
+        '<span class="dot ' + (editing ? 'on pulse' : 'ring') + '"></span>' + (editing ? 'Being edited' : 'Waiting in line') +
+        '</span></td></tr>';
+    });
+    if (!rows) rows = '<tr><td colspan="3" class="small">Nobody is in line right now.</td></tr>';
+    else {
+      // Faded rows so the length of the queue stays private.
+      [0.4, 0.16, 0.05].forEach(function (o, k) {
+        rows += '<tr aria-hidden="true" style="opacity:' + o + '"><td class="place">' + ((data.top.length) + k + 1) +
+          '</td><td><span class="mono">MF-••••</span></td><td><span class="status"><span class="dot ring"></span>Waiting in line</span></td></tr>';
+      });
+    }
+    document.getElementById('boardRows').innerHTML = rows;
+    setMeta(data.updated);
+  }
+
+  async function loadBoard() {
+    try {
+      var data = await M.call({ action: 'board' });
+      if (data.ok) renderBoard(data);
+    } catch (e) {
+      document.getElementById('boardRows').innerHTML = '<tr><td colspan="3" class="error">Couldn\'t load the queue. Check your connection and refresh.</td></tr>';
+    }
+  }
+
+  /* ---------- my job ---------- */
+  function renderJob(data) {
+    var j = data.job, cur = j.stage, all = cur === 7;
+    document.getElementById('hello').textContent = 'Hi ' + j.business + ", here's where your edit is.";
+    document.getElementById('project').textContent = j.project || 'Your edit';
+
+    document.getElementById('statusNow').innerHTML = all
+      ? '<span class="dot done" style="width:14px;height:14px"></span><div style="font-size:18px;font-weight:600">Delivered</div>'
+      : '<span class="dot on pulse" style="width:14px;height:14px"></span><div><div style="font-size:18px;font-weight:600">' +
+        esc(M.WAIT[cur - 1]) + '</div><div class="small">Step ' + cur + ' of 7</div></div>';
+
+    var pb = document.getElementById('placeBlock');
+    if (j.place) {
+      var chips = '';
+      var start = j.place - j.ahead.length;
+      j.ahead.forEach(function (r, i) {
+        chips += '<div class="chip"><span class="n">' + (start + i) + '</span>' + esc(r) + '</div><div class="link"></div>';
+      });
+      chips += '<div class="chip me"><span class="dot on pulse"></span><span class="n">' + j.place + '</span>' + esc(j.ref) + '<span class="you">You</span></div>';
+      [0.4, 0.14].forEach(function (o, i) {
+        if (j.behind[i]) chips += '<div class="link" style="opacity:' + o + '"></div><div class="chip" style="opacity:' + o + '"><span class="n">' + (j.place + i + 1) + '</span>' + esc(j.behind[i]) + '</div>';
+      });
+      pb.innerHTML = '<div class="top" style="align-items:baseline"><div class="eyebrow">Your place in line</div><div class="small">' +
+        (j.place === 1 && cur === 3 ? 'Being edited now' : M.ordinal(j.place) + ' in line') +
+        (j.draftDue ? ' · draft due <b style="color:#111">' + esc(j.draftDue) + '</b>' : '') +
+        '</div></div><div class="chips"><div class="chips-row">' + chips + '</div></div>';
+    } else {
+      var msg = cur === 1 ? "You'll join the line as soon as your deposit and footage are in."
+        : cur === 7 ? 'Your edit is finished and your files have been released. Thank you!'
+        : 'Your edit is out of the line while it\'s with you. ' + (j.draftDue && cur === 4 ? 'Draft sent · ' + esc(j.draftDue) : '');
+      pb.innerHTML = '<div class="eyebrow">Your place in line</div><div class="small" style="font-size:16px">' + msg + '</div>';
+    }
+
+    var html = '';
+    for (var n = 1; n <= 7; n++) {
+      var cls = (n < cur || all) ? 'done' : (n === cur ? 'wait' : 'next');
+      var mark = cls === 'done'
+        ? '<div class="mark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 10.4l3.3 3.3L15 7"/></svg></div><div class="bar"></div>'
+        : cls === 'wait' ? '<div class="mark"><i class="pulse"></i></div><div class="bar glow"></div>'
+        : '<div class="mark"></div><div class="bar"></div>';
+      var tag = cls === 'done' ? 'Done' : cls === 'wait' ? M.WAIT[n - 1] : '';
+      html += '<div class="step ' + cls + '"><div class="stem">' + mark + '</div><div class="seg"></div><div class="txt">' +
+        '<div class="num">' + String(n).padStart(2, '0') + '</div><div class="name">' + M.STAGES[n - 1] + '</div>' +
+        '<div class="desc">' + M.DESC[n - 1] + '</div><div class="tagline">' + esc(tag) + '</div></div></div>';
+    }
+    document.getElementById('timeline').innerHTML = html;
+    setMeta(data.updated);
+  }
+
+  async function loadJob() {
+    try {
+      var data = await M.call({ action: 'job', ref: session.ref, password: session.password });
+      if (data.ok) { renderJob(data); return true; }
+      if (data.error === 'bad_login' || data.error === 'locked') { signOut(); return false; }
+    } catch (e) { /* keep showing the last good view */ }
+    return true;
+  }
+
+  function show(view) {
+    document.getElementById('boardView').hidden = view !== 'board';
+    document.getElementById('jobView').hidden = view !== 'job';
+  }
+
+  function refresh() { return session ? loadJob() : loadBoard(); }
+
+  function startPolling() {
+    clearInterval(timer);
+    timer = setInterval(function () { if (!document.hidden) refresh(); }, POLL_MS);
+  }
+
+  function signOut() {
+    session = null; clearLogin();
+    show('board'); loadBoard();
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var ref = document.getElementById('ref').value.trim().toUpperCase();
+    var pw = document.getElementById('pw').value;
+    var err = document.getElementById('loginError'), btn = document.getElementById('loginBtn');
+    err.hidden = true;
+    if (!ref || !pw) { err.textContent = 'Enter your reference code and password.'; err.hidden = false; return; }
+    btn.disabled = true; btn.textContent = 'Checking…';
+    try {
+      var data = await M.call({ action: 'job', ref: ref, password: pw });
+      if (data.ok) {
+        session = { ref: data.job.ref, password: pw };
+        saveLogin(session, document.getElementById('remember').checked);
+        document.getElementById('pw').value = '';
+        renderJob(data); show('job'); window.scrollTo(0, 0);
+      } else {
+        err.textContent = data.error === 'locked'
+          ? 'Too many tries. Wait 15 minutes, then try again.'
+          : "That reference code and password don't match. Check them and try again.";
+        err.hidden = false;
+      }
+    } catch (ex) {
+      err.textContent = "Couldn't reach the queue. Check your connection and try again."; err.hidden = false;
+    }
+    btn.disabled = false; btn.textContent = 'View my job';
+  });
+
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
+  if (M.demo) window.addEventListener('storage', function (e) { if (e.key === M.demoKey) refresh(); });
+
+  var saved = readLogin();
+  var qref = new URLSearchParams(location.search).get('ref');
+  if (qref) document.getElementById('ref').value = qref.toUpperCase();
+  if (saved && saved.ref && saved.password) {
+    session = saved; show('job');
+    loadJob().then(function (ok) { if (!ok) show('board'); });
+  } else {
+    show('board'); loadBoard();
+  }
+  startPolling();
+})();
+</script>
+</body>
+</html>

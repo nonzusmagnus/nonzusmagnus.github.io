@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Queue admin · Magnus Forever</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div class="brand">Magnus Forever · Queue admin</div>
+    <div class="meta" id="topMeta"></div>
+  </div>
+
+  <div class="demo-banner" id="demoBanner" hidden>Demo mode: changes are saved in this browser only. Admin key: <b class="mono">demo-admin</b>. Open the client page in another tab to watch it update.</div>
+
+  <!-- SIGN IN -->
+  <section id="lockView" hidden>
+    <form class="card" id="keyForm" style="max-width:420px" novalidate>
+      <h2>Sign in</h2>
+      <div class="field">
+        <label for="key">Admin key</label>
+        <input id="key" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="error" id="keyError" role="alert" hidden></div>
+      <button class="btn" type="submit">Open admin</button>
+    </form>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="adminView" hidden style="display:flex;flex-direction:column;gap:40px">
+    <div>
+      <h1>Clients</h1>
+      <p class="lede" id="summary"></p>
+    </div>
+
+    <form class="card" id="addForm" novalidate>
+      <h2>Add a client</h2>
+      <div class="grid-form">
+        <div class="field"><label for="aBiz">Business name</label><input id="aBiz" type="text" required></div>
+        <div class="field"><label for="aProj">Project</label><input id="aProj" type="text" placeholder="e.g. Launch reel"></div>
+        <div class="field"><label for="aStage">Starts at</label><select id="aStage"></select></div>
+        <div class="field"><label for="aDue">Draft due</label><input id="aDue" type="text" placeholder="e.g. Fri 14 Nov"></div>
+      </div>
+      <label class="check"><input type="checkbox" id="aRush"> Rush job (goes to the front of the line)</label>
+      <div class="error" id="addError" role="alert" hidden></div>
+      <div><button class="btn" type="submit">Add client and make login</button></div>
+      <div class="creds" id="creds" hidden>
+        <div style="font-weight:600">Send this to the client. The password is only shown once.</div>
+        <pre id="credsText"></pre>
+        <div><button class="btn sm ghost" type="button" id="copyCreds">Copy message</button></div>
+      </div>
+    </form>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="top"><div class="eyebrow">All jobs</div><div class="small">Changes save straight away and clients see them within about 20 seconds.</div></div>
+      <div class="tablebox">
+        <table class="admin">
+          <thead><tr>
+            <th scope="col">Place</th><th scope="col">Reference</th><th scope="col">Business</th><th scope="col">Project</th>
+            <th scope="col">Stage</th><th scope="col">Draft due</th><th scope="col">Rush</th><th scope="col">Order</th><th scope="col"><span class="sr">Actions</span></th>
+          </tr></thead>
+          <tbody id="rows"><tr><td colspan="9" class="small">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+(function () {
+  var M = window.MFQ, esc = M.esc;
+  var KEY = 'mfq-admin';
+  var adminKey = null, timer = null;
+
+  if (M.demo) document.getElementById('demoBanner').hidden = false;
+  document.getElementById('aStage').innerHTML = M.STAGES.map(function (s, i) {
+    return '<option value="' + (i + 1) + '"' + (i === 0 ? ' selected' : '') + '>' + (i + 1) + ' · ' + s + '</option>';
+  }).join('');
+
+  function clientUrl() {
+    return location.origin + location.pathname.replace(/admin\.html$/, '');
+  }
+
+  function toast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.hidden = true; }, 2200);
+  }
+
+  async function api(req) {
+    req.adminKey = adminKey;
+    var res;
+    try { res = await M.call(req); } catch (e) { toast("Couldn't reach the queue. Try again."); return { ok: false, error: 'network' }; }
+    if (!res.ok && res.error === 'not_admin') { lock('That admin key is wrong.'); }
+    return res;
+  }
+
+  function lock(msg) {
+    adminKey = null;
+    try { sessionStorage.removeItem(KEY); } catch (e) {}
+    document.getElementById('adminView').hidden = true;
+    document.getElementById('lockView').hidden = false;
+    document.getElementById('topMeta').innerHTML = '';
+    var err = document.getElementById('keyError');
+    err.textContent = msg || ''; err.hidden = !msg;
+  }
+
+  function credsMessage(business, ref, pw) {
+    return 'Hi ' + business + ', you can follow your edit with ' + (M.cfg.studio || 'Magnus Forever') + ' here:\n' +
+      clientUrl() + '\n\nReference code: ' + ref + '\nPassword: ' + pw;
+  }
+
+  function showCreds(business, ref, pw) {
+    document.getElementById('credsText').textContent = credsMessage(business, ref, pw);
+    document.getElementById('creds').hidden = false;
+  }
+
+  function stageSelect(j) {
+    return '<select data-f="stage" aria-label="Stage for ' + esc(j.ref) + '">' + M.STAGES.map(function (s, i) {
+      return '<option value="' + (i + 1) + '"' + (j.stage === i + 1 ? ' selected' : '') + '>' + (i + 1) + ' · ' + s + '</option>';
+    }).join('') + '</select>';
+  }
+
+  function render(data) {
+    document.getElementById('summary').textContent = data.inLine + ' in line · ' + data.jobs.length + ' jobs in total. Only you can see this page.';
+    var html = data.jobs.map(function (j) {
+      var dot = j.stage === 7 ? 'done' : (j.stage === 3 ? 'on' : 'ring');
+      return '<tr data-ref="' + esc(j.ref) + '" data-biz="' + esc(j.business) + '">' +
+        '<td class="place">' + (j.place || '–') + '</td>' +
+        '<td><span class="status"><span class="dot ' + dot + '"></span><span class="mono">' + esc(j.ref) + '</span></span></td>' +
+        '<td><input type="text" data-f="business" value="' + esc(j.business) + '" aria-label="Business name"></td>' +
+        '<td><input type="text" data-f="project" value="' + esc(j.project) + '" aria-label="Project"></td>' +
+        '<td>' + stageSelect(j) + '</td>' +
+        '<td><input type="text" data-f="draftDue" value="' + esc(j.draftDue) + '" aria-label="Draft due" style="width:130px"></td>' +
+        '<td><input type="checkbox" data-f="rush"' + (j.rush ? ' checked' : '') + ' aria-label="Rush" style="width:18px;height:18px;accent-color:#111"></td>' +
+        '<td><div class="actions">' + (j.place
+          ? '<button class="btn sm ghost" data-a="up" type="button" aria-label="Move up">↑</button><button class="btn sm ghost" data-a="down" type="button" aria-label="Move down">↓</button>'
+          : '') + '</div></td>' +
+        '<td><div class="actions"><button class="btn sm ghost" data-a="reset" type="button">New password</button>' +
+        '<button class="btn sm ghost" data-a="remove" type="button">Remove</button></div></td></tr>';
+    }).join('');
+    document.getElementById('rows').innerHTML = html || '<tr><td colspan="9" class="small">No clients yet. Add one above.</td></tr>';
+    document.getElementById('topMeta').innerHTML = '<a href="' + esc(clientUrl()) + '" target="_blank" rel="noopener">Open client page</a>' +
+      (data.updated ? '<span>Updated ' + esc(M.timeAgo(data.updated)) + '</span>' : '') +
+      '<button class="linkbtn" id="signOut" type="button">Sign out</button>';
+    document.getElementById('signOut').onclick = function () { lock(); };
+  }
+
+  async function load() {
+    var data = await api({ action: 'adminList' });
+    if (data.ok) render(data);
+    return data.ok;
+  }
+
+  function editing() {
+    var a = document.activeElement;
+    return a && a.closest && a.closest('#rows') && (a.tagName === 'INPUT' || a.tagName === 'SELECT');
+  }
+
+  async function open() {
+    document.getElementById('lockView').hidden = true;
+    document.getElementById('adminView').hidden = false;
+    if (await load()) {
+      try { sessionStorage.setItem(KEY, adminKey); } catch (e) {}
+      clearInterval(timer);
+      timer = setInterval(function () { if (!document.hidden && !editing()) load(); }, 30000);
+    }
+  }
+
+  document.getElementById('keyForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var k = document.getElementById('key').value;
+    if (!k) return;
+    adminKey = k; document.getElementById('key').value = '';
+    open();
+  });
+
+  document.getElementById('addForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var err = document.getElementById('addError');
+    var biz = document.getElementById('aBiz').value.trim();
+    err.hidden = true;
+    if (!biz) { err.textContent = 'Add the business name.'; err.hidden = false; return; }
+    var res = await api({ action: 'add', business: biz, project: document.getElementById('aProj').value,
+      stage: Number(document.getElementById('aStage').value), draftDue: document.getElementById('aDue').value,
+      rush: document.getElementById('aRush').checked });
+    if (res.ok) {
+      showCreds(biz, res.ref, res.password);
+      ['aBiz', 'aProj', 'aDue'].forEach(function (id) { document.getElementById(id).value = ''; });
+      document.getElementById('aRush').checked = false;
+      document.getElementById('aStage').value = '1';
+      load();
+    } else if (res.error !== 'not_admin' && res.error !== 'network') {
+      err.textContent = "Couldn't add the client (" + res.error + ').'; err.hidden = false;
+    }
+  });
+
+  document.getElementById('copyCreds').addEventListener('click', function () {
+    var text = document.getElementById('credsText').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { toast('Copied'); },
+      function () { toast('Select the text and copy it'); });
+  });
+
+  var rows = document.getElementById('rows');
+  rows.addEventListener('change', async function (e) {
+    var el = e.target, f = el.getAttribute('data-f');
+    if (!f) return;
+    var tr = el.closest('tr'), fields = {};
+    fields[f] = el.type === 'checkbox' ? el.checked : (f === 'stage' ? Number(el.value) : el.value);
+    var res = await api({ action: 'update', ref: tr.getAttribute('data-ref'), fields: fields });
+    if (res.ok) { toast('Saved'); if (f === 'stage' || f === 'rush') load(); }
+  });
+  rows.addEventListener('click', async function (e) {
+    var b = e.target.closest('button[data-a]');
+    if (!b) return;
+    var tr = b.closest('tr'), ref = tr.getAttribute('data-ref'), a = b.getAttribute('data-a'), res;
+    if (a === 'up' || a === 'down') { res = await api({ action: 'move', ref: ref, dir: a }); if (res.ok) load(); }
+    if (a === 'reset') {
+      if (!confirm('Make a new password for ' + ref + '? The old one stops working.')) return;
+      res = await api({ action: 'resetPassword', ref: ref });
+      if (res.ok) { showCreds(tr.getAttribute('data-biz'), res.ref, res.password); document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' }); }
+    }
+    if (a === 'remove') {
+      if (!confirm('Remove ' + ref + ' (' + tr.getAttribute('data-biz') + ')? This can\'t be undone.')) return;
+      res = await api({ action: 'remove', ref: ref });
+      if (res.ok) { toast('Removed'); load(); }
+    }
+  });
+
+  if (M.demo) window.addEventListener('storage', function (e) { if (e.key === M.demoKey && adminKey && !editing()) load(); });
+
+  var saved = null;
+  try { saved = sessionStorage.getItem(KEY); } catch (e) {}
+  if (saved) { adminKey = saved; open(); } else lock();
+})();
+</script>
+</body>
+</html>
