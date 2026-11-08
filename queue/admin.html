@@ -7,7 +7,7 @@
 <title>Queue admin · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 <main class="wrap wide">
@@ -60,7 +60,7 @@
       <div class="top"><div class="eyebrow">All jobs</div><div class="small">Drag the handle to reorder the line. Changes save straight away and clients see them within about 20 seconds.</div></div>
       <div class="tablebox">
         <table class="admin">
-          <colgroup><col style="width:52px"><col style="width:48px"><col style="width:112px"><col><col><col style="width:160px"><col style="width:160px"><col style="width:56px"><col style="width:186px"></colgroup>
+          <colgroup><col style="width:52px"><col style="width:48px"><col style="width:112px"><col><col><col style="width:160px"><col style="width:160px"><col style="width:56px"><col style="width:232px"></colgroup>
           <thead><tr>
             <th scope="col"><span class="sr">Drag</span></th><th scope="col">Place</th><th scope="col">Reference</th><th scope="col">Business</th><th scope="col">Project</th>
             <th scope="col">Stage</th><th scope="col">Draft due</th><th scope="col">Rush</th><th scope="col"><span class="sr">Actions</span></th>
@@ -71,10 +71,30 @@
     </div>
   </section>
 </main>
+<dialog class="notebox" id="noteDialog" aria-labelledby="noteTitle">
+  <form method="dialog" id="noteForm" novalidate>
+    <h2 id="noteTitle">Message for client</h2>
+    <p class="small" id="noteHint"></p>
+    <div class="field">
+      <label for="noteInput">Message</label>
+      <textarea id="noteInput" rows="7" maxlength="2000" placeholder="Hi! Your draft is ready.&#10;- Watch it on your phone and laptop&#10;- Leave all your notes in one go&#10;- Notes back by Friday please"></textarea>
+      <div class="small">Start a line with - to make a bullet point.</div>
+    </div>
+    <div class="field">
+      <label for="linkInput">Review link (Frame.io)</label>
+      <input id="linkInput" type="text" inputmode="url" placeholder="https://f.io/…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="error" id="noteError" role="alert" hidden></div>
+    <div class="dialog-actions">
+      <button class="btn ghost" type="button" id="noteCancel">Cancel</button>
+      <button class="btn" type="submit" id="noteSave">Save message</button>
+    </div>
+  </form>
+</dialog>
 <div class="toast" id="toast" hidden></div>
 
-<script src="config.js?v=9"></script>
-<script src="api.js?v=9"></script>
+<script src="config.js?v=10"></script>
+<script src="api.js?v=10"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
@@ -130,7 +150,11 @@
     }).join('') + '</select>';
   }
 
+  var jobsByRef = {};
+
   function render(data) {
+    jobsByRef = {};
+    data.jobs.forEach(function (j) { jobsByRef[j.ref] = j; });
     document.getElementById('summary').textContent = data.inLine + ' in line · ' + data.jobs.length + ' jobs in total. Only you can see this page.';
     var html = data.jobs.map(function (j) {
       var dot = j.stage === 7 ? 'done' : (j.stage === 3 ? 'on' : 'ring');
@@ -147,7 +171,8 @@
         '<td class="c-grow" data-label="Draft due"><input type="date" class="datebtn" data-f="draftDue" value="' + esc(M.isoDate(j.draftDue) ? j.draftDue : '') + '" aria-label="Draft due for ' + esc(j.ref) + '"' +
           (j.draftDue && !M.isoDate(j.draftDue) ? ' title="Was: ' + esc(j.draftDue) + '"' : '') + '></td>' +
         '<td class="c-rush" data-label="Rush"><input type="checkbox" data-f="rush"' + (j.rush ? ' checked' : '') + ' aria-label="Rush for ' + esc(j.ref) + '" style="width:18px;height:18px;accent-color:#111"></td>' +
-        '<td class="c-act"><div class="actions"><button class="iconbtn" data-a="view" type="button" title="View as client" aria-label="View ' + esc(j.ref) + ' as the client sees it"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6S1.5 10 1.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg></button>' +
+        '<td class="c-act"><div class="actions"><button class="iconbtn' + (j.note || j.reviewLink ? ' has' : '') + '" data-a="note" type="button" title="Message for client" aria-label="Message for ' + esc(j.ref) + (j.note || j.reviewLink ? ' (has a message)' : '') + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5h14v9H8l-4 3v-3H3z"/></svg></button>' +
+        '<button class="iconbtn" data-a="view" type="button" title="View as client" aria-label="View ' + esc(j.ref) + ' as the client sees it"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6S1.5 10 1.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg></button>' +
         '<button class="iconbtn" data-a="copy" type="button" title="Copy password" aria-label="Copy password for ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/></svg></button>' +
         '<button class="iconbtn" data-a="reset" type="button" title="New password" aria-label="New password for ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="12" r="3.5"/><path d="M9.5 9.5L16 3M13.5 5.5l2 2M11.5 7.5l1.5 1.5"/></svg></button>' +
         '<button class="iconbtn" data-a="remove" type="button" title="Remove" aria-label="Remove ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5h13M8 5.5V3.5h4v2M5.5 5.5l.8 11h7.4l.8-11M8.5 8.5v5M11.5 8.5v5"/></svg></button></div></td></tr>';
@@ -167,7 +192,7 @@
 
   function editing() {
     var a = document.activeElement;
-    return !!drag || !!saving || (a && a.closest && a.closest('#rows') && (a.tagName === 'INPUT' || a.tagName === 'SELECT'));
+    return !!drag || !!saving || dlg.open || (a && a.closest && a.closest('#rows') && (a.tagName === 'INPUT' || a.tagName === 'SELECT'));
   }
 
   async function open() {
@@ -244,6 +269,7 @@
     var b = e.target.closest('button[data-a]');
     if (!b) return;
     var tr = b.closest('tr'), ref = tr.getAttribute('data-ref'), a = b.getAttribute('data-a'), res;
+    if (a === 'note') { openNote(ref); return; }
     if (a === 'copy') {
       var pw = tr.getAttribute('data-pw');
       if (!pw) {
@@ -270,6 +296,37 @@
       res = await api({ action: 'remove', ref: ref });
       if (res.ok) { toast('Removed'); load(); }
     }
+  });
+
+  /* ---------- message for client ---------- */
+  var noteRef = null;
+  var dlg = document.getElementById('noteDialog');
+  function openNote(ref) {
+    var j = jobsByRef[ref] || {};
+    noteRef = ref;
+    document.getElementById('noteTitle').textContent = 'Message for ' + ref + (j.business ? ' · ' + j.business : '');
+    document.getElementById('noteHint').textContent = j.stage === 4
+      ? 'This client is at Draft sent, so they see this straight away at the top of their page.'
+      : 'They see this at the top of their page once you move them to 4 · Draft sent.';
+    document.getElementById('noteInput').value = j.note || '';
+    document.getElementById('linkInput').value = j.reviewLink || '';
+    document.getElementById('noteError').hidden = true;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    document.getElementById('noteInput').focus();
+  }
+  function closeNote() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); noteRef = null; }
+  document.getElementById('noteCancel').addEventListener('click', closeNote);
+  document.getElementById('noteForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var link = document.getElementById('linkInput').value.trim();
+    var err = document.getElementById('noteError');
+    if (link && !/^https:\/\/[^\s"'<>]+$/i.test(link)) {
+      err.textContent = 'The link needs to start with https://'; err.hidden = false; return;
+    }
+    var btn = document.getElementById('noteSave'); btn.disabled = true;
+    var res = await api({ action: 'update', ref: noteRef, fields: { note: document.getElementById('noteInput').value, reviewLink: link } });
+    btn.disabled = false;
+    if (res.ok) { closeNote(); toast('Message saved'); load(); }
   });
 
   /* ---------- date buttons: open the calendar on any click ---------- */

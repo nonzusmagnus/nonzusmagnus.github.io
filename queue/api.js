@@ -121,6 +121,7 @@
         var idx = line.indexOf(me);
         return { ok: true, updated: s.updated, job: {
           ref: me.ref, business: me.business, project: me.project, stage: me.stage, draftDue: me.draftDue, rush: me.rush,
+          note: me.stage === 4 ? (me.note || '') : '', reviewLink: me.stage === 4 ? (me.reviewLink || '') : '',
           place: idx >= 0 ? idx + 1 : null,
           ahead: idx > 0 ? line.slice(Math.max(0, idx - 2), idx).map(function (j) { return j.ref; }) : [],
           behind: idx >= 0 ? line.slice(idx + 1, idx + 3).map(function (j) { return j.ref; }) : []
@@ -139,7 +140,7 @@
           line.forEach(function (j, i) { place[j.ref] = i + 1; });
           var others = s.jobs.filter(function (j) { return !place[j.ref]; }).sort(function (a, b) { return a.stage - b.stage || a.order - b.order; });
           return { ok: true, updated: s.updated, inLine: line.length, jobs: line.concat(others).map(function (j) {
-            return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush, draftDue: j.draftDue, place: place[j.ref] || null, created: j.created, password: j.password || '' };
+            return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush, draftDue: j.draftDue, place: place[j.ref] || null, created: j.created, password: j.password || '', note: j.note || '', reviewLink: j.reviewLink || '' };
           }) };
         case 'add':
           if (!String(req.business || '').trim()) return { ok: false, error: 'business_required' };
@@ -162,6 +163,8 @@
           if ('stage' in f) j.stage = Math.min(7, Math.max(1, Number(f.stage) || j.stage));
           if ('rush' in f) j.rush = !!f.rush;
           if ('draftDue' in f) j.draftDue = String(f.draftDue).trim();
+          if ('note' in f) j.note = String(f.note).replace(/\r\n?/g, '\n').trim().slice(0, 2000);
+          if ('reviewLink' in f) j.reviewLink = /^https:\/\/[^\s"'<>]+$/i.test(String(f.reviewLink).trim()) ? String(f.reviewLink).trim() : '';
           if ((j.stage === 3 && !wasEd) || (j.rush && !wasRush)) j.order = front(s.jobs);
           else if (inLine(j) && !wasIn) j.order = back(s.jobs);
           save(s);

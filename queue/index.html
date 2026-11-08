@@ -7,7 +7,7 @@
 <title>Edit queue · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 <main class="wrap">
@@ -70,6 +70,19 @@
   <!-- MY JOB -->
   <section id="jobView" hidden>
     <div style="display:flex;flex-direction:column;gap:44px">
+      <div class="note" id="noteBubble" hidden>
+        <div class="note-from"><span class="note-avatar" aria-hidden="true">MF</span><span>Magnus Forever</span></div>
+        <div class="bubble">
+          <div class="bubble-text" id="noteText"></div>
+          <div class="bubble-link" id="noteLink" hidden>
+            <a class="btn" id="noteLinkA" href="#" target="_blank" rel="noopener noreferrer">
+              Watch the draft and leave comments
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v8M16 4L7 13"/></svg>
+            </a>
+            <div class="small">Pause the video and comment, and your note is pinned to that exact moment.</div>
+          </div>
+        </div>
+      </div>
       <div class="top" style="align-items:flex-end;gap:24px 48px">
         <div>
           <div class="small" id="hello"></div>
@@ -111,8 +124,8 @@
   </section>
 </main>
 
-<script src="config.js?v=9"></script>
-<script src="api.js?v=9"></script>
+<script src="config.js?v=10"></script>
+<script src="api.js?v=10"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
@@ -182,8 +195,35 @@
   }
 
   /* ---------- my job ---------- */
+  // Lines starting with -, * or • become bullet points; blank lines split paragraphs.
+  function noteHtml(text) {
+    var out = '', list = false;
+    String(text || '').split('\n').forEach(function (line) {
+      var m = line.match(/^\s*[-*•]\s+(.*)$/);
+      if (m) { if (!list) { out += '<ul>'; list = true; } out += '<li>' + esc(m[1]) + '</li>'; return; }
+      if (list) { out += '</ul>'; list = false; }
+      if (line.trim()) out += '<p>' + esc(line.trim()) + '</p>';
+    });
+    if (list) out += '</ul>';
+    return out;
+  }
+
+  function renderNote(j) {
+    var box = document.getElementById('noteBubble');
+    var show = j.stage === 4 && (j.note || j.reviewLink);
+    box.hidden = !show;
+    if (!show) return;
+    var t = document.getElementById('noteText');
+    t.innerHTML = noteHtml(j.note);
+    t.hidden = !j.note;
+    var ok = /^https:\/\//i.test(j.reviewLink || '');
+    document.getElementById('noteLink').hidden = !ok;
+    if (ok) document.getElementById('noteLinkA').href = j.reviewLink;
+  }
+
   function renderJob(data) {
     var j = data.job, cur = j.stage, all = cur === 7;
+    renderNote(j);
     document.getElementById('hello').textContent = 'Hi ' + j.business + ", here's where your edit is.";
     document.getElementById('project').textContent = j.project || 'Your edit';
 

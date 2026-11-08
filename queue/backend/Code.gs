@@ -12,7 +12,7 @@
  */
 
 var SHEET_NAME = 'Jobs';
-var HEAD = ['ref', 'hash', 'salt', 'business', 'project', 'stage', 'order', 'rush', 'draftDue', 'created', 'updated', 'password'];
+var HEAD = ['ref', 'hash', 'salt', 'business', 'project', 'stage', 'order', 'rush', 'draftDue', 'created', 'updated', 'password', 'note', 'reviewLink'];
 var STAGES = ['Booked', 'In queue', 'Editing', 'Draft sent', 'Revisions', 'Final ready', 'Delivered'];
 var REF_PREFIX = 'MF-';
 var MAX_FAILS = 8;          // wrong passwords allowed per reference code...
@@ -107,6 +107,9 @@ function jobView_(me, jobs) {
       stage: me.stage,
       draftDue: me.draftDue,
       rush: me.rush,
+      // Your message and review link only show while the draft is out (stage 4).
+      note: me.stage === 4 ? me.note : '',
+      reviewLink: me.stage === 4 ? me.reviewLink : '',
       place: idx >= 0 ? idx + 1 : null,
       ahead: idx > 0 ? line.slice(Math.max(0, idx - 2), idx).map(function (j) { return j.ref; }) : [],
       behind: idx >= 0 ? line.slice(idx + 1, idx + 3).map(function (j) { return j.ref; }) : []
@@ -130,7 +133,7 @@ function adminList_() {
     jobs: line.concat(others).map(function (j) {
       return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush,
                draftDue: j.draftDue, place: placeOf[j.ref] || null, created: j.created,
-               password: j.password || '' };
+               password: j.password || '', note: j.note || '', reviewLink: j.reviewLink || '' };
     })
   };
 }
@@ -166,6 +169,8 @@ function update_(req) {
   if ('stage' in f) j.stage = stageNum_(f.stage, j.stage);
   if ('rush' in f) j.rush = !!f.rush;
   if ('draftDue' in f) j.draftDue = clean_(f.draftDue, 60);
+  if ('note' in f) j.note = cleanNote_(f.note);
+  if ('reviewLink' in f) j.reviewLink = cleanLink_(f.reviewLink);
   // Starting the edit or marking rush puts a job at the front; joining the line puts it at the back.
   if ((j.stage === 3 && !wasEditing) || (j.rush && !wasRush)) j.order = frontOrder_(jobs);
   else if (inLine_(j) && !wasInLine) j.order = backOrder_(jobs);
@@ -253,14 +258,15 @@ function readJobs_() {
       stage: stageNum_(r[5], 1), order: Number(r[6]) || 0,
       rush: r[7] === true || String(r[7]).toUpperCase() === 'TRUE',
       draftDue: String(r[8] || ''), created: String(r[9] || ''), updated: String(r[10] || ''),
-      password: String(r[11] || '')
+      password: String(r[11] || ''), note: String(r[12] || ''), reviewLink: String(r[13] || '')
     };
   }).filter(function (j) { return j.ref; });
 }
 
 function writeJob_(row, j) {
   sheet_().getRange(row, 1, 1, HEAD.length).setValues([[j.ref, j.hash, j.salt, j.business, j.project,
-    j.stage, j.order, j.rush, j.draftDue, j.created, new Date().toISOString(), j.password || '']]);
+    j.stage, j.order, j.rush, j.draftDue, j.created, new Date().toISOString(), j.password || '',
+    j.note || '', j.reviewLink || '']]);
 }
 
 function findRow_(ref) {
@@ -319,6 +325,18 @@ function normRef_(ref) {
 function stageNum_(v, fallback) {
   var n = Math.round(Number(v));
   return n >= 1 && n <= STAGES.length ? n : fallback;
+}
+
+// Keeps line breaks (for bullet points); max 2000 characters.
+function cleanNote_(v) {
+  return String(v == null ? '' : v).replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f]/g, ' ')
+    .replace(/\n{3,}/g, '\n\n').trim().slice(0, 2000);
+}
+
+// Only https links, so a review link can't run code on the client page.
+function cleanLink_(v) {
+  var s = String(v == null ? '' : v).trim();
+  return /^https:\/\/[^\s"'<>]+$/i.test(s) ? s.slice(0, 500) : '';
 }
 
 function clean_(v, max) {
