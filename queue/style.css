@@ -194,3 +194,5 @@ table.admin { table-layout: fixed; }
 .hours-row.on dd b { color: var(--green-text); }
 .hours-row dd span { font-size: 14px; color: var(--muted); }
 .hours-note { margin: 0; font-size: 14px; color: var(--muted); }
+.preview-banner { background: #111; color: #fff; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 500; }
+@media (max-width: 1000px) { table.admin td.c-ref { flex-basis: calc(100% - 260px); } }

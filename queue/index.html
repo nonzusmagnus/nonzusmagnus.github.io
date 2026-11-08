@@ -7,7 +7,7 @@
 <title>Edit queue · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <main class="wrap">
@@ -16,6 +16,7 @@
     <div class="meta" id="topMeta"></div>
   </div>
 
+  <div class="preview-banner" id="previewBanner" role="status" hidden></div>
   <div class="demo-banner" id="demoBanner" hidden>Demo mode: sample data saved in this browser only. Try reference <b class="mono">MF-7KX2</b> with password <b class="mono">demo-pass</b>.</div>
 
   <!-- PUBLIC BOARD -->
@@ -110,8 +111,8 @@
   </section>
 </main>
 
-<script src="config.js?v=5"></script>
-<script src="api.js?v=5"></script>
+<script src="config.js?v=6"></script>
+<script src="api.js?v=6"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
@@ -141,7 +142,8 @@
 
   function setMeta(updated) {
     var html = '';
-    if (session) html += '<span>Signed in as <span class="mono" style="color:#111">' + esc(session.ref) + '</span></span><button class="linkbtn" id="signOut" type="button">Sign out</button>';
+    if (session && session.adminKey) html += '<span>Viewing as <span class="mono" style="color:#111">' + esc(session.ref) + '</span></span><button class="linkbtn" id="signOut" type="button">Close preview</button>';
+    else if (session) html += '<span>Signed in as <span class="mono" style="color:#111">' + esc(session.ref) + '</span></span><button class="linkbtn" id="signOut" type="button">Sign out</button>';
     else if (updated) html += '<span>Updated ' + esc(M.timeAgo(updated)) + '</span>';
     document.getElementById('topMeta').innerHTML = html;
     var so = document.getElementById('signOut');
@@ -230,9 +232,11 @@
 
   async function loadJob() {
     try {
-      var data = await M.call({ action: 'job', ref: session.ref, password: session.password });
+      var data = await M.call(session.adminKey
+        ? { action: 'adminJob', ref: session.ref, adminKey: session.adminKey }
+        : { action: 'job', ref: session.ref, password: session.password });
       if (data.ok) { renderJob(data); return true; }
-      if (data.error === 'bad_login' || data.error === 'locked') { signOut(); return false; }
+      if (['bad_login', 'locked', 'not_admin', 'not_found'].indexOf(data.error) >= 0) { signOut(); return false; }
     } catch (e) { /* keep showing the last good view */ }
     return true;
   }
@@ -250,6 +254,14 @@
   }
 
   function signOut() {
+    if (session && session.adminKey) {
+      try { sessionStorage.removeItem('mfq-preview'); } catch (e) {}
+      session = null;
+      document.getElementById('previewBanner').hidden = true;
+      history.replaceState(null, '', location.pathname);
+      show('board'); loadBoard();
+      return;
+    }
     session = null; clearLogin();
     show('board'); loadBoard();
   }
@@ -284,10 +296,29 @@
   document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(); });
   if (M.demo) window.addEventListener('storage', function (e) { if (e.key === M.demoKey) refresh(); });
 
-  var saved = readLogin();
+  // Admin preview: opened from "View as client" on the admin page.
+  var PREVIEW_KEY = 'mfq-preview';
+  var previewRef = (new URLSearchParams(location.search).get('preview') || '').toUpperCase();
+  var preview = null;
+  if (previewRef) {
+    try {
+      var hand = JSON.parse(localStorage.getItem(PREVIEW_KEY) || 'null');
+      localStorage.removeItem(PREVIEW_KEY);
+      if (hand && hand.ref === previewRef && Date.now() - hand.at < 60000) sessionStorage.setItem(PREVIEW_KEY, hand.key);
+      var k = sessionStorage.getItem(PREVIEW_KEY);
+      if (k) preview = { ref: previewRef, adminKey: k };
+    } catch (e) {}
+  }
+
+  var saved = preview || readLogin();
+  if (preview) {
+    var pb = document.getElementById('previewBanner');
+    pb.textContent = "Admin preview: this is exactly what " + preview.ref + " sees. Nothing here changes their login.";
+    pb.hidden = false;
+  }
   var qref = new URLSearchParams(location.search).get('ref');
   if (qref) document.getElementById('ref').value = qref.toUpperCase();
-  if (saved && saved.ref && saved.password) {
+  if (saved && saved.ref && (saved.password || saved.adminKey)) {
     session = saved; show('job');
     loadJob().then(function (ok) { if (!ok) show('board'); });
   } else {

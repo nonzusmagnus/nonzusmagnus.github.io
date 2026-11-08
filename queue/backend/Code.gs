@@ -40,6 +40,7 @@ function handle_(req) {
     if (!isAdmin_(req.adminKey)) return { ok: false, error: 'not_admin' };
     switch (req.action) {
       case 'adminList': return adminList_();
+      case 'adminJob': return adminJob_(req.ref);
       case 'add': return withLock_(function () { return add_(req); });
       case 'update': return withLock_(function () { return update_(req); });
       case 'reorder': return withLock_(function () { return reorder_(req.refs); });
@@ -79,7 +80,19 @@ function job_(ref, password) {
     return { ok: false, error: 'bad_login' };
   }
   cache.remove(failKey);
+  return jobView_(me, jobs);
+}
 
+// Lets you open any client's page from the admin page without their password.
+function adminJob_(ref) {
+  ref = normRef_(ref);
+  var jobs = readJobs_();
+  for (var i = 0; i < jobs.length; i++) if (jobs[i].ref === ref) return jobView_(jobs[i], jobs);
+  return { ok: false, error: 'not_found' };
+}
+
+function jobView_(me, jobs) {
+  var ref = me.ref;
   var line = queue_(jobs);
   var idx = -1;
   for (var k = 0; k < line.length; k++) if (line[k].ref === ref) idx = k;

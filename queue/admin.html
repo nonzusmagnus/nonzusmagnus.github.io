@@ -7,7 +7,7 @@
 <title>Queue admin · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <main class="wrap wide">
@@ -60,7 +60,7 @@
       <div class="top"><div class="eyebrow">All jobs</div><div class="small">Drag the handle to reorder the line. Changes save straight away and clients see them within about 20 seconds.</div></div>
       <div class="tablebox">
         <table class="admin">
-          <colgroup><col style="width:52px"><col style="width:48px"><col style="width:112px"><col><col><col style="width:160px"><col style="width:160px"><col style="width:56px"><col style="width:96px"></colgroup>
+          <colgroup><col style="width:52px"><col style="width:48px"><col style="width:112px"><col><col><col style="width:160px"><col style="width:160px"><col style="width:56px"><col style="width:140px"></colgroup>
           <thead><tr>
             <th scope="col"><span class="sr">Drag</span></th><th scope="col">Place</th><th scope="col">Reference</th><th scope="col">Business</th><th scope="col">Project</th>
             <th scope="col">Stage</th><th scope="col">Draft due</th><th scope="col">Rush</th><th scope="col"><span class="sr">Actions</span></th>
@@ -73,8 +73,8 @@
 </main>
 <div class="toast" id="toast" hidden></div>
 
-<script src="config.js?v=5"></script>
-<script src="api.js?v=5"></script>
+<script src="config.js?v=6"></script>
+<script src="api.js?v=6"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
@@ -147,7 +147,8 @@
         '<td class="c-grow" data-label="Draft due"><input type="date" class="datebtn" data-f="draftDue" value="' + esc(M.isoDate(j.draftDue) ? j.draftDue : '') + '" aria-label="Draft due for ' + esc(j.ref) + '"' +
           (j.draftDue && !M.isoDate(j.draftDue) ? ' title="Was: ' + esc(j.draftDue) + '"' : '') + '></td>' +
         '<td class="c-rush" data-label="Rush"><input type="checkbox" data-f="rush"' + (j.rush ? ' checked' : '') + ' aria-label="Rush for ' + esc(j.ref) + '" style="width:18px;height:18px;accent-color:#111"></td>' +
-        '<td class="c-act"><div class="actions"><button class="iconbtn" data-a="reset" type="button" title="New password" aria-label="New password for ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="12" r="3.5"/><path d="M9.5 9.5L16 3M13.5 5.5l2 2M11.5 7.5l1.5 1.5"/></svg></button>' +
+        '<td class="c-act"><div class="actions"><button class="iconbtn" data-a="view" type="button" title="View as client" aria-label="View ' + esc(j.ref) + ' as the client sees it"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6S1.5 10 1.5 10z"/><circle cx="10" cy="10" r="2.5"/></svg></button>' +
+        '<button class="iconbtn" data-a="reset" type="button" title="New password" aria-label="New password for ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="12" r="3.5"/><path d="M9.5 9.5L16 3M13.5 5.5l2 2M11.5 7.5l1.5 1.5"/></svg></button>' +
         '<button class="iconbtn" data-a="remove" type="button" title="Remove" aria-label="Remove ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5h13M8 5.5V3.5h4v2M5.5 5.5l.8 11h7.4l.8-11M8.5 8.5v5M11.5 8.5v5"/></svg></button></div></td></tr>';
     }).join('');
     document.getElementById('rows').innerHTML = html || '<tr><td colspan="9" class="small">No clients yet. Add one above.</td></tr>';
@@ -225,6 +226,11 @@
     var b = e.target.closest('button[data-a]');
     if (!b) return;
     var tr = b.closest('tr'), ref = tr.getAttribute('data-ref'), a = b.getAttribute('data-a'), res;
+    if (a === 'view') {
+      try { localStorage.setItem('mfq-preview', JSON.stringify({ key: adminKey, ref: ref, at: Date.now() })); } catch (x) {}
+      window.open(clientUrl() + '?preview=' + encodeURIComponent(ref), '_blank');
+      return;
+    }
     if (a === 'reset') {
       if (!confirm('Make a new password for ' + ref + '? The old one stops working.')) return;
       res = await api({ action: 'resetPassword', ref: ref });

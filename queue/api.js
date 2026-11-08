@@ -117,9 +117,7 @@
       if (req.action === 'board') {
         return { ok: true, updated: s.updated, top: line.slice(0, 3).map(function (j) { return { ref: j.ref, stage: j.stage, rush: j.rush }; }) };
       }
-      if (req.action === 'job') {
-        var me = s.jobs.find(function (j) { return j.ref === norm(req.ref) && j.password === req.password; });
-        if (!me) return { ok: false, error: 'bad_login' };
+      function view(me) {
         var idx = line.indexOf(me);
         return { ok: true, updated: s.updated, job: {
           ref: me.ref, business: me.business, project: me.project, stage: me.stage, draftDue: me.draftDue, rush: me.rush,
@@ -128,8 +126,13 @@
           behind: idx >= 0 ? line.slice(idx + 1, idx + 3).map(function (j) { return j.ref; }) : []
         } };
       }
+      if (req.action === 'job') {
+        var me = s.jobs.find(function (j) { return j.ref === norm(req.ref) && j.password === req.password; });
+        return me ? view(me) : { ok: false, error: 'bad_login' };
+      }
       if (req.adminKey !== ADMIN) return { ok: false, error: 'not_admin' };
       var find = function (ref) { return s.jobs.find(function (j) { return j.ref === norm(ref); }); };
+      if (req.action === 'adminJob') { var aj = find(req.ref); return aj ? view(aj) : { ok: false, error: 'not_found' }; }
       switch (req.action) {
         case 'adminList':
           var place = {};
