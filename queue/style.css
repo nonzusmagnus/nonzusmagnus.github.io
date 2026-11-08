@@ -144,3 +144,38 @@ input.datebtn::-webkit-calendar-picker-indicator { cursor: pointer; }
 .admin input.datebtn { width: 140px; }
 .admin td input[data-f=business], .admin td input[data-f=project] { min-width: 130px; }
 .admin td:first-child, .admin th:first-child { padding-right: 0; width: 52px; }
+
+/* admin table: fit the page */
+.wrap.wide { max-width: 1440px; }
+table.admin { table-layout: fixed; }
+.admin th, .admin td { padding: 12px 10px; }
+.admin td:first-child, .admin th:first-child { padding-left: 14px; padding-right: 0; width: auto; }
+.admin select, .admin input.datebtn, .admin td input[data-f=business], .admin td input[data-f=project] { width: 100%; min-width: 0; }
+.admin .mono { font-size: 14px; }
+.iconbtn { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 10px; background: #fff; color: var(--text); cursor: pointer; flex: none; }
+.iconbtn:hover { background: var(--soft); }
+.iconbtn[data-a=remove]:hover { color: var(--red-text); border-color: var(--red-text); }
+
+/* narrower screens: each job becomes a card */
+@media (max-width: 1000px) {
+  .tablebox:has(table.admin) { overflow: visible; }
+  table.admin, table.admin tbody { display: block; }
+  table.admin thead, table.admin colgroup { display: none; }
+  table.admin tr { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 14px; padding: 16px; border-bottom: 1px solid var(--line); }
+  table.admin tr:last-child { border-bottom: 0; }
+  table.admin td { display: block; padding: 0; border: 0; }
+  table.admin td.c-drag, table.admin td.c-place, table.admin td.c-ref { align-self: center; }
+  table.admin td.c-ref { margin-right: auto; }
+  table.admin td.c-act { order: -1; margin-left: auto; align-self: center; }
+  table.admin td.c-ref { order: -2; }
+  table.admin td.c-place { order: -3; }
+  table.admin td.c-drag { order: -4; }
+  table.admin td.c-grow { flex: 1 1 180px; min-width: 0; }
+  table.admin td[data-label]::before { content: attr(data-label); display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+  table.admin td.c-rush { display: flex; flex-direction: column; align-items: center; }
+  table.admin td.c-drag:empty { display: none; }
+}
+@media (max-width: 1000px) {
+  table.admin td.c-ref { flex: 1 0 calc(100% - 210px); margin-right: 0; }
+  table.admin td.c-act { margin-left: 0; }
+}

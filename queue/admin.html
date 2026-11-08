@@ -7,10 +7,10 @@
 <title>Queue admin · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
-<main class="wrap">
+<main class="wrap wide">
   <div class="top">
     <div class="brand">Magnus Forever · Queue admin</div>
     <div class="meta" id="topMeta"></div>
@@ -60,6 +60,7 @@
       <div class="top"><div class="eyebrow">All jobs</div><div class="small">Drag the handle to reorder the line. Changes save straight away and clients see them within about 20 seconds.</div></div>
       <div class="tablebox">
         <table class="admin">
+          <colgroup><col style="width:52px"><col style="width:48px"><col style="width:112px"><col><col><col style="width:160px"><col style="width:160px"><col style="width:56px"><col style="width:96px"></colgroup>
           <thead><tr>
             <th scope="col"><span class="sr">Drag</span></th><th scope="col">Place</th><th scope="col">Reference</th><th scope="col">Business</th><th scope="col">Project</th>
             <th scope="col">Stage</th><th scope="col">Draft due</th><th scope="col">Rush</th><th scope="col"><span class="sr">Actions</span></th>
@@ -72,8 +73,8 @@
 </main>
 <div class="toast" id="toast" hidden></div>
 
-<script src="config.js"></script>
-<script src="api.js"></script>
+<script src="config.js?v=4"></script>
+<script src="api.js?v=4"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
@@ -134,20 +135,20 @@
     var html = data.jobs.map(function (j) {
       var dot = j.stage === 7 ? 'done' : (j.stage === 3 ? 'on' : 'ring');
       return '<tr data-ref="' + esc(j.ref) + '" data-biz="' + esc(j.business) + '"' + (j.place ? ' data-line' : '') + '>' +
-        '<td>' + (j.place
+        '<td class="c-drag">' + (j.place
           ? '<button class="handle" data-drag type="button" aria-label="Drag to reorder ' + esc(j.ref) + ' (or use the arrow keys)" title="Drag to reorder">' +
             '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><circle cx="6.5" cy="4" r="1.5"/><circle cx="11.5" cy="4" r="1.5"/><circle cx="6.5" cy="9" r="1.5"/><circle cx="11.5" cy="9" r="1.5"/><circle cx="6.5" cy="14" r="1.5"/><circle cx="11.5" cy="14" r="1.5"/></svg></button>'
           : '') + '</td>' +
-        '<td class="place">' + (j.place || '–') + '</td>' +
-        '<td><span class="status"><span class="dot ' + dot + '"></span><span class="mono">' + esc(j.ref) + '</span></span></td>' +
-        '<td><input type="text" data-f="business" value="' + esc(j.business) + '" aria-label="Business name"></td>' +
-        '<td><input type="text" data-f="project" value="' + esc(j.project) + '" aria-label="Project"></td>' +
-        '<td>' + stageSelect(j) + '</td>' +
-        '<td><input type="date" class="datebtn" data-f="draftDue" value="' + esc(M.isoDate(j.draftDue) ? j.draftDue : '') + '" aria-label="Draft due for ' + esc(j.ref) + '"' +
+        '<td class="place c-place">' + (j.place || '–') + '</td>' +
+        '<td class="c-ref"><span class="status"><span class="dot ' + dot + '"></span><span class="mono">' + esc(j.ref) + '</span></span></td>' +
+        '<td class="c-grow" data-label="Business"><input type="text" data-f="business" value="' + esc(j.business) + '" aria-label="Business name"></td>' +
+        '<td class="c-grow" data-label="Project"><input type="text" data-f="project" value="' + esc(j.project) + '" aria-label="Project"></td>' +
+        '<td class="c-grow" data-label="Stage">' + stageSelect(j) + '</td>' +
+        '<td class="c-grow" data-label="Draft due"><input type="date" class="datebtn" data-f="draftDue" value="' + esc(M.isoDate(j.draftDue) ? j.draftDue : '') + '" aria-label="Draft due for ' + esc(j.ref) + '"' +
           (j.draftDue && !M.isoDate(j.draftDue) ? ' title="Was: ' + esc(j.draftDue) + '"' : '') + '></td>' +
-        '<td><input type="checkbox" data-f="rush"' + (j.rush ? ' checked' : '') + ' aria-label="Rush" style="width:18px;height:18px;accent-color:#111"></td>' +
-        '<td><div class="actions"><button class="btn sm ghost" data-a="reset" type="button">New password</button>' +
-        '<button class="btn sm ghost" data-a="remove" type="button">Remove</button></div></td></tr>';
+        '<td class="c-rush" data-label="Rush"><input type="checkbox" data-f="rush"' + (j.rush ? ' checked' : '') + ' aria-label="Rush for ' + esc(j.ref) + '" style="width:18px;height:18px;accent-color:#111"></td>' +
+        '<td class="c-act"><div class="actions"><button class="iconbtn" data-a="reset" type="button" title="New password" aria-label="New password for ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="12" r="3.5"/><path d="M9.5 9.5L16 3M13.5 5.5l2 2M11.5 7.5l1.5 1.5"/></svg></button>' +
+        '<button class="iconbtn" data-a="remove" type="button" title="Remove" aria-label="Remove ' + esc(j.ref) + '"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5h13M8 5.5V3.5h4v2M5.5 5.5l.8 11h7.4l.8-11M8.5 8.5v5M11.5 8.5v5"/></svg></button></div></td></tr>';
     }).join('');
     document.getElementById('rows').innerHTML = html || '<tr><td colspan="9" class="small">No clients yet. Add one above.</td></tr>';
     document.getElementById('topMeta').innerHTML = '<a href="' + esc(clientUrl()) + '" target="_blank" rel="noopener">Open client page</a>' +

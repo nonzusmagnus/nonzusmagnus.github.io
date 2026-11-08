@@ -82,6 +82,16 @@
     }
     function load() {
       try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.jobs) return s; } catch (e) {}
+      // Carry over demo data saved by the first version, keeping the line in the order it showed.
+      try {
+        var old = JSON.parse(localStorage.getItem('mfq-demo-v1'));
+        if (old && old.jobs) {
+          old.jobs.slice().sort(function (a, b) {
+            return (b.stage === 3) - (a.stage === 3) || (b.rush ? 1 : 0) - (a.rush ? 1 : 0) || a.order - b.order;
+          }).forEach(function (j, i) { j.order = i + 1; });
+          save(old, true); return old;
+        }
+      } catch (e) {}
       var s2 = seed(); save(s2, true); return s2;
     }
     function save(s, quiet) {
