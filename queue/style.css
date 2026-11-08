@@ -179,3 +179,18 @@ table.admin { table-layout: fixed; }
   table.admin td.c-ref { flex: 1 0 calc(100% - 210px); margin-right: 0; }
   table.admin td.c-act { margin-left: 0; }
 }
+
+/* contact hours (client job page) */
+.hours { border: 1px solid #e4e4e4; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+.hours-head { display: flex; align-items: center; gap: 10px; }
+.hours-head h2 { font-size: 18px; }
+.hours-grid { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.hours-row { border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.hours-row.on { background: #f0faf3; }
+.hours-row.off { background: var(--soft); }
+.hours-row dt { font-size: 14px; font-weight: 600; color: var(--muted); }
+.hours-row dd { margin: 0; display: flex; flex-direction: column; gap: 2px; }
+.hours-row dd b { font-size: 22px; font-weight: 700; letter-spacing: -0.015em; }
+.hours-row.on dd b { color: var(--green-text); }
+.hours-row dd span { font-size: 14px; color: var(--muted); }
+.hours-note { margin: 0; font-size: 14px; color: var(--muted); }

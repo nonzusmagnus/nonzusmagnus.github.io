@@ -7,7 +7,7 @@
 <title>Edit queue · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <main class="wrap">
@@ -88,12 +88,30 @@
           <span><span class="dot on"></span>Waiting</span>
         </div>
       </div>
+
+      <aside class="hours" aria-labelledby="hoursTitle">
+        <div class="hours-head">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M10 5.5V10l3 2"/></svg>
+          <h2 id="hoursTitle">When you can reach me</h2>
+        </div>
+        <dl class="hours-grid">
+          <div class="hours-row on">
+            <dt>Monday to Friday</dt>
+            <dd><b>2pm – 7pm</b><span>Messages and calls</span></dd>
+          </div>
+          <div class="hours-row off">
+            <dt>Saturday and Sunday</dt>
+            <dd><b>Unavailable</b><span>Kept for editing and shooting</span></dd>
+          </div>
+        </dl>
+        <p class="hours-note">Messages sent outside these hours are answered in the next weekday window.</p>
+      </aside>
     </div>
   </section>
 </main>
 
-<script src="config.js?v=4"></script>
-<script src="api.js?v=4"></script>
+<script src="config.js?v=5"></script>
+<script src="api.js?v=5"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
