@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Project Status · Magnus Forever</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Example site styles. On your real site, your own CSS replaces this block. -->
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; font: 17px/1.6 'Inter', system-ui, sans-serif; background: #fff; color: #111; }
+  @media (prefers-color-scheme: dark) { body { background: #0e0e0e; color: #f2f2f2; } }
+  .site-nav, .site-foot { max-width: 1100px; margin: 0 auto; padding: 22px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .site-nav a, .site-foot a { color: inherit; text-decoration: none; }
+  .site-nav .logo { font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 14px; }
+  .site-nav nav { display: flex; gap: 22px; font-size: 15px; }
+  .site-foot { font-size: 14px; opacity: .6; border-top: 1px solid rgba(127,127,127,.25); }
+</style>
+
+<!-- Status section styles -->
+<link rel="stylesheet" href="mf-status.css">
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="logo" href="/">Magnus Forever</a>
+  <nav><a href="/">Work</a><a href="/">About</a><a href="/">Contact</a></nav>
+</header>
+
+<main>
+  <!-- ▼ Paste this section anywhere on your site -->
+  <section data-mf-status data-src="data.json"></section>
+  <script src="queue.js"></script>
+  <script src="mf-status.js"></script>
+  <!-- ▲ -->
+</main>
+
+<footer class="site-foot">
+  <span>© Magnus Forever</span>
+  <a href="https://instagram.com/magnusforever" target="_blank" rel="noopener">@magnusforever</a>
+</footer>
+
+</body>
+</html>

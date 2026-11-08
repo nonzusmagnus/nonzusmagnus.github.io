@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Edit Pipeline</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#ffffff; --text:#111111; --muted:#5c5c5c; --line:#e4e4e4; --soft:#f5f5f4; --accent:#111111; --gate:#b4690e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#0e0e0e; --text:#f2f2f2; --muted:#a3a3a3; --line:#2a2a2a; --soft:#181818; --accent:#f2f2f2; --gate:#f0a54a; }
+  }
+  :root[data-theme="dark"] { --bg:#0e0e0e; --text:#f2f2f2; --muted:#a3a3a3; --line:#2a2a2a; --soft:#181818; --accent:#f2f2f2; --gate:#f0a54a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:17px/1.55 'Inter',system-ui,sans-serif; }
+  .wrap { max-width:640px; margin:0 auto; padding:40px 16px 64px; }
+  h1 { font-size:30px; font-weight:700; letter-spacing:-.02em; margin:0 0 6px; }
+  .sub { color:var(--muted); margin:0 0 36px; }
+
+  ol { list-style:none; margin:0; padding:0; }
+  li.stage { display:grid; grid-template-columns:40px 1fr; gap:16px; }
+  .rail { display:flex; flex-direction:column; align-items:center; }
+  .num { width:40px; height:40px; border-radius:50%; border:2px solid var(--text); display:grid; place-items:center; font-weight:700; font-size:16px; flex:none; }
+  .queue .num { background:var(--text); color:var(--bg); }
+  .bar { width:2px; flex:1; background:var(--line); }
+  li.stage:last-child .bar { display:none; }
+  .body { padding:6px 0 28px; }
+  .body h2 { font-size:19px; font-weight:600; margin:0; }
+  .body p { margin:2px 0 0; color:var(--muted); }
+  .gate { display:inline-block; margin-top:10px; font-size:14px; font-weight:600; color:var(--gate); }
+  .loop { display:inline-block; margin-top:10px; font-size:14px; font-weight:600; }
+
+  .key { display:flex; flex-wrap:wrap; gap:20px; margin:8px 0 40px; font-size:14px; color:var(--muted); }
+  .key span { display:inline-flex; align-items:center; gap:8px; }
+  .key i { width:14px; height:14px; border-radius:50%; border:2px solid var(--text); display:inline-block; }
+  .key i.f { background:var(--text); }
+
+  .rules { border-top:1px solid var(--line); padding-top:28px; }
+  .rules h3 { font-size:15px; font-weight:600; margin:0 0 12px; }
+  .rules ul { margin:0; padding:0; list-style:none; }
+  .rules li { padding:10px 0; border-bottom:1px solid var(--line); }
+  .rules li:last-child { border-bottom:0; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Edit Pipeline</h1>
+  <p class="sub">Every job moves through these 7 steps.</p>
+
+  <div class="key">
+    <span><i class="f"></i>In the edit queue</span>
+    <span><i></i>Waiting on client or admin</span>
+  </div>
+
+  <ol>
+    <li class="stage">
+      <div class="rail"><div class="num">1</div><div class="bar"></div></div>
+      <div class="body"><h2>Booked</h2><p>Job created and the client gets their status link.</p>
+        <span class="gate">Needs deposit + footage to continue</span></div>
+    </li>
+    <li class="stage queue">
+      <div class="rail"><div class="num">2</div><div class="bar"></div></div>
+      <div class="body"><h2>In queue</h2><p>The client sees their place in line and an estimated draft date.</p></div>
+    </li>
+    <li class="stage queue">
+      <div class="rail"><div class="num">3</div><div class="bar"></div></div>
+      <div class="body"><h2>Editing</h2><p>Being cut now.</p></div>
+    </li>
+    <li class="stage">
+      <div class="rail"><div class="num">4</div><div class="bar"></div></div>
+      <div class="body"><h2>Draft sent</h2><p>The client watches the draft and sends notes within 24 or 48 hours.</p></div>
+    </li>
+    <li class="stage queue">
+      <div class="rail"><div class="num">5</div><div class="bar"></div></div>
+      <div class="body"><h2>Revisions</h2><p>Notes are applied, then a new draft goes back to step 4.</p>
+        <span class="loop">↺ Repeats, with 2 rounds included</span></div>
+    </li>
+    <li class="stage">
+      <div class="rail"><div class="num">6</div><div class="bar"></div></div>
+      <div class="body"><h2>Final ready</h2><p>Approved. The balance invoice is sent.</p>
+        <span class="gate">Needs balance paid to release files</span></div>
+    </li>
+    <li class="stage">
+      <div class="rail"><div class="num">7</div><div class="bar"></div></div>
+      <div class="body"><h2>Delivered</h2><p>Files are released and the job is closed.</p></div>
+    </li>
+  </ol>
+
+  <div class="rules">
+    <h3>Queue rules</h3>
+    <ul>
+      <li>No place in the queue until the deposit and footage are in.</li>
+      <li>Rush jobs go to the front for a fee.</li>
+      <li>Waiting on a client never holds up the queue.</li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>

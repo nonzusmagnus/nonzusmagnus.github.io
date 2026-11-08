@@ -1,0 +1,60 @@
+/* Magnus Forever · project status section
+   Everything is scoped under .mf-status, so it won't touch the rest of your site.
+   It inherits your site's font and text colour. Override these variables to match: */
+.mf-status {
+  --mf-muted: rgba(127, 127, 127, 1);
+  --mf-line: rgba(127, 127, 127, .25);
+  --mf-soft: rgba(127, 127, 127, .12);
+  --mf-btn-bg: #111;
+  --mf-btn-text: #fff;
+  --mf-wait: #c2410c;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 56px 20px 80px;
+  font: inherit;
+  color: inherit;
+  line-height: 1.65;
+}
+@media (prefers-color-scheme: dark) {
+  .mf-status { --mf-btn-bg: #f2f2f2; --mf-btn-text: #111; }
+}
+.mf-status * { box-sizing: border-box; }
+.mf-status h1 { font-size: clamp(30px, 6vw, 44px); line-height: 1.1; letter-spacing: -.02em; font-weight: 700; margin: 0; }
+.mf-status h2 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--mf-muted); margin: 0 0 12px; }
+.mf-status p { margin: 0 0 12px; }
+.mf-status a { color: inherit; }
+
+.mf-status .mf-eyebrow { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--mf-muted); margin-bottom: 10px; }
+.mf-status .mf-sub { color: var(--mf-muted); margin-top: 10px; }
+.mf-status .mf-head { padding-bottom: 32px; border-bottom: 1px solid var(--mf-line); }
+.mf-status .mf-block { padding: 32px 0; border-bottom: 1px solid var(--mf-line); }
+.mf-status .mf-headline { font-size: clamp(22px, 4.5vw, 28px); font-weight: 600; line-height: 1.3; margin-bottom: 8px; }
+
+.mf-status .mf-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 20px; }
+.mf-status .mf-btn { display: inline-block; padding: 12px 22px; border-radius: 999px; background: var(--mf-btn-bg); color: var(--mf-btn-text); text-decoration: none; font-weight: 600; }
+.mf-status .mf-link { font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+
+.mf-status .mf-note { margin: 32px 0 0; padding: 4px 0 4px 18px; border-left: 3px solid currentColor; }
+.mf-status .mf-note p { white-space: pre-wrap; margin-bottom: 6px; }
+.mf-status .mf-note cite { font-style: normal; font-size: 14px; color: var(--mf-muted); }
+
+.mf-status .mf-dates { margin: 0; }
+.mf-status .mf-dates div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--mf-line); }
+.mf-status .mf-dates div:last-child { border-bottom: 0; }
+.mf-status .mf-dates dt { color: var(--mf-muted); }
+.mf-status .mf-dates dd { margin: 0; font-weight: 600; text-align: right; }
+.mf-status .mf-wait { color: var(--mf-wait); }
+
+.mf-status .mf-lane { display: flex; gap: 4px; height: 14px; margin-top: 16px; }
+.mf-status .mf-lane i { border-radius: 3px; background: var(--mf-soft); min-width: 6px; }
+.mf-status .mf-lane i.mf-me { background: currentColor; }
+
+.mf-status .mf-steps { list-style: none; margin: 0; padding: 0; counter-reset: mf; }
+.mf-status .mf-steps li { counter-increment: mf; padding: 8px 0 8px 40px; position: relative; color: var(--mf-muted); }
+.mf-status .mf-steps li::before { content: counter(mf); position: absolute; left: 0; top: 8px; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--mf-line); display: grid; place-items: center; font-size: 13px; font-weight: 600; line-height: 1; }
+.mf-status .mf-steps li.mf-done::before { content: '✓'; border-color: currentColor; }
+.mf-status .mf-steps li.mf-now { color: inherit; font-weight: 600; }
+.mf-status .mf-steps li.mf-now::before { border: 2px solid currentColor; }
+.mf-status .mf-steps li span { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-left: 8px; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; }
+
+.mf-status .mf-small { font-size: 14px; color: var(--mf-muted); margin-top: 28px; }

@@ -1,0 +1,98 @@
+{
+  "settings": {
+    "studio": "Magnus Forever",
+    "weeklyCapacityHours": 20,
+    "workDays": [1, 2, 3, 4, 5],
+    "blockedDates": ["2026-11-13"],
+    "feedbackWindowHours": 48,
+    "startDate": "",
+    "whatsapp": "353000000000",
+    "email": "hello@magnusforever.com"
+  },
+  "jobs": [
+    {
+      "id": "lumen-skincare-a7k2qx",
+      "client": "Lumen Skincare",
+      "project": "30s product commercial",
+      "deliverables": "1x 30s 16:9, 1x 15s 9:16 cutdown",
+      "status": "editing",
+      "editHours": 12, "hoursDone": 5, "revisionHours": 2,
+      "depositPaid": true, "footageReceived": true, "balancePaid": false, "rush": false,
+      "lockedDate": "2026-10-28", "deadline": "2026-11-14", "feedbackDue": "",
+      "revisionRound": 0, "revisionsIncluded": 2, "priority": 0,
+      "draftUrl": "", "finalUrl": "", "notes": ""
+    },
+    {
+      "id": "northside-coffee-m3p9zd",
+      "client": "Northside Coffee",
+      "project": "Brand film",
+      "deliverables": "1x 90s brand film, 3x 15s socials",
+      "status": "locked",
+      "editHours": 16, "hoursDone": 0, "revisionHours": 3,
+      "depositPaid": true, "footageReceived": true, "balancePaid": false, "rush": false,
+      "lockedDate": "2026-11-02", "deadline": "2026-11-21", "feedbackDue": "",
+      "revisionRound": 0, "revisionsIncluded": 2, "priority": 1,
+      "draftUrl": "", "finalUrl": "", "notes": "Music licence confirmed, cutting to the track you picked."
+    },
+    {
+      "id": "halo-gym-r8w1tb",
+      "client": "Halo Gym",
+      "project": "Reels pack",
+      "deliverables": "3x 20s vertical reels",
+      "status": "locked",
+      "editHours": 6, "hoursDone": 0, "revisionHours": 1,
+      "depositPaid": true, "footageReceived": true, "balancePaid": false, "rush": false,
+      "lockedDate": "2026-11-04", "deadline": "", "feedbackDue": "",
+      "revisionRound": 0, "revisionsIncluded": 2, "priority": 2,
+      "draftUrl": "", "finalUrl": "", "notes": ""
+    },
+    {
+      "id": "kite-records-x4n6ve",
+      "client": "Kite Records",
+      "project": "Single promo",
+      "deliverables": "1x 45s promo",
+      "status": "revisions",
+      "editHours": 8, "hoursDone": 8, "revisionHours": 3,
+      "depositPaid": true, "footageReceived": true, "balancePaid": false, "rush": true,
+      "lockedDate": "2026-10-20", "deadline": "2026-11-11", "feedbackDue": "",
+      "revisionRound": 1, "revisionsIncluded": 2, "priority": 3,
+      "draftUrl": "https://vimeo.com/", "finalUrl": "", "notes": ""
+    },
+    {
+      "id": "ember-studios-q2c5hj",
+      "client": "Ember Studios",
+      "project": "Event recap",
+      "deliverables": "1x 60s recap",
+      "status": "draft",
+      "editHours": 7, "hoursDone": 7, "revisionHours": 2,
+      "depositPaid": true, "footageReceived": true, "balancePaid": false, "rush": false,
+      "lockedDate": "2026-10-24", "deadline": "", "feedbackHours": 48, "feedbackDue": "2026-11-09T14:00",
+      "revisionRound": 0, "revisionsIncluded": 2, "priority": null,
+      "draftUrl": "https://vimeo.com/", "finalUrl": "", "notes": "Timestamp any notes so I can find them fast."
+    },
+    {
+      "id": "field-day-j9t3ka",
+      "client": "Field Day",
+      "project": "Spring campaign",
+      "deliverables": "TBC",
+      "status": "booked",
+      "editHours": 14, "hoursDone": 0, "revisionHours": 2,
+      "depositPaid": true, "footageReceived": false, "balancePaid": false, "rush": false,
+      "lockedDate": "", "deadline": "", "feedbackDue": "",
+      "revisionRound": 0, "revisionsIncluded": 2, "priority": null,
+      "draftUrl": "", "finalUrl": "", "notes": ""
+    },
+    {
+      "id": "atlas-apparel-z6b8ym",
+      "client": "Atlas Apparel",
+      "project": "Lookbook film",
+      "deliverables": "1x 60s film",
+      "status": "delivered",
+      "editHours": 10, "hoursDone": 10, "revisionHours": 2,
+      "depositPaid": true, "footageReceived": true, "balancePaid": true, "rush": false,
+      "lockedDate": "2026-10-01", "deadline": "", "feedbackDue": "",
+      "revisionRound": 2, "revisionsIncluded": 2, "priority": null,
+      "draftUrl": "", "finalUrl": "https://drive.google.com/", "notes": ""
+    }
+  ]
+}

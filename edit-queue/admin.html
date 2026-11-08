@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Edit Queue Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap wide">
+  <header class="top">
+    <div><p class="brand" id="studio"></p><h1>Edit Queue</h1></div>
+    <div class="actions">
+      <button id="new" class="btn primary">+ New job</button>
+      <button id="settingsBtn" class="btn">Settings</button>
+      <button id="dl" class="btn">Download data.json</button>
+      <button id="reset" class="btn ghost">Discard changes</button>
+    </div>
+  </header>
+  <div id="dirty" class="notice" hidden>Unpublished changes. Download data.json and upload it to your GitHub repo to make them live.</div>
+
+  <h3>Queue &amp; pacing</h3>
+  <p id="load" class="muted small"></p>
+  <ol id="queue" class="qlist"></ol>
+
+  <h3>Pipeline</h3>
+  <div id="board" class="board"></div>
+</main>
+
+<dialog id="jobDlg"><form method="dialog" id="jobForm"></form></dialog>
+<dialog id="setDlg"><form method="dialog" id="setForm"></form></dialog>
+
+<script src="queue.js"></script>
+<script>
+const { STAGES, STAGE_LABEL, QUEUE_STAGES, esc, iso, parseDate, fmt, fmtDue, localDT, loadData, queueOrder, remainingHours, schedule, updateMessage } = MFQueue;
+const KEY = 'mf-edit-queue';
+const $ = s => document.querySelector(s);
+let data, published;
+
+const FIELDS = [
+  ['client', 'Client', 'text'], ['project', 'Project', 'text'],
+  ['deliverables', 'Deliverables', 'text', 'full'],
+  ['status', 'Stage', 'select'], ['deadline', 'Client deadline', 'date'],
+  ['editHours', 'Edit hours (estimate)', 'number'], ['hoursDone', 'Hours done', 'number'],
+  ['revisionHours', 'Hours per revision round', 'number'], ['lockedDate', 'Locked into queue', 'date'],
+  ['depositPaid', 'Deposit paid', 'check'], ['footageReceived', 'Footage received', 'check'],
+  ['balancePaid', 'Balance paid', 'check'], ['rush', 'Rush (jumps queue)', 'check'],
+  ['revisionRound', 'Revision rounds used', 'number'], ['revisionsIncluded', 'Revisions included', 'number'],
+  ['feedbackHours', 'Notes window', 'window'], ['feedbackDue', 'Notes due', 'datetime-local'],
+  ['draftUrl', 'Draft review link (Frame.io / Vimeo / Drive)', 'url', 'full'],
+  ['finalUrl', 'Final files link', 'url', 'full'],
+  ['notes', 'Note shown to client', 'textarea', 'full'],
+];
+const NEXT = { booked: 'locked', locked: 'editing', editing: 'draft', draft: 'revisions', revisions: 'draft', final: 'delivered' };
+
+function store(v) { try { v == null ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+function restore() { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function commit() { store(data); render(); }
+function link(id) { return new URL('index.html?job=' + encodeURIComponent(id), location.href).href; }
+function newId(name) {
+  const slug = String(name || 'job').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 18) || 'job';
+  return slug + '-' + Math.random().toString(36).slice(2, 8);
+}
+function copy(text, btn) {
+  const done = () => { const t = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => btn.textContent = t, 1200); };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => prompt('Copy this:', text));
+  else prompt('Copy this:', text);
+}
+
+function setStatus(j, st) {
+  const prev = j.status;
+  if (prev === st) return;
+  if (prev === 'booked' && QUEUE_STAGES.includes(st) && !(j.depositPaid && j.footageReceived)) {
+    if (!confirm('Deposit or footage isn’t marked as received. Lock into the queue anyway?')) return false;
+  }
+  j.status = st;
+  const today = iso(new Date());
+  if (QUEUE_STAGES.includes(st) && !j.lockedDate) j.lockedDate = today;
+  if (st === 'draft') {
+    const h = Number(j.feedbackHours || data.settings.feedbackWindowHours || 48);
+    j.feedbackHours = h;
+    const d = new Date(); d.setHours(d.getHours() + h);
+    j.feedbackDue = localDT(d);
+  }
+  if (st === 'revisions' && prev === 'draft') {
+    j.revisionRound = (j.revisionRound || 0) + 1;
+    if (j.revisionRound > (j.revisionsIncluded ?? 2)) alert(`Heads up: this is revision round ${j.revisionRound}, past the ${j.revisionsIncluded ?? 2} included. Bill the extra round.`);
+  }
+  if (st === 'editing' || st === 'revisions' || st === 'locked') {
+    // Joining the queue fresh goes to the back of your manual order
+    if (!QUEUE_STAGES.includes(prev)) j.priority = Math.max(-1, ...data.jobs.map(x => QUEUE_STAGES.includes(x.status) && x !== j ? (x.priority ?? -1) : -1)) + 1;
+  }
+}
+
+function card(j, sch) {
+  const q = sch.byId[j.id];
+  const extra = j.status === 'booked' ? `<small>${j.depositPaid ? '✓' : '○'} deposit · ${j.footageReceived ? '✓' : '○'} footage</small>`
+    : j.status === 'draft' ? `<small>v${(j.revisionRound || 0) + 1} · notes due ${fmtDue(j.feedbackDue)}</small>`
+    : j.status === 'final' ? `<small>${j.balancePaid ? '✓ balance paid' : '○ balance outstanding'}</small>` : '';
+  return `<div class="jc"><b>${esc(j.client)}</b><span>${esc(j.project)}</span>
+    ${q ? `<small>#${q.position} · draft ${fmt(q.end)}</small>` : ''}${extra}
+    <div class="row">
+      <button data-edit="${j.id}">Edit</button>
+      <button data-copy="${j.id}">Link</button>
+      <button data-share="${j.id}">Update</button>
+      ${j.status === 'draft' ? `<button data-approve="${j.id}">Approve</button>` : ''}
+      ${NEXT[j.status] ? `<button data-next="${j.id}">${STAGE_LABEL[NEXT[j.status]]} →</button>` : ''}
+    </div></div>`;
+}
+
+function render() {
+  const s = data.settings;
+  $('#studio').textContent = s.studio || '';
+  $('#dirty').hidden = JSON.stringify(data) === JSON.stringify(published);
+  const sch = schedule(data);
+  const total = sch.order.reduce((a, j) => a + remainingHours(j), 0);
+  const waiting = data.jobs.filter(j => j.status === 'draft').length;
+  $('#load').textContent = `${total.toFixed(1)}h queued · ${(total / (s.weeklyCapacityHours || 20)).toFixed(1)} weeks at ${s.weeklyCapacityHours}h/week · ${waiting} waiting on client feedback`;
+
+  $('#queue').innerHTML = sch.order.map((j, i) => {
+    const q = sch.byId[j.id];
+    const late = j.deadline && q.end > parseDate(j.deadline);
+    return `<li><span class="n">${i + 1}</span>
+      <div class="qi"><b>${esc(j.client)}</b> · ${esc(j.project)}
+        <small>${STAGE_LABEL[j.status]} · ${remainingHours(j)}h left · ${fmt(q.start)} → draft ${fmt(q.end)}${j.rush ? ' · <em class="tag">Rush</em>' : ''}${late ? ` · <em class="tag warn">Past deadline (${fmt(j.deadline)})</em>` : ''}</small></div>
+      <div class="mv"><button data-up="${j.id}" ${i ? '' : 'disabled'} aria-label="Move up">↑</button><button data-down="${j.id}" ${i < sch.order.length - 1 ? '' : 'disabled'} aria-label="Move down">↓</button></div></li>`;
+  }).join('') || '<li class="muted">Queue is empty.</li>';
+
+  $('#board').innerHTML = STAGES.map(([k, l]) => {
+    const js = data.jobs.filter(j => j.status === k);
+    return `<div class="col"><h4>${l} <span>${js.length}</span></h4>${js.map(j => card(j, sch)).join('')}</div>`;
+  }).join('');
+}
+
+function move(id, dir) {
+  const o = queueOrder(data.jobs);
+  const i = o.findIndex(j => j.id === id), k = i + dir;
+  if (k < 0 || k >= o.length) return;
+  if (o[i].rush !== o[k].rush) o[i].rush = o[k].rush; // moving across the rush line takes on that status
+  [o[i], o[k]] = [o[k], o[i]];
+  o.forEach((j, n) => j.priority = n);
+  commit();
+}
+
+function field([k, l, t, cls], obj) {
+  const v = obj[k];
+  const c = cls ? ` class="${cls}"` : '';
+  if (t === 'check') return `<label class="ck"><input type="checkbox" name="${k}" ${v ? 'checked' : ''}> ${l}</label>`;
+  if (t === 'select') return `<label${c}>${l}<select name="${k}">${STAGES.map(([s, n]) => `<option value="${s}" ${s === v ? 'selected' : ''}>${n}</option>`).join('')}</select></label>`;
+  if (t === 'window') { const w = v || data.settings.feedbackWindowHours || 48; return `<label${c}>${l}<select name="${k}">${[24, 48].map(h => `<option value="${h}" ${h === w ? 'selected' : ''}>${h} hours</option>`).join('')}</select></label>`; }
+  if (t === 'textarea') return `<label${c}>${l}<textarea name="${k}" rows="3">${esc(v)}</textarea></label>`;
+  return `<label${c}>${l}<input type="${t}" name="${k}" value="${esc(v ?? '')}" ${t === 'number' ? 'step="0.5" min="0"' : ''} ${k === 'client' ? 'required' : ''}></label>`;
+}
+
+function openJob(id) {
+  const isNew = !id;
+  const j = isNew ? { status: 'booked', editHours: 8, hoursDone: 0, revisionHours: 2, revisionRound: 0, revisionsIncluded: 2, feedbackHours: data.settings.feedbackWindowHours || 48 } : data.jobs.find(x => x.id === id);
+  const f = $('#jobForm');
+  f.innerHTML = `<h2>${isNew ? 'New job' : esc(j.client)}</h2>
+    ${isNew ? '<p class="muted small">A private client link is generated when you save.</p>' : `<p class="muted small">Client link: <a href="${link(j.id)}" target="_blank">${esc(link(j.id))}</a></p>`}
+    <div class="fields">${FIELDS.map(x => field(x, j)).join('')}</div>
+    <div class="row end">${isNew ? '' : '<button type="button" id="del" class="btn ghost danger">Delete</button>'}
+      <button value="cancel" class="btn" formnovalidate>Cancel</button><button value="save" class="btn primary">Save</button></div>`;
+  const dlg = $('#jobDlg');
+  dlg.showModal();
+  f.onsubmit = e => {
+    if (e.submitter && e.submitter.value !== 'save') return;
+    const fd = new FormData(f);
+    const out = {};
+    FIELDS.forEach(([k, , t]) => {
+      if (t === 'check') out[k] = fd.has(k);
+      else if (t === 'window') out[k] = Number(fd.get(k)) || 48;
+      else if (t === 'number') out[k] = fd.get(k) === '' ? null : Number(fd.get(k));
+      else out[k] = String(fd.get(k) || '').trim();
+    });
+    const target = out.status;
+    if (isNew) {
+      const nj = { ...j, ...out, id: newId(out.client), status: 'booked', priority: null };
+      data.jobs.push(nj);
+      if (target !== 'booked') setStatus(nj, target);
+    } else {
+      const prev = j.status;
+      Object.assign(j, out, { status: prev });
+      if (target !== prev && setStatus(j, target) === false) { /* cancelled stage change, keep other edits */ }
+    }
+    commit();
+  };
+  const del = $('#del');
+  if (del) del.onclick = () => {
+    if (!confirm(`Delete ${j.client}? Their client link will stop working once you publish.`)) return;
+    data.jobs.splice(data.jobs.indexOf(j), 1);
+    dlg.close(); commit();
+  };
+}
+
+function openSettings() {
+  const s = data.settings;
+  const days = [[1, 'Mon'], [2, 'Tue'], [3, 'Wed'], [4, 'Thu'], [5, 'Fri'], [6, 'Sat'], [0, 'Sun']];
+  const f = $('#setForm');
+  f.innerHTML = `<h2>Settings</h2><div class="fields">
+    <label>Studio name<input name="studio" value="${esc(s.studio)}"></label>
+    <label>Edit hours per week<input type="number" step="1" min="1" name="weeklyCapacityHours" value="${esc(s.weeklyCapacityHours)}"></label>
+    <label class="full">Edit days<span class="days">${days.map(([n, l]) => `<label class="ck"><input type="checkbox" name="wd" value="${n}" ${(s.workDays || []).includes(n) ? 'checked' : ''}> ${l}</label>`).join('')}</span></label>
+    <label class="full">Blocked days, e.g. shoot days (YYYY-MM-DD, comma separated)<input name="blockedDates" value="${esc((s.blockedDates || []).join(', '))}"></label>
+    <label>Default notes window<select name="feedbackWindowHours">${[24, 48].map(h => `<option value="${h}" ${h === Number(s.feedbackWindowHours) ? 'selected' : ''}>${h} hours</option>`).join('')}</select></label>
+    <label>Queue starts (optional)<input type="date" name="startDate" value="${esc(s.startDate)}"></label>
+    <label>WhatsApp number (intl, no +)<input name="whatsapp" value="${esc(s.whatsapp)}"></label>
+    <label>Feedback email<input type="email" name="email" value="${esc(s.email)}"></label>
+  </div><div class="row end"><button value="cancel" class="btn" formnovalidate>Cancel</button><button value="save" class="btn primary">Save</button></div>`;
+  $('#setDlg').showModal();
+  f.onsubmit = e => {
+    if (e.submitter && e.submitter.value !== 'save') return;
+    const fd = new FormData(f);
+    Object.assign(s, {
+      studio: String(fd.get('studio') || '').trim(),
+      weeklyCapacityHours: Number(fd.get('weeklyCapacityHours')) || 20,
+      workDays: fd.getAll('wd').map(Number),
+      blockedDates: String(fd.get('blockedDates') || '').split(',').map(x => x.trim()).filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x)),
+      feedbackWindowHours: Number(fd.get('feedbackWindowHours')) || 48,
+      startDate: String(fd.get('startDate') || ''),
+      whatsapp: String(fd.get('whatsapp') || '').replace(/\D/g, ''),
+      email: String(fd.get('email') || '').trim(),
+    });
+    commit();
+  };
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const d = b.dataset;
+  const find = id => data.jobs.find(j => j.id === id);
+  if (d.edit) openJob(d.edit);
+  if (d.copy) copy(link(d.copy), b);
+  if (d.share) {
+    const j = find(d.share), q = schedule(data).byId[j.id];
+    const msg = updateMessage(j, q, link(j.id), data.settings.studio);
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  }
+  if (d.next) { const j = find(d.next); if (setStatus(j, NEXT[j.status]) !== false) commit(); }
+  if (d.approve) { setStatus(find(d.approve), 'final'); commit(); }
+  if (d.up) move(d.up, -1);
+  if (d.down) move(d.down, 1);
+});
+
+$('#new').onclick = () => openJob(null);
+$('#settingsBtn').onclick = openSettings;
+$('#dl').onclick = () => {
+  const blob = new Blob([JSON.stringify(data, null, 2) + '\n'], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'data.json'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+$('#reset').onclick = () => {
+  if (!confirm('Discard unpublished changes and reload what’s live?')) return;
+  data = structuredClone(published); store(null); render();
+};
+
+(async () => {
+  try { published = await loadData(); }
+  catch (e) { document.querySelector('main').innerHTML = '<h1>Couldn’t load data.json</h1><p class="muted">Open this through your GitHub Pages link (or a local server), not as a file.</p>'; return; }
+  const saved = restore();
+  data = saved || structuredClone(published);
+  data.settings = data.settings || {};
+  data.jobs = data.jobs || [];
+  render();
+})();
+</script>
+</body>
+</html>
