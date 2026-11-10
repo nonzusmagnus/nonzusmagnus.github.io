@@ -115,11 +115,11 @@
       var s = load();
       var line = queue(s.jobs);
       if (req.action === 'board') {
-        return { ok: true, updated: s.updated, top: line.slice(0, 3).map(function (j) { return { ref: j.ref, stage: j.stage, rush: j.rush }; }) };
+        return { ok: true, updated: s.updated, status: s.status || 'active', top: line.slice(0, 3).map(function (j) { return { ref: j.ref, stage: j.stage, rush: j.rush }; }) };
       }
       function view(me) {
         var idx = line.indexOf(me);
-        return { ok: true, updated: s.updated, job: {
+        return { ok: true, updated: s.updated, status: s.status || 'active', job: {
           ref: me.ref, business: me.business, project: me.project, stage: me.stage, draftDue: me.draftDue, rush: me.rush,
           note: me.stage === 4 ? (me.note || '') : '', reviewLink: me.stage === 4 ? (me.reviewLink || '') : '',
           place: idx >= 0 ? idx + 1 : null,
@@ -133,13 +133,17 @@
       }
       if (req.adminKey !== ADMIN) return { ok: false, error: 'not_admin' };
       var find = function (ref) { return s.jobs.find(function (j) { return j.ref === norm(ref); }); };
+      if (req.action === 'setStatus') {
+        if (req.status !== 'active' && req.status !== 'away') return { ok: false, error: 'bad_status' };
+        s.status = req.status; save(s, true); return { ok: true, status: s.status };
+      }
       if (req.action === 'adminJob') { var aj = find(req.ref); return aj ? view(aj) : { ok: false, error: 'not_found' }; }
       switch (req.action) {
         case 'adminList':
           var place = {};
           line.forEach(function (j, i) { place[j.ref] = i + 1; });
           var others = s.jobs.filter(function (j) { return !place[j.ref]; }).sort(function (a, b) { return a.stage - b.stage || a.order - b.order; });
-          return { ok: true, updated: s.updated, inLine: line.length, jobs: line.concat(others).map(function (j) {
+          return { ok: true, updated: s.updated, status: s.status || 'active', inLine: line.length, jobs: line.concat(others).map(function (j) {
             return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush, draftDue: j.draftDue, place: place[j.ref] || null, created: j.created, password: j.password || '', note: j.note || '', reviewLink: j.reviewLink || '' };
           }) };
         case 'add':

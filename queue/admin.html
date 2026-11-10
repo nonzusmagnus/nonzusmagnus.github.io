@@ -7,7 +7,7 @@
 <title>Queue admin · Magnus Forever</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <main class="wrap wide">
@@ -34,7 +34,16 @@
   <!-- ADMIN -->
   <section id="adminView" hidden style="display:flex;flex-direction:column;gap:40px">
     <div>
-      <h1>Clients</h1>
+      <div class="title-row">
+        <h1>Clients</h1>
+        <div class="status-switch" role="group" aria-label="What clients see about you">
+          <span class="small">Clients see you as</span>
+          <div class="stswitch">
+            <button type="button" data-st="active" aria-pressed="false"><span class="presence-dot"></span>Active</button>
+            <button type="button" data-st="away" aria-pressed="false"><span class="presence-dot"></span>Away</button>
+          </div>
+        </div>
+      </div>
       <p class="lede" id="summary"></p>
     </div>
 
@@ -93,8 +102,8 @@
 </dialog>
 <div class="toast" id="toast" hidden></div>
 
-<script src="config.js?v=10"></script>
-<script src="api.js?v=10"></script>
+<script src="config.js?v=11"></script>
+<script src="api.js?v=11"></script>
 <script>
 (function () {
   var M = window.MFQ, esc = M.esc;
@@ -184,9 +193,24 @@
     document.getElementById('signOut').onclick = function () { lock(); };
   }
 
+  function showStatus(st) {
+    document.querySelectorAll('.stswitch button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-st') === st));
+    });
+  }
+  document.querySelector('.stswitch').addEventListener('click', async function (e) {
+    var b = e.target.closest('button[data-st]');
+    if (!b || b.getAttribute('aria-pressed') === 'true') return;
+    var st = b.getAttribute('data-st'), before = document.querySelector('.stswitch [aria-pressed=true]');
+    showStatus(st);
+    var res = await api({ action: 'setStatus', status: st });
+    if (res.ok) toast(st === 'away' ? 'Clients now see you as Away' : 'Clients now see you as Available');
+    else showStatus(before ? before.getAttribute('data-st') : '');
+  });
+
   async function load() {
     var data = await api({ action: 'adminList' });
-    if (data.ok) render(data);
+    if (data.ok) { render(data); if (data.status) showStatus(data.status); }
     return data.ok;
   }
 

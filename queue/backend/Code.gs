@@ -42,6 +42,7 @@ function handle_(req) {
     switch (req.action) {
       case 'adminList': return adminList_();
       case 'adminJob': return adminJob_(req.ref);
+      case 'setStatus': return setStatus_(req.status);
       case 'add': return withLock_(function () { return add_(req); });
       case 'update': return withLock_(function () { return update_(req); });
       case 'reorder': return withLock_(function () { return reorder_(req.refs); });
@@ -61,6 +62,7 @@ function board_() {
   return {
     ok: true,
     updated: lastUpdated_(),
+    status: status_(),
     top: line.slice(0, 3).map(function (j) { return { ref: j.ref, stage: j.stage, rush: j.rush }; })
   };
 }
@@ -100,6 +102,7 @@ function jobView_(me, jobs) {
   return {
     ok: true,
     updated: lastUpdated_(),
+    status: status_(),
     job: {
       ref: me.ref,
       business: me.business,
@@ -129,6 +132,7 @@ function adminList_() {
   return {
     ok: true,
     updated: lastUpdated_(),
+    status: status_(),
     inLine: line.length,
     jobs: line.concat(others).map(function (j) {
       return { ref: j.ref, business: j.business, project: j.project, stage: j.stage, rush: j.rush,
@@ -287,6 +291,17 @@ function withLock_(fn) {
 function isAdmin_(key) {
   var real = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
   return !!real && real.length >= 8 && String(key || '') === real;
+}
+
+// Your Active / Away switch. Clients see it on the queue and their job page.
+function status_() {
+  return PropertiesService.getScriptProperties().getProperty('STATUS') === 'away' ? 'away' : 'active';
+}
+
+function setStatus_(st) {
+  if (st !== 'active' && st !== 'away') return { ok: false, error: 'bad_status' };
+  PropertiesService.getScriptProperties().setProperty('STATUS', st);
+  return { ok: true, status: st };
 }
 
 function touch_() {
