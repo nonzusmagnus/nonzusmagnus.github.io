@@ -1,268 +1,321 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ogochuksstyles Booked</title>
-<meta name="description" content="Ogochuksstyles 30-second commercial: script and storyboard draft for client review.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Booked. Storyboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
-  :root {
-    --bg: #faf3ef; --surface: #ffffff; --ink: #2a0f17; --muted: #7a5a62; --line: #ead8d4;
-    --accent: #7a1e34; --accent-soft: #f6e3e5; --gold: #b8865a; --frame: #f1e4e0;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #1a0b0f; --surface: #26121a; --ink: #f8ebe8; --muted: #c4a3aa; --line: #3d2029;
-      --accent: #e0778f; --accent-soft: #3a1823; --gold: #d9a878; --frame: #2f1820;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #1a0b0f; --surface: #26121a; --ink: #f8ebe8; --muted: #c4a3aa; --line: #3d2029;
-    --accent: #e0778f; --accent-soft: #3a1823; --gold: #d9a878; --frame: #2f1820;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 40px 16px 80px; }
-  header.top { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--ink); padding-bottom: 10px; gap: 12px; flex-wrap: wrap; }
-  .brand { font-weight: 700; letter-spacing: .32em; font-size: 12px; }
-  .meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-  .kicker { margin-top: 44px; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
-  h1 { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: clamp(40px, 8vw, 76px); line-height: 1; letter-spacing: -.01em; margin: 10px 0 14px; color: var(--accent); }
-  h1 em { font-style: italic; font-weight: 600; color: var(--ink); }
-  .specs { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { font-size: 12px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); padding: 6px 12px; border-radius: 999px; }
-  section { margin-top: 48px; }
-  h2 { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; margin: 0 0 16px; padding-top: 14px; border-top: 1px solid var(--line); }
-  .logline { font-size: clamp(17px, 2.2vw, 20px); line-height: 1.7; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 22px 24px; margin: 0; }
-  .timeline { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 4px 0 6px; gap: 2px; }
-  .timeline span { display: block; height: 100%; }
-  .tl-labels { display: flex; font-size: 10px; color: var(--muted); letter-spacing: .06em; gap: 2px; }
-  .tl-labels span { overflow: hidden; white-space: nowrap; text-overflow: clip; }
+/* Layout: home tiles -> storyboard viewer (frame left, info right) or screenplay with shot margin. Shotboard house tokens + the film's grade swatches. */
+:root{
+  --ink:#0a0a0a; --paper:#f3f1ea; --ember:#c43b23; --done:#2e9e57;
+  --honey:#c98a3a; --mustard:#c9a227; --caramel:#9a5b2e; --choc:#3b2417; --cream:#efe3cc;
+  --bg:var(--paper); --fg:var(--ink); --muted:#5f584e; --line:#d9d3c6; --panel:#fbfaf6; --tint:#f6e9e5;
+  --display:"Bebas Neue",Impact,"Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --label:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"Courier Prime","Courier New",Courier,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121110;--fg:#f3f1ea;--muted:#a59d90;--line:#2c2925;--panel:#1a1816;--tint:#2a1814;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121110;--fg:#f3f1ea;--muted:#a59d90;--line:#2c2925;--panel:#1a1816;--tint:#2a1814;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.lbl{font-family:var(--label);text-transform:uppercase;letter-spacing:.14em;font-weight:600;font-size:13px}
 
-  .shot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 22px; padding: 22px 0; border-bottom: 1px solid var(--line); }
-  .frame { position: relative; aspect-ratio: 16 / 9; background: var(--frame); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  .frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .frame .ph { text-align: center; color: var(--muted); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; padding: 12px; }
-  .frame .ph b { display: block; font-family: 'Playfair Display', Georgia, serif; font-size: 30px; letter-spacing: 0; color: var(--accent); opacity: .55; text-transform: none; }
-  .badge { position: absolute; top: 8px; left: 8px; background: var(--ink); color: var(--bg); font-size: 10px; font-weight: 700; letter-spacing: .1em; padding: 3px 8px; border-radius: 4px; z-index: 1; }
-  .tc { font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--gold); text-transform: uppercase; }
-  .shot h3 { margin: 2px 0 6px; font-size: 18px; line-height: 1.3; }
-  .slug { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .action { margin: 0 0 10px; }
-  .dlg { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 10px 14px; margin: 10px 0; }
-  .dlg p { margin: 4px 0; }
-  .who { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
-  .paren { font-style: italic; color: var(--muted); }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .tag { font-size: 11px; font-weight: 600; border: 1px solid var(--line); padding: 2px 9px; border-radius: 999px; color: var(--muted); }
-  .tag.sfx { border-color: var(--gold); color: var(--gold); }
-  .tag.vfx { border-color: var(--accent); color: var(--accent); }
+/* HOME */
+#home{padding-block:40px 56px}
+.eyebrow{color:var(--ember)}
+.htitle{font-family:var(--display);font-size:clamp(84px,17vw,200px);line-height:.85;margin:10px 0 6px;letter-spacing:.01em}
+.hsub{color:var(--muted);font-size:18px;max-width:60ch;margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:8px 22px;margin:18px 0 28px;color:var(--muted)}
+.facts b{color:var(--fg);font-weight:600}
+.tiles{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+.tile{position:relative;border:0;text-align:left;padding:0;min-height:340px;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.tile .in{position:relative;padding:22px;display:grid;gap:4px}
+.tile h2{font-family:var(--display);font-size:clamp(46px,7vw,76px);line-height:.9;margin:0;font-weight:400}
+.tile p{margin:0;font-size:15px}
+.t-board{background:#0a0a0a;color:#f3f1ea}
+.t-board img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.72}
+.t-board::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,0) 30%,rgba(10,10,10,.92) 100%)}
+.t-board .in{z-index:1}
+.t-script{background:#f3f1ea;color:#0a0a0a;border:1px solid #0a0a0a}
+.t-script .pagelines{position:absolute;inset:22px 22px auto 22px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:#5f584e;white-space:pre-wrap}
+.tile .go{color:var(--ember)}
+.chain{margin-top:22px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;color:var(--muted)}
+.chain span.sep{color:var(--ember)}
+.grade{margin-top:30px;display:grid;gap:10px}
+.sw{display:flex;flex-wrap:wrap;gap:8px}
+.sw i{display:flex;align-items:flex-end;width:92px;height:56px;border-radius:3px;padding:6px;font-style:normal;font-family:var(--label);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.sw i.lt{color:#2a1a10}
 
-  .review { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 22px; }
-  .review ol { padding-left: 20px; margin: 14px 0; }
-  .review li { margin: 10px 0; }
-  .review li b { display: block; }
-  .review li span { color: var(--muted); font-size: 14px; }
-  footer { margin-top: 56px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+/* STORYBOARD (always dark: it's the screening room) */
+#board{background:#0a0a0a;color:#f3f1ea;min-height:100vh;--muted:#a59d90;--line:#2a2724;--panel:#151413;--tint:#2a1511}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#0a0a0a}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:#0a0a0a;border-bottom:1px solid #2a2724}
+.bar .wrap{display:flex;align-items:center;gap:12px;min-height:60px;padding-block:8px}
+.btn{min-height:44px;padding:0 14px;border:1px solid #3a3632;background:transparent;border-radius:3px;display:inline-flex;align-items:center;gap:8px;font-family:var(--label);text-transform:uppercase;letter-spacing:.12em;font-weight:600;font-size:13px}
+.btn:hover{border-color:#f3f1ea}
+.bar .ttl{flex:1;min-width:0}
+.bar .ttl b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1;letter-spacing:.02em;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .ttl small{color:#a59d90}
+.prog{white-space:nowrap;color:#a59d90}
+.prog b{color:#f3f1ea}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:12px;scrollbar-width:thin}
+.tab{flex:0 0 auto;min-height:44px;padding:0 14px;border-radius:3px;border:1px solid #2a2724;background:#151413;display:flex;align-items:center;gap:10px;font-family:var(--label);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:14px}
+.tab small{color:#a59d90;font-weight:500;letter-spacing:.04em}
+.tab[aria-selected="true"]{background:#f3f1ea;color:#0a0a0a;border-color:#f3f1ea}
+.tab[aria-selected="true"] small{color:#5f584e}
+.tab.complete small{color:var(--done)}
+.subj{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;padding-block:6px 14px}
+.subj h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,6vw,64px);line-height:.9;margin:0}
+.subj p{margin:0;color:#a59d90}
+.viewer{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+.frame{position:relative;background:#151413;border-radius:3px;overflow:hidden;aspect-ratio:16/9;max-width:100%}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.count{position:absolute;top:10px;left:10px;background:#f3f1ea;color:#0a0a0a;font-family:var(--label);font-weight:700;font-size:13px;letter-spacing:.08em;padding:3px 8px;border-radius:2px;z-index:2}
+.tc{position:absolute;top:10px;right:10px;background:rgba(10,10,10,.75);color:#f3f1ea;font-family:var(--label);font-weight:600;font-size:13px;letter-spacing:.1em;padding:3px 8px;border-radius:2px;z-index:2}
+.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:9%;gap:6px;text-align:center;z-index:1}
+.endcard .l1{font-family:var(--display);font-size:clamp(26px,4.6vw,52px);color:#3b2417;line-height:1}
+.endcard .l2{font-family:var(--label);font-weight:700;letter-spacing:.3em;font-size:clamp(11px,1.5vw,16px);color:#9a5b2e}
+.info{display:grid;gap:14px;min-width:0}
+.scn{color:var(--ember);font-family:var(--label);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:13px}
+.info h2{font-family:var(--display);font-weight:400;font-size:40px;line-height:.95;margin:2px 0 0;padding-bottom:10px;border-bottom:4px solid #f3f1ea;text-wrap:balance}
+.slug{font-family:var(--mono);font-size:14px;color:#a59d90}
+.lens{justify-self:start;background:#f3f1ea;color:#0a0a0a;font-family:var(--label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px;padding:6px 10px;border-radius:2px}
+.dir{font-size:17px;line-height:1.55;margin:0}
+.dlg{display:grid;gap:8px}
+.dlg div{background:var(--tint);border-left:4px solid var(--ember);padding:10px 14px;border-radius:0 3px 3px 0}
+.dlg span{display:block;color:var(--ember);font-family:var(--label);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12px}
+.dlg p{margin:2px 0 0;font-weight:700;font-size:18px;line-height:1.35}
+.trans{font-family:var(--label);letter-spacing:.12em;text-transform:uppercase;font-weight:600;font-size:13px;color:#a59d90;border-top:1px dashed #3a3632;padding-top:10px}
+.trans b{color:var(--ember)}
+details.pr{border:1px solid #2a2724;border-radius:3px}
+details.pr summary{min-height:44px;display:flex;align-items:center;padding:0 12px;cursor:pointer;font-family:var(--label);letter-spacing:.12em;text-transform:uppercase;font-weight:600;font-size:13px;color:#a59d90}
+details.pr pre{margin:0;padding:0 12px 12px;white-space:pre-wrap;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:#d7d0c4;max-height:320px;overflow:auto}
+.cp{margin:0 12px 12px}
+.donebtn{min-height:48px;border-radius:3px;border:2px solid #f3f1ea;background:transparent;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--label);letter-spacing:.14em;text-transform:uppercase;font-weight:700;font-size:14px}
+.donebtn .box{width:18px;height:18px;border:2px solid currentColor;border-radius:2px;display:grid;place-items:center;font-size:13px;line-height:1}
+.donebtn.on{background:var(--done);border-color:var(--done);color:#fff}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nav .btn{justify-content:center}
+.btn:disabled{opacity:.35;cursor:default}
+.note{font-size:13px;color:#a59d90;margin:0}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding-block:20px 40px}
+.th{flex:0 0 auto;width:150px;border:2px solid transparent;padding:0;background:#151413;border-radius:3px;position:relative;overflow:hidden}
+.th img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.th span{display:block;font-family:var(--label);font-weight:600;font-size:12px;letter-spacing:.08em;text-align:left;padding:4px 6px;color:#a59d90;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.th.cur{border-color:var(--ember)}
+.th.dn img{opacity:.35}
+.th.dn::after{content:"\2713";position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--done);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
 
-  @media (max-width: 640px) {
-    .shot { grid-template-columns: 1fr; gap: 14px; }
-  }
+/* SCRIPT (light page, screenplay type) */
+#script{padding-block:0 60px}
+.sbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.sbar .wrap{display:flex;align-items:center;gap:12px;min-height:60px;padding-block:8px}
+.sbar .btn{border-color:var(--line)}
+.sbar .btn:hover{border-color:var(--fg)}
+.sbar .ttl{flex:1;font-family:var(--display);font-size:28px;line-height:1}
+.page{max-width:900px;margin:28px auto 0;background:var(--panel);border:1px solid var(--line);padding:clamp(20px,5vw,56px)}
+.cover{text-align:center;padding-block:10px 30px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.cover .t{font-family:var(--display);font-size:clamp(64px,12vw,120px);line-height:.85;margin:6px 0}
+.cover .m{font-family:var(--mono);color:var(--muted);font-size:14px}
+.sc{display:grid;grid-template-columns:minmax(0,1fr) 168px;gap:10px 26px;font-family:var(--mono);font-size:16px;line-height:1.55}
+.sc .txt{min-width:0}
+.heading{font-weight:700;text-transform:uppercase;margin:26px 0 4px}
+.timing{color:var(--muted);font-size:13px;margin:0 0 10px}
+.act{margin:0 0 14px}
+.sfx{margin:0 0 14px;font-weight:700;text-transform:uppercase}
+.cue{margin:14px 0 0 33%;text-transform:uppercase}
+.paren{margin:0 0 0 27%;font-style:italic}
+.line{margin:0 14% 14px 20%}
+.vo{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;margin:0 0 14px 10%}
+.vo b{text-transform:uppercase;font-weight:400;white-space:nowrap}
+.super{text-align:center;font-weight:700;text-transform:uppercase;margin:18px 0}
+.shots{display:flex;flex-direction:column;gap:8px;padding-top:26px}
+.shot{border:1px solid var(--line);background:var(--bg);padding:0;border-radius:2px;text-align:left;font-family:var(--label)}
+.shot img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.shot span{display:block;padding:4px 6px;font-size:12px;letter-spacing:.08em;font-weight:600;color:var(--muted)}
+.shot span b{color:var(--ember)}
+.open{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--body)}
+.open h3{font-family:var(--label);text-transform:uppercase;letter-spacing:.14em;font-size:14px;margin:0 0 6px;color:var(--ember)}
+.open ul{margin:0;padding-left:18px}
+@media (max-width:760px){
+  .tiles{grid-template-columns:1fr}
+  .tile{min-height:260px}
+  .viewer{grid-template-columns:1fr}
+  .info h2{font-size:34px}
+  .bar .switch span,.prog .w{display:none}
+  .sc{grid-template-columns:1fr}
+  .shots{flex-direction:row;overflow-x:auto;padding-top:0}
+  .shot{flex:0 0 150px}
+  .cue{margin-left:22%}.paren{margin-left:16%}.line{margin:0 4% 14px 10%}.vo{margin-left:0}
+}
+@media (prefers-reduced-motion:no-preference){.frame img{animation:fi .35s ease}@keyframes fi{from{opacity:.4}to{opacity:1}}}
 </style>
-</head>
-<body>
-<div class="wrap">
-  <header class="top">
-    <div class="brand">MAGNUS FOREVER</div>
-    <div class="meta">Draft 1 · For client review · <a href="script.html" style="color:var(--accent)">Script</a></div>
-  </header>
 
-  <div class="kicker">Ogochuksstyles · Commercial</div>
-  <h1>Booked<em>.</em></h1>
-  <div class="specs">
-    <span class="chip">30 seconds</span>
-    <span class="chip">10 shots</span>
-    <span class="chip">2 locations: office · bedroom</span>
-    <span class="chip">Cast: Wendy · Ogo · 4 caller VOs</span>
+<main id="home" class="wrap">
+  <div class="lbl eyebrow">Ogochuksstyles × Magnus Forever</div>
+  <div class="htitle">Booked.</div>
+  <p class="hsub">A 30-second commercial for Ogochuksstyles. Wendy runs a front desk that won't stop ringing. Ogo needs her hair done tonight. The website fixes both.</p>
+  <div class="facts lbl"><span><b>0:30</b> runtime</span><span><b>20</b> frames</span><span><b>2</b> locations</span><span><b>Draft 3</b> · storyboard</span></div>
+  <div class="tiles">
+    <button class="tile t-board" data-go="storyboard"><img src="img/shot-1-2.jpg" alt=""><div class="in"><span class="lbl go">Open storyboard →</span><h2>Storyboard</h2><p>20 frames · lens, direction &amp; dialogue · tick off on set</p></div></button>
+    <button class="tile t-script" data-go="script"><div class="pagelines">INT. OGOCHUKSSTYLES OFFICE – MORNING
+
+Silence. An empty desk in
+morning light.
+
+SFX: HEELS. CLICK, CLICK, CLICK.</div><div class="in"><span class="lbl go">Read script →</span><h2>Script</h2><p>Full shooting script with the frames beside each beat</p></div></button>
   </div>
-
-  <section>
-    <h2>The idea</h2>
-    <p class="logline">The Ogochuksstyles phone won't stop. Wendy, the secretary, is drowning in booking calls until one last panicked client, Ogo, gets the easy answer: book on the website. Two taps later she has her style. The office goes quiet again.</p>
-  </section>
-
-  <section>
-    <h2>Runtime</h2>
-    <div class="timeline" aria-hidden="true">
-      <span style="flex:4;background:var(--gold)"></span>
-      <span style="flex:7;background:var(--accent)"></span>
-      <span style="flex:9;background:var(--muted)"></span>
-      <span style="flex:7;background:var(--accent)"></span>
-      <span style="flex:3;background:var(--ink)"></span>
+  <div class="chain lbl" id="chain"></div>
+  <div class="grade">
+    <div class="lbl" style="color:var(--muted)">The grade · warm amber, honey &amp; chocolate</div>
+    <div class="sw">
+      <i style="background:#3b2417">Chocolate</i><i style="background:#9a5b2e">Caramel</i><i style="background:#c98a3a">Honey oak</i><i style="background:#c9a227" class="lt">Mustard</i><i style="background:#efe3cc" class="lt">Cream</i>
     </div>
-    <div class="tl-labels">
-      <span style="flex:4">Arrival</span>
-      <span style="flex:7">Phone chaos</span>
-      <span style="flex:9">Last call + fix</span>
-      <span style="flex:7">Booking</span>
-      <span style="flex:3">End</span>
+  </div>
+</main>
+
+<section id="board" hidden>
+  <div class="bar"><div class="wrap">
+    <button class="btn" id="back" aria-label="Back to home">←</button>
+    <div class="ttl"><b>Booked.</b><small class="lbl">Ogochuksstyles · 0:30</small></div>
+    <div class="prog lbl"><b id="pdone">0</b> / <span id="ptot">20</span> <span class="w">shots done</span></div>
+    <button class="btn switch" id="toScript">Script <span>→</span></button>
+  </div></div>
+  <div class="wrap">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="subj"><h1 id="sname"></h1><p id="slog"></p></div>
+    <div class="viewer">
+      <div class="frame" id="frame"></div>
+      <div class="info" id="info"></div>
     </div>
-  </section>
+    <div class="thumbs" id="thumbs"></div>
+  </div>
+</section>
 
-  <section>
-    <h2>Script &amp; storyboard</h2>
+<section id="script" hidden>
+  <div class="sbar"><div class="wrap">
+    <button class="btn" id="sback" aria-label="Back to home">←</button>
+    <div class="ttl">Script</div>
+    <button class="btn" id="toBoard">Storyboard →</button>
+  </div></div>
+  <div class="wrap"><article class="page" id="page"></article></div>
+</section>
 
-    <article class="shot">
-      <div class="frame"><span class="badge">01</span><img src="img/shot-01.jpg" alt="" onerror="this.remove()"><div class="ph"><b>01</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:00 – 0:02</div>
-        <h3>Empty office</h3>
-        <div class="slug">Int. Ogochuksstyles office · Morning · Wide</div>
-        <p class="action">The office is still. Morning light, an empty desk, nobody here yet.</p>
-        <div class="tags"><span class="tag sfx">SFX: heels clicking, off-screen</span></div>
-      </div>
-    </article>
+<script>
+const DATA = {"subjects": [{"name": "Morning", "log": "Ogochuksstyles office · 0:00–0:04 · the calm before", "trans": "RING. Hard cut to Wendy snapping up the phone.", "frames": [{"id": "1.1", "title": "Office Exterior", "t": "0:00", "scene": "EXT. OGOCHUKSSTYLES OFFICE – MORNING", "lens": "24mm anamorphic · low angle from the path", "action": "Establishing. The black building sits quiet in low golden sunrise, grasses backlit in the foreground.", "dialogue": [], "img": "img/shot-1-1.jpg", "prompt": "A cinematic still photograph of a modern two-storey office exterior in early morning, a low wide composition from the gravel path at knee height looking up at the charcoal-black facade, a cluster of wild garden planting filling the lower-left foreground in soft focus, the large first-floor picture window weighted to the right third of frame, the frame holding a calm, just-woken stillness.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe building is the location carrying identically from the attached office reference photographs: matte charcoal-black rendered walls, a deep projecting box window framed in black aluminium on the first floor, a full-height glazed entrance below with frosted dot manifestation, a pale resin-bound path and loose gravel leading to the door, lavender, grasses and red crocosmia in the beds. The interior behind the glass glows faintly warm. No people anywhere in frame.\n\nLow golden sunrise light arrives from camera-left, raking across the black facade and catching every edge of the window frames in a thin warm line, the planting lit from behind so the grass heads glow amber. The sky is a pale washed blue with soft cloud. The air carries a thin morning density at every depth: the foreground planting softened a touch, the facade crisp but gently lifted, the sky rolling off softly.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in every surface — oak, plaster, glass, fabric, foliage, resin floor. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no game-engine look, no digital cleanliness, no plastic surfaces, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "1.2", "title": "Empty Reception Desk", "t": "0:01", "scene": "INT. OGOCHUKSSTYLES OFFICE – MORNING", "lens": "35mm · eye level, locked", "action": "Silence. An empty desk in morning light. Sun climbs the fluted oak.", "dialogue": [], "img": "img/shot-1-2.jpg", "prompt": "A cinematic still photograph of an empty reception area in morning light, a wide composition at standing eye level from the striped entrance mat, the curved fluted-oak reception desk anchored on the left third of frame, the tall oak-framed glass screen and the bright atrium beyond filling the right of frame, the frame holding a held, silent stillness before the day begins.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe space is the location carrying identically from the attached office reference photographs: a curved reception desk clad in vertical fluted oak with a white stone top, two pale upholstered chairs tucked behind it, a single cream desk telephone with a row of line buttons and a closed laptop on the counter, a small potted plant, a pleated lamp and a framed coral print on the white wall, a smooth pale-grey resin floor, a black-and-white striped entrance mat crossing the lower-left foreground. Through the glass, a mustard-yellow oval rug and an oak bench sit in the atrium. No people.\n\nWarm low morning sun pours in from the glazed entrance camera-left, laying long golden rectangles across the grey floor and climbing the fluted oak so every rib carries a bright edge and a soft shadow. The white walls take a warm honey bounce. The air carries a thin interior density: the foreground mat softened a touch, the desk crisp, the atrium deeper and slightly paler, blacks lifted in the shadow under the desk lip.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in every surface — oak, plaster, glass, fabric, foliage, resin floor. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no game-engine look, no digital cleanliness, no plastic surfaces, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "1.3", "title": "Heels Click In", "t": "0:02", "scene": "INT. OGOCHUKSSTYLES OFFICE – MORNING", "lens": "40mm · floor level, tracking L→R", "action": "Wendy's heels cross the atrium past the mustard rug.", "dialogue": [["SFX", "HEELS. CLICK, CLICK, CLICK."]], "img": "img/shot-1-3.jpg", "prompt": "A cinematic still photograph at floor level inside a bright office atrium in the morning, a low tracking composition with the camera skimming just above the polished grey resin floor, a pair of tan leather block heels mid-stride crossing the frame left to right on the left third with lead room ahead of them, the mustard-yellow oval rug and the fluted-oak reception desk soft in the deeper background, the frame holding a crisp, rhythmic energy.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. Only her lower legs, the hem of her chocolate-brown wide-leg trousers swinging with the step and the tan heels are in frame, the front heel just striking the floor, the back heel lifting.\n\nThe atrium is the location carrying identically from the attached office reference photographs: pale grey resin floor with a soft sheen, the mustard oval rug, oak bench and potted plants, curved fluted-oak walls and the oak handrail of the stair deep in the background.\n\nWarm golden morning sun streams low from camera-left, throwing a long warm shadow of the heels across the floor toward camera-right and laying a bright specular streak along the resin. The air carries a thin density: the near floor already soft, the rug and desk deeper and gently lifted in bokeh.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "1.4", "title": "Wendy Clocks In", "t": "0:03", "scene": "INT. OGOCHUKSSTYLES OFFICE – MORNING", "lens": "50mm · medium, seated eye level", "action": "Wendy clocks in, drops into her chair and exhales. Peace. Coffee in hand.", "dialogue": [], "img": "img/shot-1-4.jpg", "prompt": "A cinematic still photograph of a receptionist settling behind a curved fluted-oak reception desk in the morning, a medium composition at seated eye level from just across the counter, the woman weighted to the right third of frame, the softly blurred white stone counter edge running across the lower foreground, the frame holding a calm, contented stillness.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. She has just dropped into her chair, shoulders released, eyes softly closed, chest lifting on a slow exhale, a closed-lip contented smile. Her right hand rests around a cream ceramic coffee mug on the counter, her left on the arm of the chair. A cream desk telephone with a row of line buttons sits quiet beside her.\n\nThe reception is the location carrying identically from the attached office reference photographs: the white wall behind her with floating shelves holding small ceramics, a pleated lamp and a framed coral print, a potted plant on the counter, the oak-framed glass screen to her right.\n\nSoft warm morning sun arrives from camera-left through the entrance glass, wrapping the left side of her face in a golden key and leaving the right side in a gentle warm falloff, a fine rim tracing her bun and shoulder. The air carries a thin interior density: the foreground counter edge softened, her face crisp, the shelves behind her slightly lifted and paler.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}]}, {"name": "The Rush", "log": "Continuous · 0:04–0:11 · every line lights up", "trans": "Silence. One last ring.", "frames": [{"id": "2.1", "title": "First Call", "t": "0:04", "scene": "CONTINUOUS", "lens": "50mm · MCU, handheld", "action": "RING. She snaps it up, bright and professional.", "dialogue": [["Wendy", "Ogochuksstyles, good morn—"]], "img": "img/shot-2-1.jpg", "prompt": "A cinematic still photograph of a receptionist answering a desk phone, a medium close-up at seated eye level, the woman anchored on the left third of frame looking slightly screen-right, the cream handset pressed to her ear, the fluted-oak desk edge in soft focus across the lower foreground, the frame holding a bright, professional snap of energy.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. She has just lifted the handset in one quick motion, the coiled cord still swinging, her mouth open mid-word in a polished greeting, eyebrows lifted, posture upright and bright. Her free hand hovers over the row of glowing line buttons on the cream desk telephone.\n\nThe reception is the location carrying identically from the attached office reference photographs: white walls with small ceramics on floating shelves soft behind her, the oak-framed glass screen and a hint of the mustard rug deep in the right background.\n\nWarm golden morning light from camera-left through the entrance glass keys her face softly, a small amber pinpoint glowing on the active line button, the right side of her face falling into a warm honey shadow. The air carries a thin density: the handset and her face crisp, the shelves and atrium behind lifted and gently softened.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "2.2", "title": "Lines Pile Up", "t": "0:06", "scene": "CONTINUOUS", "lens": "35mm · top-down overhead", "action": "Another line. Another. Hard, fast cuts: pick up, put down, pick up. The voices pile on top of each other.", "dialogue": [], "img": "img/shot-2-2.jpg", "prompt": "A cinematic still photograph looking straight down from above a reception counter, a top-down overhead composition, the white stone counter filling the frame, the cream desk telephone weighted to the left third with every line button lit, two hands mid-motion across the frame, the frame holding a frantic, overlapping energy.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. Only her hands and caramel ribbed-knit sleeves are in frame: one hand slamming the handset down onto the cradle, the other already reaching to stab the next blinking line button, a slight motion blur on both hands, gold rings catching light. A mobile phone face-up beside the desk phone buzzes with an incoming call glow, a sticky-note pad covered in hurried handwriting, a pen rolling, the cream coffee mug pushed to the edge.\n\nThe counter is the white stone top of the fluted-oak reception desk from the location carrying identically from the attached office reference photographs, the oak ribs of the desk front just visible at the bottom edge.\n\nWarm golden morning light from frame-left rakes across the stone, throwing short sharp shadows of the handset and fingers toward frame-right, each lit line button glowing a small amber point with soft bloom. The air carries a thin interior density, the counter surface crisp, the edges of frame gently falling off.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "2.3", "title": "Swamped Desk", "t": "0:08", "scene": "CONTINUOUS", "lens": "32mm · wide from the far side of the atrium", "action": "Wendy is tiny against the double-height atrium, a phone at each ear.", "dialogue": [["Caller 1 (V.O.)", "Is this Ogochuksstyles?"], ["Caller 2 (V.O.)", "Can I book Saturday?"]], "img": "img/shot-2-3.jpg", "prompt": "A cinematic still photograph of a bright double-height office atrium in the morning, a wide composition from the far side of the atrium at standing eye level, the mustard-yellow oval rug filling the lower foreground, the white balustrade of the mezzanine running across the upper third, a lone receptionist small behind the reception desk weighted to the right third of frame, the frame holding a comic sense of one person against a flood.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. Small in the frame, she is caught mid-juggle: a handset clamped between ear and shoulder, a mobile phone held to the other ear, one hand reaching for the desk phone buttons, her body twisting. Her posture reads instantly at this distance — elbows out, shoulders up.\n\nThe atrium is the location carrying identically from the attached office reference photographs: curved fluted-oak walls with a dark oak handrail, the oak stair rising camera-right, the white vertical-slat balustrade of the mezzanine above with potted plants, skylights overhead, a wall screen on the right, large potted plants on the grey resin floor.\n\nWarm daylight pours down through the skylights as a soft top light, warming the oak walls to honey and the rug to a glowing ochre, with a stronger golden side light from the entrance camera-right catching the receptionist. The air carries a thin interior density at every depth: the foreground rug softened, the desk mid-ground crisp, the mezzanine and skylights slightly paler and lifted.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "2.4", "title": "Smile Holds, Eyes Scream", "t": "0:09", "scene": "CONTINUOUS", "lens": "75mm · close-up", "action": "CU: Wendy's smile holds. Her eyes are screaming.", "dialogue": [["Caller 3 (V.O.)", "How much for cornrows?"], ["Caller 4 (V.O.)", "Walk-ins?!"]], "img": "img/shot-2-4.jpg", "prompt": "A cinematic still photograph of a receptionist in a tight close-up, the camera at eye level and slightly close, her face weighted to the left third of frame with the cream handset at her ear on the right side of her face, the warm reception wall dissolving into soft bokeh behind, the frame holding a held, comic tension.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. Her mouth holds a perfectly professional closed-lip smile that is clearly fixed in place, while her wide, unblinking eyes stare straight down the lens with barely contained panic, one eyebrow twitching up, a single strand of hair escaped from her sleek bun. A second phone is pressed against her collarbone.\n\nThe background is the location carrying identically from the attached office reference photographs: the white wall, shelves and pleated lamp rendered only as warm cream and oak-coloured shapes in oval bokeh.\n\nSoft warm morning light from camera-left wraps the near side of her face, a crisp catchlight sitting high in each eye, the far side falling into a warm honey shadow with a fine golden rim along the jaw. The air carries a thin density, her eyes razor sharp, the bokeh softly lifted.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "2.5", "title": "Missed Calls Stack Up", "t": "0:10", "scene": "CONTINUOUS", "lens": "100mm macro · insert", "action": "Insert: missed calls stacking up on the mobile. Every desk line glows.", "dialogue": [], "img": "img/shot-2-5.jpg", "prompt": "A cinematic still photograph insert of a mobile phone lying face-up on a white stone reception counter, a macro close-up angled slightly from above, the phone weighted to the right third of frame, the cream desk telephone soft and blurred in the left background with several amber line buttons glowing, the frame holding a mounting, overwhelming pressure.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe phone screen shows a tall stack of missed-call notifications piled on top of one another with red badges, reading as a dense column of grey notification cards with a red badge showing \"23\", the screen light glowing cool-white onto the stone around it.\n\nThe counter is the white stone top of the fluted-oak reception desk from the location carrying identically from the attached office reference photographs, a cream coffee mug and a sticky-note pad with hurried handwriting at the frame edges.\n\nWarm golden morning light from frame-left rakes across the stone, while the small cool-white glow of the screen spills a few centimetres onto the surface, the two temperatures meeting at the phone's edge. The air carries a thin density, the screen crisp, the desk phone dissolving into warm oval bokeh with amber highlights.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in every surface — oak, plaster, glass, fabric, foliage, resin floor. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no game-engine look, no digital cleanliness, no plastic surfaces, no glossy AI sheen, no oversharpening, no HDR overprocessing."}]}, {"name": "Last Call", "log": "Continuous · 0:11–0:15 · one more ring", "trans": "Hard cut to Ogo's bedroom.", "frames": [{"id": "3.1", "title": "One Last Ring", "t": "0:11", "scene": "CONTINUOUS", "lens": "40mm · medium-wide, off-axis", "action": "Silence. Wendy slumps. One last ring. She picks up.", "dialogue": [["Ogo (V.O.) · panicking", "Hi, it's Ogo! Girls' night is TONIGHT and my hair is NOT done. Please fit me in!"]], "img": "img/shot-3-1.jpg", "prompt": "A cinematic still photograph of a receptionist slumped behind a curved fluted-oak reception desk, a medium-wide composition at seated eye level from slightly off-axis, the woman anchored on the left third of frame, the cream desk telephone in soft focus in the right foreground with a single line button glowing, the frame holding a drained, exhausted stillness.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. She is slumped back in her chair, arms limp, a few strands loose from her bun, a pen still in one hand, staring flatly at the one glowing line on the phone as it rings again. The counter around her is a mess of sticky notes and the mobile phone face-down.\n\nThe reception is the location carrying identically from the attached office reference photographs: white walls, floating shelves with small ceramics, the pleated lamp, the oak-framed glass screen and the warm atrium with the mustard rug soft deep behind her.\n\nThe morning light has moved higher: a softer, more even warm top light, the golden side light from the entrance now a gentle glow camera-left, the single amber line button the brightest point in the near foreground with a soft bloom. The air carries a thin interior density: the phone softened in the foreground, her face crisp, the atrium deeper and paler.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}]}, {"name": "Girls' Night", "log": "Ogo's bedroom · 0:15–0:20 · intercut with Wendy", "trans": "Ogo opens the website.", "frames": [{"id": "4.1", "title": "Ogo's Bedroom", "t": "0:15", "scene": "INT. OGO'S BEDROOM – EVENING", "lens": "32mm · wide from the doorway", "action": "Outfit on the bed, makeup half done. Ogo, hair wrapped, phone to her ear. Intercut with Wendy.", "dialogue": [], "img": "img/shot-4-1.jpg", "prompt": "A cinematic still photograph inside a warm, lived-in bedroom in the evening, a wide composition at standing eye level from the doorway, an unmade bed with a carefully laid-out outfit filling the lower foreground, a young woman standing by a vanity mirror anchored on the right third of frame with a phone pressed to her ear, the frame holding a frantic, comic urgency.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe client is a Black woman with rich brown skin, her hair fully wrapped in a mustard-and-rust patterned silk headwrap, wearing an oversized cream satin robe over a fitted black slip, one eye finished with soft bronze shadow and lashes, the other still bare. She stands mid-pace, phone to her ear with one hand, the other hand clutching the top of her headwrap, eyes wide, mouth open mid-plea, her weight thrown forward onto her front foot.\n\nThe bedroom is a stylish small apartment room: a bed with rumpled cream linen and a mustard throw, a chocolate-brown satin slip dress, a cropped cream blazer, gold hoops and strappy heels laid out across it; a wooden vanity with a round mirror ringed with warm bulbs, makeup brushes, palettes and a hair-tie scattered on it; a rattan chair heaped with rejected outfits, a tall plant, a framed print on a warm plaster wall, a window behind showing deep blue dusk.\n\nThe vanity mirror bulbs are the dominant source — a warm tungsten glow from camera-right wrapping her face and robe in golden light and falling off across the room, a small amber bedside lamp warming the bed in the foreground, the window behind her holding a cool deep-blue dusk that rims the edge of her headwrap. The air carries a gentle interior density: the outfit on the bed softened in the foreground, her face crisp, the window deeper and cooler, blacks lifted and grainy in the corners.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, tungsten-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "4.2", "title": "Breathe", "t": "0:16", "scene": "INTERCUT – OFFICE", "lens": "50mm · MCU", "action": "Wendy, calm and in control, talks her down.", "dialogue": [["Wendy · calm", "Breathe. You on your phone?"]], "img": "img/shot-4-2.jpg", "prompt": "A cinematic still photograph of a receptionist on the phone at her desk, a medium close-up at seated eye level, the woman weighted to the right third of frame and turned slightly screen-left, the cream handset at her ear, a soft out-of-focus edge of the fluted-oak desk in the lower-left foreground, the frame holding a calm, in-control warmth.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. Composed again, she leans back slightly with a knowing, reassuring closed-lip smile, eyes soft and half-lidded, one hand raised palm-down in a gentle 'calm down' gesture as she speaks.\n\nThe reception is the location carrying identically from the attached office reference photographs: white wall, shelves and pleated lamp rendered soft behind her, the warm atrium glimpsed through the glass.\n\nWarm, soft late-morning light from camera-left wraps her face evenly, a gentle golden rim along her cheek and bun, the shadows warm honey rather than dark. The air carries a thin density, her face crisp, the background lifted into warm cream bokeh.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "4.3", "title": "Yeah?", "t": "0:18", "scene": "INT. OGO'S BEDROOM – EVENING", "lens": "75mm · close-up", "action": "Ogo stops pacing, hopeful.", "dialogue": [["Ogo", "Yeah?"], ["Wendy", "Go to our website."]], "img": "img/shot-4-3.jpg", "prompt": "A cinematic still photograph of a young woman on the phone in a warm bedroom at night, a close-up at eye level, her face anchored on the left third of frame with her phone held to her ear on the right side, the round bulb-ringed vanity mirror glowing in soft bokeh behind her, the frame holding a breathless, hopeful pause.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe client is a Black woman with rich brown skin, her hair fully wrapped in a mustard-and-rust patterned silk headwrap, wearing an oversized cream satin robe over a fitted black slip, one eye finished with soft bronze shadow and lashes, the other still bare. She has stopped pacing, eyes wide and hopeful, eyebrows raised, lips just parted on a small questioning word, her free hand pressed flat against her chest.\n\nThe bedroom behind her is a warm plaster wall, the vanity mirror's warm bulbs reading as large round golden bokeh, a tall plant silhouette, the blue window glimpsed at frame edge.\n\nWarm tungsten light from the vanity bulbs camera-right keys her face in a soft golden wrap, catching the satin of her robe and the silk headwrap in a bright warm sheen, a faint cool dusk rim from the window behind on the left edge of her cheek. The air carries a gentle density, her face crisp, the bokeh softly lifted.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, tungsten-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}]}, {"name": "Booked", "log": "Ogo's bedroom · 0:20–0:27 · the website does the rest", "trans": "Cut back to the office. Quiet again.", "frames": [{"id": "5.1", "title": "Logo Light", "t": "0:20", "scene": "OGO'S BEDROOM – CONTINUOUS", "lens": "50mm · low close-up · VFX", "action": "VFX: the logo shines out of her phone and lights up her face.", "dialogue": [], "img": "img/shot-5-1.jpg", "prompt": "A cinematic still photograph of a young woman looking down into her phone in a darkened bedroom, a low close-up from just below the phone, her face filling the centre-right of frame above the glowing screen, the room behind falling into deep warm darkness, the frame holding a moment of wonder.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe client is a Black woman with rich brown skin, her hair fully wrapped in a mustard-and-rust patterned silk headwrap, wearing an oversized cream satin robe over a fitted black slip, one eye finished with soft bronze shadow and lashes, the other still bare. She holds the phone in both hands at chest height, gazing down into it, her face transformed from panic to awe, lips slightly parted, eyes reflecting the light.\n\nBehind her the bedroom recedes into warm darkness, the vanity mirror bulbs reduced to small golden bokeh points in the deep background.\n\nA brilliant warm golden-white glow bursts upward out of the phone screen as if the light is pouring out of it, uplighting her chin, cheeks and eyes in a radiant amber wash, tiny reflections of the glow dancing in her pupils, the light falling off quickly past her forehead so the headwrap catches only its edge. The rest of the frame drops to lifted, grainy chocolate shadow. The air carries a gentle density so the glow blooms softly around the phone without forming any rays.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, tungsten-balanced and pushed, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "5.2", "title": "Style Scroll", "t": "0:22", "scene": "OGO'S BEDROOM – CONTINUOUS", "lens": "65mm · over-the-shoulder insert", "action": "Tap. Two-strand twists, cornrows, freestyle braids, pick & drop fly past.", "dialogue": [], "img": "img/shot-5-2.jpg", "prompt": "A cinematic still photograph over the shoulder of a young woman holding her phone in a warm bedroom at night, a close insert at chest height, the phone screen weighted to the right third of frame, her thumb mid-swipe, the soft satin of her robe and the edge of her headwrap blurred in the left foreground, the frame holding a fast, excited momentum.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe client is a Black woman with rich brown skin, her hair fully wrapped in a mustard-and-rust patterned silk headwrap, wearing an oversized cream satin robe over a fitted black slip, one eye finished with soft bronze shadow and lashes, the other still bare. Only her shoulder, the edge of her silk headwrap, her hand and manicured thumb are in frame, the thumb blurred mid-flick across the screen.\n\nThe phone screen shows a sleek hair salon booking page in warm cream and chocolate tones, a grid of portrait photographs of Black women with different finished hairstyles — two-strand twists, neat cornrows, long freestyle braids, pick-and-drop braids — the grid slightly motion-blurred upward from the scroll.\n\nThe screen is the key: a soft warm-white glow on her fingers and the satin of the robe, the warm tungsten vanity light from behind adding a golden rim along her shoulder and thumb. The air carries a gentle density, the screen crisp, the bedroom behind melting into warm bokeh.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, tungsten-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "5.3", "title": "That One", "t": "0:24", "scene": "OGO'S BEDROOM – CONTINUOUS", "lens": "50mm · MCU", "action": "The scrolling stops instantly.", "dialogue": [["Ogo", "That one."]], "img": "img/shot-5-3.jpg", "prompt": "A cinematic still photograph of a young woman making a decision in a warm bedroom at night, a medium close-up at eye level, her face anchored on the left third of frame, her phone held up toward camera on the right with her index finger pointing firmly at the screen, the frame holding a confident, decisive beat.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe client is a Black woman with rich brown skin, her hair fully wrapped in a mustard-and-rust patterned silk headwrap, wearing an oversized cream satin robe over a fitted black slip, one eye finished with soft bronze shadow and lashes, the other still bare. Her panic is gone; she gives a sure, satisfied closed-lip smirk, one eyebrow raised, eyes locked on the screen, finger planted on it.\n\nThe bedroom behind her is soft and warm: the bulb-ringed vanity mirror as golden bokeh, the outfit-covered bed and the cool blue window softly out of focus.\n\nWarm tungsten light from the vanity camera-right wraps her face in golden light, the phone screen adding a soft cream fill from below, a faint cool rim from the window on the far edge. The air carries a gentle density, her face crisp, the background lifted and soft.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, tungsten-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "5.4", "title": "Booking Confirmed", "t": "0:26", "scene": "OGO'S BEDROOM – CONTINUOUS", "lens": "100mm macro · insert", "action": "Tap. Booking confirmed.", "dialogue": [], "img": "img/shot-5-4.jpg", "prompt": "A cinematic still photograph macro insert of a thumb tapping a phone screen, a tight close-up at a slight angle, the phone filling the centre of frame, the cream satin of a robe soft in the foreground below, the frame holding a small, satisfying moment of resolution.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe client is a Black woman with rich brown skin, her hair fully wrapped in a mustard-and-rust patterned silk headwrap, wearing an oversized cream satin robe over a fitted black slip, one eye finished with soft bronze shadow and lashes, the other still bare. Only her hand is in frame, a warm bronze manicure, the thumb pressing down on the screen.\n\nThe phone screen shows a clean booking confirmation page in cream and chocolate brown with a large mustard-gold tick mark in a circle and a single short line of text reading \"Booked\" beneath it.\n\nThe screen glows a soft warm cream onto her thumb and the satin, the warm tungsten bedroom light from behind adding a golden rim to the edge of the phone and her knuckles. The air carries a gentle density, the tick crisp, everything behind it melting into warm amber bokeh.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, tungsten-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}]}, {"name": "Quiet Again", "log": "Ogochuksstyles office · 0:27–0:30 · end card", "trans": "", "frames": [{"id": "6.1", "title": "Coffee", "t": "0:27", "scene": "INT. OGOCHUKSSTYLES OFFICE", "lens": "40mm · medium-wide across the atrium", "action": "Wendy leans back and sips her coffee. Quiet again.", "dialogue": [], "img": "img/shot-6-1.jpg", "prompt": "A cinematic still photograph of a calm office reception in warm afternoon light, a medium-wide composition at seated eye level from across the atrium, the mustard oval rug in soft focus in the lower foreground, the receptionist leaning back in her chair behind the curved fluted-oak desk weighted to the right third of frame, the white mezzanine balustrade crossing the upper frame, the frame holding a satisfied, peaceful stillness.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe receptionist is a Black woman with deep brown skin, a sleek middle-parted low bun, small gold hoop earrings and a thin gold chain, wearing a fitted caramel ribbed-knit long-sleeve top tucked into high-waisted chocolate-brown wide-leg trousers and tan leather block heels. She leans back in her chair, legs crossed, sipping from the cream coffee mug held in both hands, eyes closed in contentment, a small closed-lip smile. The desk in front of her is tidy again, the cream telephone silent.\n\nThe space is the location carrying identically from the attached office reference photographs: fluted oak, white plaster, the oak stair and dark handrail, potted plants and skylights above.\n\nSoft warm golden light pours down from the skylights and in from the entrance camera-left, bathing her and the oak in honey tones, a gentle rim on her shoulders, the rug glowing ochre. The air carries a thin interior density: the rug softened in the foreground, her crisp in the mid-ground, the mezzanine slightly paler and lifted.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}, {"id": "6.2", "title": "End Card", "t": "0:29", "scene": "END CARD", "lens": "35mm spherical · locked", "action": "End card over the empty desk at golden hour.", "dialogue": [["Super", "Remember, Ogochuks styles you!"], ["Super", "OGOCHUKSSTYLES.COM"]], "img": "img/shot-6-2.jpg", "prompt": "A cinematic still photograph of an empty reception desk at golden hour, a wide, locked, centred composition at standing eye level, the curved fluted-oak desk sitting low in the lower third, generous clean warm-white wall space filling the upper two-thirds of frame, a single cream coffee mug left on the counter, the frame holding a calm, finished stillness.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe space is the location carrying identically from the attached office reference photographs: the fluted oak desk front, white stone counter, the cream desk telephone quiet, a small plant, the pleated lamp switched on, the pale grey resin floor.\n\nLow golden-hour sun from camera-left rakes across the fluted oak so each rib glows and casts a fine shadow, a soft warm gradient climbing the plain wall from honey near the desk to cream at the top, the pleated lamp adding a small warm glow. The air carries a thin interior density, the desk crisp, the wall a smooth, clean gradient.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, natural bloom around every point light source. Color-negative motion-picture film rendition, daylight-balanced, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in every surface — oak, plaster, glass, fabric, foliage, resin floor. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no game-engine look, no digital cleanliness, no plastic surfaces, no glossy AI sheen, no oversharpening, no HDR overprocessing.", "endcard": ["Remember, Ogochuks styles you!", "OGOCHUKSSTYLES.COM"]}]}, {"name": "Alt Ending", "log": "Optional · replaces 6.1", "trans": "", "frames": [{"id": "7.1", "title": "Ogo Runs to Uber", "t": "ALT", "scene": "EXT. OGO'S STREET – NIGHT", "lens": "32mm anamorphic · low wide from the pavement", "action": "Alt ending: Ogo, hair done, grabs her bag and runs out to her Uber.", "dialogue": [], "img": "img/shot-7-1.jpg", "prompt": "A cinematic still photograph of a young woman hurrying out of a terraced-house front door at night toward a waiting car, a low wide composition from the pavement, the black car's rear and red tail lights filling the right foreground in soft focus, the woman mid-stride down the steps anchored on the left third of frame with lead room toward the car, the frame holding an excited, glamorous rush.\n\nNO ON-SCREEN TEXT: no captions, no subtitles, no titles, no lower thirds, no watermarks, no logos overlaid on the image, no timecode, no UI or social-media overlays, no borders, no frame labels anywhere in the image.\n\nThe client is a Black woman with rich brown skin, her hair now finished in long, neat freestyle braids falling past her shoulders with small gold cuffs, wearing a fitted chocolate-brown satin slip dress, a cropped cream blazer and gold hoops, her makeup complete with warm bronze eyes. She is mid-step down the front steps, a small gold clutch in one hand, her braids swinging with the motion, a confident closed-lip smile, gaze locked on the car.\n\nA quiet residential street of red-brick terraced houses, a warm open front doorway behind her, wet pavement, a low garden wall and railings, parked cars and a streetlamp further down the street.\n\nThe warm doorway light behind her rims her braids and shoulders in gold, the car's red tail lights splash across the wet pavement in the foreground, and a sodium-amber streetlamp deeper camera-left adds a warm pool down the street; everything else falls into lifted, grainy chocolate-black. The air carries a moderate night density: the car softened in the foreground, her crisp, the street deeper and lower in contrast with bloom on every lamp.\n\nCaptured as an IMAX large-format cinema frame with enormous resolution and tonal depth, through a vintage anamorphic lens at a wide aperture — oval bokeh on the deeper highlights, a gentle horizontal squeeze, soft frame-edge falloff, organic handheld breath, natural bloom around every point light source. Color-negative motion-picture film rendition, tungsten-balanced and pushed for night, heavy fine grain across the entire frame and heaviest in the lifted shadows. Low macro contrast with blacks lifted at every depth and highlights rolling off softly, never clipping; high micro contrast with razor texture in skin, fabric, oak, plaster and metal. The grade is warm and golden throughout: honey oak, mustard ochre, cream and caramel in the mid-tones, deep chocolate-brown in the lifted shadows, skin rendered rich, warm and luminous, any cool note held small and only where daylight or a screen motivates it. Real skin with fine even pore texture, peach fuzz catching light at the jaw and hairline, subsurface scattering at the ear edges and nostrils, flattering and natural with no blemishes and no rough pores. Hair strand by strand with flyaways. Fabric with real weave, weight, and drape. A real photographic frame from a real camera on a real location — no CGI, no rendered look, no digital cleanliness, no plastic surfaces, no waxy or smoothed skin, no glossy AI sheen, no oversharpening, no HDR overprocessing."}]}], "script": [{"shots": ["1.1", "1.2", "1.3", "1.4"], "lines": [{"h": "INT. OGOCHUKSSTYLES OFFICE – MORNING"}, {"t": "0:00 – 0:04"}, {"a": "Silence. An empty desk in morning light."}, {"sfx": "SFX: Heels. Click, click, click."}, {"a": "WENDY clocks in, drops into her chair and exhales. Peace."}]}, {"shots": ["2.1", "2.2", "2.3", "2.4", "2.5"], "lines": [{"h": "CONTINUOUS"}, {"t": "0:04 – 0:11"}, {"a": "RING. She snaps it up."}, {"c": "WENDY", "d": "Ogochuksstyles, good morn—"}, {"a": "Another line. Another. Hard, fast cuts: pick up, put down, pick up. The voices pile on top of each other."}, {"vo": [["CALLER 1 (V.O.)", "Is this Ogochuksstyles?"], ["CALLER 2 (V.O.)", "Can I book Saturday?"], ["CALLER 3 (V.O.)", "How much for cornrows?"], ["CALLER 4 (V.O.)", "Walk-ins?!"]]}, {"a": "CU: Wendy's smile holds. Her eyes are screaming. Insert: missed calls stacking up."}]}, {"shots": ["3.1"], "lines": [{"h": "CONTINUOUS"}, {"t": "0:11 – 0:15"}, {"a": "Silence. One last ring."}, {"c": "OGO (V.O.)", "p": "panicking", "d": "Hi, it's Ogo! Girls' night is TONIGHT and my hair is NOT done. Please fit me in!"}]}, {"shots": ["4.1", "4.2", "4.3"], "lines": [{"h": "INT. OGO'S BEDROOM – EVENING"}, {"t": "0:15 – 0:20"}, {"a": "Outfit on the bed, makeup half done. OGO, hair wrapped, phone to her ear. Intercut with Wendy."}, {"c": "WENDY", "p": "calm", "d": "Breathe. You on your phone?"}, {"c": "OGO", "d": "Yeah?"}, {"c": "WENDY", "d": "Go to our website."}]}, {"shots": ["5.1", "5.2", "5.3", "5.4"], "lines": [{"h": "OGO'S BEDROOM – CONTINUOUS"}, {"t": "0:20 – 0:27"}, {"sfx": "VFX: The logo shines out of her phone and lights up her face."}, {"a": "Tap. Two-strand twists, cornrows, freestyle braids, pick & drop fly past. The scrolling stops instantly."}, {"c": "OGO", "d": "That one."}, {"a": "Tap. Booking confirmed."}]}, {"shots": ["6.1", "6.2"], "lines": [{"h": "INT. OGOCHUKSSTYLES OFFICE"}, {"t": "0:27 – 0:30"}, {"a": "Wendy leans back and sips her coffee. Quiet again."}, {"s": "Remember, Ogochuks styles you!"}, {"s": "OGOCHUKSSTYLES.COM"}]}, {"shots": ["7.1"], "lines": [{"h": "ALT ENDING"}, {"a": "Ogo, hair done, grabs her bag and runs out to her Uber."}]}], "open": ["Which style Ogo picks (frames 5.3 and 7.1 show freestyle braids as a placeholder).", "Who plays Ogo.", "Ogo's bedroom and street locations (frames built without reference photos)."]};
+const SUBJECTS = DATA.subjects;
+const FRAMES = SUBJECTS.flatMap((s,si)=>s.frames.map((f,fi)=>({...f,si,fi})));
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const key = f=>"booked_"+f.id.replace(".","-");
+let done = new Set(), state={si:0,fi:0}, db=null, localOnly=true;
 
-    <article class="shot">
-      <div class="frame"><span class="badge">02</span><img src="img/shot-02.jpg" alt="" onerror="this.remove()"><div class="ph"><b>02</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:02 – 0:04</div>
-        <h3>Heels in, clock in</h3>
-        <div class="slug">Low-angle tracking → medium</div>
-        <p class="action">Wendy's heels cross the floor. She clocks in, sits at her desk and takes a beat of calm.</p>
-        <div class="tags"><span class="tag">Low angle</span><span class="tag">Tracking</span></div>
-      </div>
-    </article>
+// ---- persistence: shared db, falling back to this device
+function loadLocal(){try{done=new Set(JSON.parse(localStorage.getItem("booked-done")||"[]"))}catch(e){}}
+function saveLocal(){try{localStorage.setItem("booked-done",JSON.stringify([...done]))}catch(e){}}
+loadLocal();
+(async()=>{
+  try{
+    db = window.claude?.use ? await window.claude.use("db") : null;
+    if(!db) return;
+    db.collection("done").onSnapshot(snap=>{
+      localOnly=false; done=new Set(snap.docs.filter(d=>d.data()?.done).map(d=>d.id)); renderBoard(); renderProgress();
+    },()=>{db=null;localOnly=true;renderBoard()});
+  }catch(e){db=null}
+})();
+async function toggle(f){
+  const k=key(f), on=!done.has(k);
+  on?done.add(k):done.delete(k); renderBoard(); renderProgress();
+  if(db && !localOnly){
+    try{ on ? await db.collection("done").doc(k).set({done:true,shot:f.id}) : await db.collection("done").doc(k).delete(); }
+    catch(e){ on?done.delete(k):done.add(k); renderBoard(); renderProgress(); alertNote("You can view this board but not tick shots. Ask for contributor access."); }
+  } else saveLocal();
+}
+let noteMsg="";
+function alertNote(m){noteMsg=m;renderBoard()}
 
-    <article class="shot">
-      <div class="frame"><span class="badge">03</span><img src="img/shot-03.jpg" alt="" onerror="this.remove()"><div class="ph"><b>03</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:04 – 0:06</div>
-        <h3>First ring</h3>
-        <div class="slug">Medium · Desk</div>
-        <p class="action">The phone rings. She snaps it up.</p>
-        <div class="dlg">
-          <p><span class="who">Wendy</span></p>
-          <p>Ogochuksstyles, good morning—</p>
-        </div>
-      </div>
-    </article>
+// ---- routing
+function show(view){
+  $("#home").hidden=view!=="home"; $("#board").hidden=view!=="storyboard"; $("#script").hidden=view!=="script";
+  if(view==="storyboard") renderBoard();
+  window.scrollTo(0,0);
+}
+function route(){const h=location.hash.slice(1); show(h==="storyboard"||h==="script"?h:"home")}
+window.addEventListener("hashchange",route);
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>location.hash=b.dataset.go);
+$("#back").onclick=$("#sback").onclick=()=>{location.hash=""; show("home")};
+$("#toScript").onclick=()=>location.hash="script";
+$("#toBoard").onclick=()=>location.hash="storyboard";
 
-    <article class="shot">
-      <div class="frame"><span class="badge">04</span><img src="img/shot-04.jpg" alt="" onerror="this.remove()"><div class="ph"><b>04</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:06 – 0:11</div>
-        <h3>Phone chaos</h3>
-        <div class="slug">Hard, fast cuts · CU Wendy · Insert phone</div>
-        <p class="action">Lines ring over each other. Pick up, put down, pick up again. Close-up: Wendy, smiling, eyes screaming. Insert: missed calls stacking up.</p>
-        <div class="dlg">
-          <p><span class="who">Caller 1 (V.O.)</span> Hello, is this Ogochuksstyles?</p>
-          <p><span class="who">Caller 2 (V.O.)</span> Can I book for Saturday?</p>
-          <p><span class="who">Caller 3 (V.O.)</span> How much is knotless?</p>
-          <p><span class="who">Caller 4 (V.O.)</span> Do you do walk-ins?</p>
-        </div>
-        <div class="tags"><span class="tag sfx">Voices overlap, not in sequence</span></div>
-      </div>
-    </article>
+// ---- home chain
+$("#chain").innerHTML=SUBJECTS.map(s=>`<span>${esc(s.name)}</span>`).join('<span class="sep">→</span>');
 
-    <article class="shot">
-      <div class="frame"><span class="badge">05</span><img src="img/shot-05.jpg" alt="" onerror="this.remove()"><div class="ph"><b>05</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:11 – 0:15</div>
-        <h3>The last call</h3>
-        <div class="slug">Close-up · Wendy</div>
-        <p class="action">Silence. One ring. She answers.</p>
-        <div class="dlg">
-          <p><span class="who">Ogo (V.O.)</span></p>
-          <p>Hiii, my name's Ogo, funny enough. I have a girls' night tonight and my hair is NOT done. Please tell me you can fit me in.</p>
-        </div>
-        <div class="tags"><span class="tag">Line carries into shot 06</span></div>
-      </div>
-    </article>
+// ---- storyboard
+function renderProgress(){
+  $("#pdone").textContent=FRAMES.filter(f=>done.has(key(f))).length; $("#ptot").textContent=FRAMES.length;
+}
+function go(si,fi){state={si,fi};renderBoard()}
+function step(d){
+  const i=FRAMES.findIndex(f=>f.si===state.si&&f.fi===state.fi)+d;
+  if(i>=0&&i<FRAMES.length) go(FRAMES[i].si,FRAMES[i].fi);
+}
+function renderBoard(){
+  if($("#board").hidden) return;
+  renderProgress();
+  const s=SUBJECTS[state.si], f=s.frames[state.fi], gi=FRAMES.findIndex(x=>x.si===state.si&&x.fi===state.fi);
+  $("#tabs").innerHTML=SUBJECTS.map((x,i)=>{const n=x.frames.filter(fr=>done.has(key(fr))).length;
+    return `<button class="tab${n===x.frames.length?" complete":""}" role="tab" aria-selected="${i===state.si}" data-s="${i}">${esc(x.name)} <small>${n}/${x.frames.length}</small></button>`}).join("");
+  $("#tabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>go(+b.dataset.s,0));
+  $("#sname").textContent=s.name; $("#slog").textContent=s.log;
+  $("#frame").innerHTML=`<span class="count">${state.fi+1} / ${s.frames.length}</span><span class="tc">${esc(f.t)}</span><img src="${f.img}" alt="Frame ${esc(f.id)}: ${esc(f.title)}">`+
+    (f.endcard?`<div class="endcard"><div class="l1">${esc(f.endcard[0])}</div><div class="l2">${esc(f.endcard[1])}</div></div>`:"");
+  const k=key(f), isDone=done.has(k), last=state.fi===s.frames.length-1;
+  $("#info").innerHTML=`
+    <div><div class="scn">Shot ${esc(f.id)}</div><h2>${esc(f.title)}</h2></div>
+    <div class="slug">${esc(f.scene)}</div>
+    <div class="lens">${esc(f.lens)}</div>
+    <p class="dir">${esc(f.action)}</p>
+    ${f.dialogue.length?`<div class="dlg">${f.dialogue.map(d=>`<div><span>${esc(d[0])}</span><p>${esc(d[1])}</p></div>`).join("")}</div>`:""}
+    ${last&&s.trans?`<div class="trans"><b>Cut →</b> ${esc(s.trans)}</div>`:""}
+    <details class="pr"><summary>Image prompt</summary><pre>${esc(f.prompt)}</pre><button class="btn cp" id="copy">Copy prompt</button></details>
+    <button class="donebtn${isDone?" on":""}" id="done" aria-pressed="${isDone}"><span class="box">${isDone?"✓":""}</span>${isDone?"Shot done":"Mark shot done"}</button>
+    <div class="nav"><button class="btn" id="prev" ${gi===0?"disabled":""}>← Back</button><button class="btn" id="next" ${gi===FRAMES.length-1?"disabled":""}>Next →</button></div>
+    <p class="note">${noteMsg?esc(noteMsg):localOnly?"Ticks are saved on this device only.":"Ticks save on this device only."}</p>`;
+  $("#done").onclick=()=>toggle(f);
+  $("#prev").onclick=()=>step(-1); $("#next").onclick=()=>step(1);
+  $("#copy").onclick=e=>{const b=e.currentTarget;navigator.clipboard?.writeText(f.prompt).then(()=>b.textContent="Copied",()=>b.textContent="Select the text to copy")};
+  $("#thumbs").innerHTML=s.frames.map((x,i)=>`<button class="th${i===state.fi?" cur":""}${done.has(key(x))?" dn":""}" data-f="${i}" aria-label="Shot ${esc(x.id)}"><img src="${x.img}" alt=""><span>${esc(x.id)} · ${esc(x.title)}</span></button>`).join("");
+  $("#thumbs").querySelectorAll(".th").forEach(b=>b.onclick=()=>go(state.si,+b.dataset.f));
+  const cur=$("#thumbs .cur"), strip=$("#thumbs"); if(cur){const l=cur.offsetLeft-strip.offsetLeft; if(l<strip.scrollLeft||l+cur.offsetWidth>strip.scrollLeft+strip.clientWidth) strip.scrollLeft=l-16;}
+}
+document.addEventListener("keydown",e=>{if($("#board").hidden||e.target.closest("pre,input,textarea"))return;if(e.key==="ArrowRight")step(1);if(e.key==="ArrowLeft")step(-1)});
 
-    <article class="shot">
-      <div class="frame"><span class="badge">06</span><img src="img/shot-06.jpg" alt="" onerror="this.remove()"><div class="ph"><b>06</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:15 – 0:17</div>
-        <h3>Meet Ogo</h3>
-        <div class="slug">Int. Ogo's bedroom · Evening · Medium</div>
-        <p class="action">Getting-dressed vibe: outfit laid out on the bed, makeup half done. Ogo, hair wrapped, phone to her ear, panicking.</p>
-      </div>
-    </article>
+// ---- script
+function renderScript(){
+  const blocks=DATA.script.map(sc=>{
+    const body=sc.lines.map(l=>{
+      if(l.h) return `<div class="heading">${esc(l.h)}</div>`;
+      if(l.t) return `<p class="timing">${esc(l.t)}</p>`;
+      if(l.a) return `<p class="act">${esc(l.a)}</p>`;
+      if(l.sfx) return `<p class="sfx">${esc(l.sfx)}</p>`;
+      if(l.vo) return `<div class="vo">${l.vo.map(v=>`<b>${esc(v[0])}</b><span>${esc(v[1])}</span>`).join("")}</div>`;
+      if(l.c) return `<p class="cue">${esc(l.c)}</p>${l.p?`<p class="paren">(${esc(l.p)})</p>`:""}<p class="line">${esc(l.d)}</p>`;
+      if(l.s) return `<p class="super">${esc(l.s)}</p>`;
+      return "";
+    }).join("");
+    const shots=sc.shots.map(id=>{const f=FRAMES.find(x=>x.id===id);return `<button class="shot" data-id="${id}"><img src="${f.img}" alt=""><span><b>${id}</b> ${esc(f.title)}</span></button>`}).join("");
+    return `<div class="sc"><div class="txt">${body}</div><div class="shots">${shots}</div></div>`;
+  }).join("");
+  $("#page").innerHTML=`<div class="cover"><div class="lbl eyebrow">Magnus Forever · Script · Draft 3</div><div class="t">Booked.</div><div class="m">Ogochuksstyles · 30s commercial<br>Wendy · Ogo · 4 caller VOs &nbsp;|&nbsp; Office · Bedroom</div></div>${blocks}
+  <div class="open"><h3>Still to confirm</h3><ul>${DATA.open.map(o=>`<li>${esc(o)}</li>`).join("")}</ul></div>`;
+  $("#page").querySelectorAll(".shot").forEach(b=>b.onclick=()=>{const f=FRAMES.find(x=>x.id===b.dataset.id);state={si:f.si,fi:f.fi};location.hash="storyboard";});
+}
+renderScript();
+route();
+</script>
 
-    <article class="shot">
-      <div class="frame"><span class="badge">07</span><img src="img/shot-07.jpg" alt="" onerror="this.remove()"><div class="ph"><b>07</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:17 – 0:20</div>
-        <h3>The fix</h3>
-        <div class="slug">Intercut · Wendy / Ogo</div>
-        <div class="dlg">
-          <p><span class="who">Wendy</span> <span class="paren">(calm)</span> Ogo, I've got you. Are you on your phone?</p>
-          <p><span class="who">Ogo</span> Yeah?</p>
-          <p><span class="who">Wendy</span> Go to our website.</p>
-        </div>
-      </div>
-    </article>
-
-    <article class="shot">
-      <div class="frame"><span class="badge">08</span><img src="img/shot-08.jpg" alt="" onerror="this.remove()"><div class="ph"><b>08</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:20 – 0:23</div>
-        <h3>The logo glows</h3>
-        <div class="slug">Over the shoulder → CU face</div>
-        <p class="action">The site loads. The Ogochuksstyles logo shines out of the phone and lights up her face. She taps it.</p>
-        <div class="tags"><span class="tag vfx">VFX: logo light spill</span></div>
-      </div>
-    </article>
-
-    <article class="shot">
-      <div class="frame"><span class="badge">09</span><img src="img/shot-09.jpg" alt="" onerror="this.remove()"><div class="ph"><b>09</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:23 – 0:27</div>
-        <h3>That one</h3>
-        <div class="slug">Screen insert · CU eyes · Insert tap</div>
-        <p class="action">She whips through the styles (two-strand twists, cornrows, freestyle braids, pick &amp; drop) and the scrolling stops instantly. Her eyes light up. Tap. Booking confirmed.</p>
-        <div class="dlg">
-          <p><span class="who">Ogo</span> That one.</p>
-        </div>
-        <div class="tags"><span class="tag">Screen recording</span></div>
-      </div>
-    </article>
-
-    <article class="shot">
-      <div class="frame"><span class="badge">10</span><img src="img/shot-10.jpg" alt="" onerror="this.remove()"><div class="ph"><b>10</b>Frame to come</div></div>
-      <div>
-        <div class="tc">0:27 – 0:30</div>
-        <h3>Quiet again</h3>
-        <div class="slug">Int. office · Medium → end card</div>
-        <p class="action">Wendy leans back and sips her coffee. The office is quiet again.</p>
-        <div class="dlg">
-          <p><span class="who">Super</span> Remember, Ogochuks styles you!</p>
-          <p><span class="who">Super</span> OGOCHUKSSTYLES.COM + logo</p>
-        </div>
-      </div>
-    </article>
-  </section>
-
-  <section>
-    <h2>Confirmed &amp; open</h2>
-    <div class="review">
-      <ol>
-        <li><b>Ending: confirmed</b><span>Wendy leans back with her coffee. Alternative on the table: Ogo, hair done, running out to her Uber.</span></li>
-        <li><b>Tagline: confirmed</b><span>"Remember, Ogochuks styles you!"</span></li>
-        <li><b>Website: confirmed</b><span>ogochuksstyles.com</span></li>
-        <li><b>Hairstyles: confirmed</b><span>Two-strand twists, cornrows, freestyle braids, pick &amp; drop. Still to confirm: which one Ogo picks.</span></li>
-        <li><b>Locations: confirmed</b><span>Office for Wendy; bedroom with a getting-dressed vibe for Ogo.</span></li>
-        <li><b>Cast: open</b><span>Who plays Ogo?</span></li>
-      </ol>
-    </div>
-  </section>
-
-  <footer>
-    <span>Magnus Forever · @magnusforever</span>
-    <span>Draft 1 · Script subject to change</span>
-  </footer>
-</div>
-</body>
-</html>
+</body></html>
