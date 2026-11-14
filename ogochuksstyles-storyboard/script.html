@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ogochuksstyles Script</title>
+<meta name="description" content="Ogochuksstyles 'Booked' 30-second commercial script, draft 2.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf3ef; --surface: #ffffff; --ink: #2a0f17; --muted: #7a5a62; --line: #ead8d4;
+    --accent: #7a1e34; --accent-soft: #f6e3e5; --gold: #b8865a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a0b0f; --surface: #26121a; --ink: #f8ebe8; --muted: #c4a3aa; --line: #3d2029;
+      --accent: #e0778f; --accent-soft: #3a1823; --gold: #d9a878;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a0b0f; --surface: #26121a; --ink: #f8ebe8; --muted: #c4a3aa; --line: #3d2029;
+    --accent: #e0778f; --accent-soft: #3a1823; --gold: #d9a878;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 16px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--ink); padding-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+  .brand { font-weight: 700; letter-spacing: .32em; font-size: 12px; }
+  .meta { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .meta a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .kicker { margin-top: 44px; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+  h1 { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: clamp(40px, 8vw, 72px); line-height: 1; margin: 10px 0 14px; color: var(--accent); }
+  h1 em { font-style: italic; font-weight: 600; color: var(--ink); }
+  .specs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .chip { font-size: 12px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); padding: 6px 12px; border-radius: 999px; }
+
+  .scene { margin-top: 40px; }
+  .scene-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 12px; margin-bottom: 14px; }
+  .slug { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .tc { font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--gold); }
+  .action { margin: 10px 0; }
+  .sfx { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+  .vfx { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .line { margin: 14px 0 14px 12%; max-width: 70%; }
+  .who { display: block; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .paren { display: block; font-style: italic; color: var(--muted); font-size: 14px; }
+  .say { font-size: 18px; }
+  .stack { background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; }
+  .stack p { margin: 4px 0; }
+  .stack .who { display: inline; margin-right: 6px; }
+  .endcard { margin-top: 40px; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 34px 16px; }
+  .endcard .tag { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(26px, 5vw, 38px); color: var(--accent); line-height: 1.15; }
+  .endcard .url { margin-top: 10px; font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  .notes { margin-top: 44px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+  .notes b { color: var(--ink); }
+  footer { margin-top: 48px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 560px) { .line { margin-left: 0; max-width: 100%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">MAGNUS FOREVER</div>
+    <div class="meta">Script · Draft 2 · <a href="./">Storyboard</a></div>
+  </header>
+
+  <div class="kicker">Ogochuksstyles · 30s commercial</div>
+  <h1>Booked<em>.</em></h1>
+  <div class="specs">
+    <span class="chip">0:30</span>
+    <span class="chip">Wendy · Ogo · 4 caller VOs</span>
+    <span class="chip">Office · Bedroom</span>
+  </div>
+
+  <section class="scene">
+    <div class="scene-head"><span class="slug">Int. Ogochuksstyles office – Morning</span><span class="tc">0:00 – 0:04</span></div>
+    <p class="action">Silence. An empty desk in morning light.</p>
+    <p class="sfx">SFX: Heels. Click, click, click.</p>
+    <p class="action">WENDY clocks in, drops into her chair and exhales. Peace.</p>
+  </section>
+
+  <section class="scene">
+    <div class="scene-head"><span class="slug">Continuous</span><span class="tc">0:04 – 0:11</span></div>
+    <p class="action">RING. She snaps it up.</p>
+    <div class="line"><span class="who">Wendy</span><span class="say">Ogochuksstyles, good morn—</span></div>
+    <p class="action">Another line. Another. Hard, fast cuts: pick up, put down, pick up. The voices pile on top of each other.</p>
+    <div class="stack">
+      <p><span class="who">Caller 1 (V.O.)</span> Is this Ogochuksstyles?</p>
+      <p><span class="who">Caller 2 (V.O.)</span> Can I book Saturday?</p>
+      <p><span class="who">Caller 3 (V.O.)</span> How much for cornrows?</p>
+      <p><span class="who">Caller 4 (V.O.)</span> Walk-ins?!</p>
+    </div>
+    <p class="action">CU: Wendy's smile holds. Her eyes are screaming. Insert: missed calls stacking up.</p>
+  </section>
+
+  <section class="scene">
+    <div class="scene-head"><span class="slug">Continuous</span><span class="tc">0:11 – 0:15</span></div>
+    <p class="action">Silence. One last ring.</p>
+    <div class="line"><span class="who">Ogo (V.O.)</span><span class="paren">(panicking)</span><span class="say">Hi, it's Ogo! Girls' night is TONIGHT and my hair is NOT done. Please fit me in!</span></div>
+  </section>
+
+  <section class="scene">
+    <div class="scene-head"><span class="slug">Int. Ogo's bedroom – Evening</span><span class="tc">0:15 – 0:20</span></div>
+    <p class="action">Outfit on the bed, makeup half done. OGO, hair wrapped, phone to her ear. Intercut with Wendy.</p>
+    <div class="line"><span class="who">Wendy</span><span class="paren">(calm)</span><span class="say">Breathe. You on your phone?</span></div>
+    <div class="line"><span class="who">Ogo</span><span class="say">Yeah?</span></div>
+    <div class="line"><span class="who">Wendy</span><span class="say">Go to our website.</span></div>
+  </section>
+
+  <section class="scene">
+    <div class="scene-head"><span class="slug">Ogo's bedroom – Continuous</span><span class="tc">0:20 – 0:27</span></div>
+    <p class="vfx">VFX: The logo shines out of her phone and lights up her face.</p>
+    <p class="action">Tap. Two-strand twists, cornrows, freestyle braids, pick &amp; drop fly past. The scrolling stops instantly.</p>
+    <div class="line"><span class="who">Ogo</span><span class="say">That one.</span></div>
+    <p class="action">Tap. <b>Booking confirmed.</b></p>
+  </section>
+
+  <section class="scene">
+    <div class="scene-head"><span class="slug">Int. Ogochuksstyles office</span><span class="tc">0:27 – 0:30</span></div>
+    <p class="action">Wendy leans back and sips her coffee. Quiet again.</p>
+  </section>
+
+  <div class="endcard">
+    <div class="tag">Remember, Ogochuks styles you!</div>
+    <div class="url">ogochuksstyles.com</div>
+  </div>
+
+  <div class="notes">
+    <p><b>Alt ending:</b> Ogo, hair done, grabs her bag and runs out to her Uber.</p>
+    <p><b>Still to confirm:</b> which style Ogo picks, and who plays Ogo.</p>
+  </div>
+
+  <footer>
+    <span>Magnus Forever · @magnusforever</span>
+    <span>Draft 2 · Subject to change</span>
+  </footer>
+</div>
+</body>
+</html>
