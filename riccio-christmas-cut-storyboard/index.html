@@ -1,0 +1,297 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>The Christmas Cut Shotboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: one film, night-dark board. Home tile -> subject tabs -> frame viewer + info panel, thumb strip below. Single dark look by choice. */
+:root{
+  --ink:#0a0a0a; --panel:#141312; --line:#2a2826; --paper:#f3f1ea; --muted:#a39e94;
+  --ember:#c43b23; --ember-soft:rgba(196,59,35,.14); --done:#2e9e57; --frost:#9fb7d4; --gold:#d9a85b;
+  --display:"Bebas Neue",Impact,"Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --label:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{background:var(--ink);color:var(--paper)}
+body{font-family:var(--body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,.tab:focus-visible,.thumb:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.lbl{font-family:var(--label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+
+/* Home */
+#home{padding-block:56px 64px;display:flex;flex-direction:column;gap:28px}
+#home h1{font-family:var(--display);font-weight:400;font-size:clamp(64px,13vw,150px);line-height:.88;margin:0;letter-spacing:.01em;text-wrap:balance}
+#home .sub{max-width:62ch;color:var(--muted);margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px}
+.facts div{display:flex;flex-direction:column}
+.facts b{font-family:var(--label);font-weight:600;font-size:17px;color:var(--paper);letter-spacing:.04em}
+.tile{display:grid;grid-template-columns:1.4fr 1fr;align-items:stretch;border:1px solid var(--line);background:var(--panel);padding:0;text-align:left;overflow:hidden;min-height:44px}
+.tile img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;display:block}
+.tile .t{padding:24px;display:flex;flex-direction:column;gap:10px;justify-content:center;min-width:0}
+.tile .t strong{font-family:var(--display);font-weight:400;font-size:52px;line-height:.95}
+.tile .go{font-family:var(--label);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ember)}
+.tile:hover{border-color:var(--ember)}
+.chain{font-family:var(--label);font-size:15px;letter-spacing:.06em;color:var(--muted)}
+.chain span{color:var(--paper)}
+@media (max-width:760px){.tile{grid-template-columns:1fr}}
+
+/* Board */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:14px;min-height:60px;flex-wrap:wrap;padding-block:6px}
+.back{background:none;border:1px solid var(--line);min-height:44px;padding:0 14px;font-family:var(--label);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.bar .title{font-family:var(--display);font-size:28px;line-height:1;flex:1;min-width:0}
+.bar .title small{font-family:var(--label);font-size:13px;letter-spacing:.12em;color:var(--muted);margin-left:8px}
+.count{font-family:var(--label);font-weight:600;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.count b{color:var(--done)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:14px;scrollbar-width:thin}
+.tab{flex:0 0 auto;min-height:44px;padding:0 14px;border:1px solid var(--line);background:none;font-family:var(--label);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;display:flex;gap:8px;align-items:center}
+.tab .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.tab[aria-selected="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.tab[aria-selected="true"] .n{color:#5a564f}
+.subhead{display:flex;flex-direction:column;gap:2px;padding-block:6px 18px}
+.subhead h2{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:0}
+.subhead p{margin:0;color:var(--muted);max-width:70ch}
+.viewer{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:760px){.viewer{grid-template-columns:1fr}}
+.frame{position:relative;background:#000;border:1px solid var(--line)}
+.frame img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;max-width:100%}
+.badge{position:absolute;top:12px;left:12px;background:rgba(10,10,10,.82);padding:4px 10px;font-family:var(--label);font-weight:700;letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.tc{position:absolute;top:12px;right:12px;background:rgba(10,10,10,.82);padding:4px 10px;font-family:var(--label);font-weight:600;letter-spacing:.08em;color:var(--frost);font-variant-numeric:tabular-nums}
+.info{display:flex;flex-direction:column;gap:16px;min-width:0}
+.scene{font-family:var(--label);font-weight:700;letter-spacing:.16em;color:var(--ember);text-transform:uppercase;font-size:14px}
+.info h3{font-family:var(--display);font-weight:400;font-size:42px;line-height:.95;margin:0;padding-bottom:10px;border-bottom:4px solid var(--paper);text-wrap:balance}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.lens{background:var(--paper);color:var(--ink);font-family:var(--label);font-weight:700;letter-spacing:.06em;padding:5px 10px;font-size:15px}
+.env{border:1px solid var(--line);font-family:var(--label);font-weight:600;letter-spacing:.1em;padding:5px 10px;font-size:14px}
+.env.ext{color:var(--frost);border-color:#3a4a5e}
+.env.int{color:var(--gold);border-color:#5e4a2c}
+.env.card{color:var(--muted)}
+.dir{font-size:17px;line-height:1.55;margin:0}
+.notes{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:15px}
+.notes dt{font-family:var(--label);font-weight:700;letter-spacing:.12em;color:var(--gold);font-size:13px;text-transform:uppercase;padding-top:2px}
+.notes dd{margin:0;color:#d8d4cb}
+.dlg{background:var(--ember-soft);border-left:4px solid var(--ember);padding:12px 16px;display:flex;flex-direction:column;gap:4px}
+.dlg .who{font-family:var(--label);font-weight:700;letter-spacing:.16em;color:var(--ember);font-size:13px;text-transform:uppercase}
+.dlg .par{font-style:italic;color:var(--muted);font-size:14px}
+.dlg .line{font-weight:700;font-size:19px;line-height:1.35}
+.trans{border:1px dashed var(--line);padding:10px 14px;font-family:var(--label);font-weight:600;letter-spacing:.06em;color:var(--muted)}
+.trans b{color:var(--paper)}
+.donebtn{min-height:48px;border:1px solid var(--line);background:none;display:flex;align-items:center;gap:12px;padding:0 16px;font-family:var(--label);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.donebtn .box{width:22px;height:22px;border:2px solid var(--muted);display:grid;place-items:center}
+.donebtn[aria-pressed="true"]{border-color:var(--done);color:var(--done)}
+.donebtn[aria-pressed="true"] .box{background:var(--done);border-color:var(--done)}
+.donebtn[aria-pressed="true"] .box::after{content:"";width:6px;height:11px;border:solid var(--ink);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.nav{display:flex;gap:10px}
+.nav button{flex:1;min-height:48px;border:1px solid var(--line);background:none;font-family:var(--label);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.nav button.next{background:var(--ember);border-color:var(--ember);color:#fff}
+.nav button:disabled{opacity:.35;cursor:default}
+.persist{font-size:13px;color:var(--muted)}
+.strip{display:flex;gap:10px;overflow-x:auto;padding-block:22px 48px}
+.thumb{flex:0 0 150px;position:relative;border:2px solid transparent;background:none;padding:0;text-align:left}
+.thumb img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.thumb span{display:block;font-family:var(--label);font-weight:600;font-size:13px;letter-spacing:.08em;color:var(--muted);padding:4px 2px}
+.thumb[aria-current="true"]{border-color:var(--ember)}
+.thumb.isdone img{opacity:.4}
+.thumb.isdone::after{content:"✓";position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:var(--done);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+@media (prefers-reduced-motion:no-preference){.frame img{animation:fade .25s ease}@keyframes fade{from{opacity:.4}to{opacity:1}}}
+</style>
+
+<section id="home" class="wrap">
+  <div class="lbl">Riccio Studio Bray · Magnus Forever</div>
+  <h1>The Christmas Cut</h1>
+  <p class="sub">Christmas hero film storyboard. Snow, lights and three barbers arriving for the busiest season of the year. 15 frames generated from the script and the cast and shop references.</p>
+  <div class="facts">
+    <div><span class="lbl">Runtime</span><b>35–38s</b></div>
+    <div><span class="lbl">Frame</span><b>4:3</b></div>
+    <div><span class="lbl">Lens kit</span><b>16 · 25 · 50mm</b></div>
+    <div><span class="lbl">Shoot</span><b>Mon 4:30–6:30pm</b></div>
+    <div><span class="lbl">Cast</span><b>Nathan · Joel · Valerio</b></div>
+  </div>
+  <button class="tile" id="open" type="button">
+    <img src="img/shot02.jpg" alt="RICCIO STUDIO shopfront in the snow at night">
+    <span class="t"><strong>Open the board</strong><span id="homecount" class="count">0 / 15 shots done</span><span class="go">Start at shot 1 →</span></span>
+  </button>
+  <div class="chain" id="chain"></div>
+</section>
+
+<section id="board" hidden>
+  <div class="bar"><div class="wrap">
+    <button class="back" id="back" type="button">← Home</button>
+    <div class="title">The Christmas Cut<small>Riccio Studio Bray</small></div>
+    <div class="count" id="count"></div>
+  </div></div>
+  <div class="wrap">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="subhead"><h2 id="subTitle"></h2><p id="subLog"></p></div>
+    <div class="viewer">
+      <div class="frame"><img id="img" alt=""><div class="badge" id="badge"></div><div class="tc" id="tc"></div></div>
+      <div class="info">
+        <div class="scene" id="sceneNo"></div>
+        <h3 id="sceneName"></h3>
+        <div class="chips" id="chips"></div>
+        <p class="dir" id="dir"></p>
+        <dl class="notes" id="notes"></dl>
+        <div id="dlg"></div>
+        <div id="trans"></div>
+        <button class="donebtn" id="done" type="button" aria-pressed="false"><span class="box"></span><span>Mark shot done</span></button>
+        <div class="nav"><button id="prev" type="button">← Back</button><button id="next" class="next" type="button">Next →</button></div>
+        <div class="persist" id="persist"></div>
+      </div>
+    </div>
+    <div class="strip" id="strip"></div>
+  </div>
+</section>
+
+<script>
+const SUBJECTS = [
+  { name:"Opening", log:"Black card and the establishing shopfront. Sleigh bell, light wind.", frames:[
+    {id:"01", img:"shot01", tc:"0:00–0:02", env:"card", name:"Opening bell", lens:"Title card",
+     dir:"Black screen. A single sleigh bell rings. RICCIO STUDIO BRAY fades in from centre.",
+     notes:[["On screen","RICCIO STUDIO BRAY"],["Sound","One sleigh bell, light wind ambience."]]},
+    {id:"02", img:"shot02", tc:"0:02–0:06", env:"ext", name:"The shopfront in the snow", lens:"50mm · from across the road",
+     dir:"Slow push-in from across the road. The neighbouring shop's Christmas lights glow out of focus in the foreground, snow drifting down. The RICCIO shopfront sits warm in the centre, tree by the door, lights along the window.",
+     notes:[["Camera","Gimbal or slider. 50mm is the longest in the kit, so open it right up for bokeh. 50/60fps."],["VFX","Falling snow layer, light haze."],["Sound","Bells continue, wind."]]}
+  ], trans:"Cut down to the driveway"},
+  { name:"Arrival", log:"Footsteps, the tilt-up reveal of all three, and the door opening on the beat drop.", frames:[
+    {id:"03", img:"shot03", tc:"0:06–0:10", env:"ext", name:"Footsteps in fresh snow", lens:"25mm · ground level",
+     dir:"Low close-up just above untouched snow. A boot presses a clean print, then another. The camera tracks low alongside the footprints toward the shop door. Boots only, no faces.",
+     notes:[["Credit","Valerio's footsteps idea."],["Camera","Gimbal at ground level, shallow depth of field, slow motion."],["Practical","Snow blanket or spray on the driveway. One take, no easy reset."],["Sound","Amplified crunch of each step."]]},
+    {id:"04", img:"shot04", tc:"0:10–0:13", env:"ext", name:"The three arrive", lens:"16mm · low angle",
+     dir:"Tilt up from the footprints to reveal all three barbers walking side by side. Beanies, winter coats, breath in the cold, lights blurring behind. Unhurried and composed. Nathan left, Valerio centre, Joel right.",
+     notes:[["Camera","Low angle, slow motion, slight push."],["VFX","Breath enhancement if needed. Falling snow."],["Sound","Bells build and swell."]]},
+    {id:"05", img:"shot05", tc:"0:13–0:15", env:"ext", name:"The door opens", lens:"25mm · inside looking out",
+     dir:"BEAT DROP. A hand pushes the door open on the drop. Warm golden light spills out across the snow.",
+     notes:[["Music","Sleigh bells switch to the modern festive track. Every cut from here lands on the beat."],["Lighting","Interior warm and bright against the cold blue exterior."]]}
+  ], trans:"Through the door, inside to the chair"},
+  { name:"Getting ready", log:"The chair swipe, then four fast cuts on the beat. No haircut detail here.", frames:[
+    {id:"06", img:"shot06", tc:"0:15–0:18", env:"int", name:"Snow on the chair", lens:"25mm · chair height",
+     dir:"The barber chair sits dusted in snow. Valerio sweeps it clean in one swipe, snow spraying off in slow motion, then spins the chair to face camera. It stops dead on the beat.",
+     notes:[["Credit","Joel's idea."],["Camera","Locked off or slow push. 50/60fps for the swipe."],["Practical","Snow spray or fake snow on the chair."],["VFX","Extra snow particles on the swipe."]]},
+    {id:"07A", img:"shot07a", tc:"0:18–0:19", env:"int", name:"Beanie toss", lens:"25mm",
+     dir:"Joel pulls his beanie off and tosses it onto the coat stand.",
+     notes:[["Sound","Music leads."]]},
+    {id:"07B", img:"shot07b", tc:"0:19–0:20", env:"int", name:"Cape snap", lens:"25mm",
+     dir:"Nathan snaps a cape out, floating mid-air in slow motion.",
+     notes:[["Sound","Cape snap hit under the music."]]},
+    {id:"07C", img:"shot07c", tc:"0:20–0:21", env:"int", name:"Clippers on", lens:"50mm · insert",
+     dir:"Clippers click on, the blade catching the light. Valerio's hand.",
+     notes:[["Sound","Clipper buzz under the music."]]},
+    {id:"07D", img:"shot07d", tc:"0:21–0:23", env:"int", name:"All three ready", lens:"16mm · wide",
+     dir:"All three at their stations, standing tall, ready. Nathan left, Valerio centre, Joel right.",
+     notes:[["Note","No haircut detail here. The Signature Cut video covers that."]]}
+  ], trans:"Music dips for the lines to camera"},
+  { name:"One line each", log:"Each barber speaks straight to camera by his chair or in the mirror. Quick cuts, each line under three seconds.", frames:[
+    {id:"08A", img:"shot08a", tc:"0:23–0:26", env:"int", name:"Nathan to camera", lens:"50mm · mid shot, eye level",
+     dir:"Nathan leans on his chair and speaks straight to camera.",
+     dlg:[["Nathan","leaning on his chair","Christmas parties. Family photos."]],
+     notes:[["Note","Their own words are fine."]]},
+    {id:"08B", img:"shot08b", tc:"0:26–0:28", env:"int", name:"Joel to camera", lens:"50mm · mid shot, eye level",
+     dir:"Joel, arms folded, by the mirror.",
+     dlg:[["Joel","arms folded, by the mirror","Everyone wants to look their best."]],
+     notes:[["Note","Keep the line under three seconds."]]},
+    {id:"08C", img:"shot08c", tc:"0:28–0:31", env:"int", name:"Valerio to camera", lens:"50mm · mid shot, eye level",
+     dir:"Valerio spins the chair and sits on it backwards.",
+     dlg:[["Valerio","spins the chair, sits on it backwards","We'll get you sharp for it."]],
+     notes:[["Note","Keep the line under three seconds."]]}
+  ], trans:"Back outside for the final image"},
+  { name:"Close", log:"The doorway final and the booking card.", frames:[
+    {id:"09", img:"shot09", tc:"0:31–0:35", env:"ext", name:"Sharp for the season", lens:"25mm · pull-back",
+     dir:"Wide from outside: the three in the open doorway, warm light behind, snow falling in front, tree and lights framing them. A small nod to camera as the camera pulls back.",
+     notes:[["On screen","SHARP FOR THE SEASON."],["Camera","Gimbal or slider pull-back, 50/60fps."],["VFX","Falling snow, glow on the practicals."]]},
+    {id:"10", img:"shot10", tc:"0:35–0:38", env:"card", name:"Bookings open", lens:"End card",
+     dir:"End card.",
+     notes:[["On screen","CHRISTMAS BOOKINGS NOW OPEN · RICCIO STUDIO BRAY · Link in bio"],["Sound","Music resolves. The single sleigh bell from the opening closes it out."]]}
+  ]}
+];
+const FLAT = SUBJECTS.flatMap((s,si)=>s.frames.map((f,fi)=>({...f,si,fi})));
+const TOTAL = FLAT.length;
+const key = (si,fi)=>`xmas_${si}_${fi}`;
+let state = {si:0, fi:0};
+let done = new Set();
+let db = null;
+const $ = id=>document.getElementById(id);
+
+// local fallback
+function loadLocal(){ try{ const v=JSON.parse(localStorage.getItem("xmasDone")||"[]"); done=new Set(v);}catch(e){} }
+function saveLocal(){ try{ localStorage.setItem("xmasDone",JSON.stringify([...done])); }catch(e){} }
+loadLocal();
+$("persist").textContent = "Saved on this device only.";
+
+function esc(s){ const d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+function renderCounts(){
+  const n = done.size;
+  $("count").innerHTML = `<b>${n}</b> / ${TOTAL} shots done`;
+  $("homecount").textContent = `${n} / ${TOTAL} shots done`;
+}
+function renderTabs(){
+  $("tabs").innerHTML = SUBJECTS.map((s,si)=>{
+    const d = s.frames.filter((_,fi)=>done.has(key(si,fi))).length;
+    return `<button class="tab" role="tab" type="button" data-si="${si}" aria-selected="${si===state.si}">${esc(s.name)}<span class="n">${d}/${s.frames.length}</span></button>`;
+  }).join("");
+}
+function render(){
+  const s = SUBJECTS[state.si], f = s.frames[state.fi], k = key(state.si,state.fi);
+  const globalIdx = FLAT.findIndex(x=>x.si===state.si&&x.fi===state.fi);
+  renderTabs(); renderCounts();
+  $("subTitle").textContent = s.name; $("subLog").textContent = s.log;
+  $("img").src = `img/${f.img}.jpg`; $("img").alt = `Shot ${f.id}: ${f.name}`;
+  $("badge").textContent = `${state.fi+1} / ${s.frames.length}`;
+  $("tc").textContent = f.tc;
+  $("sceneNo").textContent = `Shot ${f.id}`;
+  $("sceneName").textContent = f.name;
+  const envTxt = {ext:"EXT · cold blue night", int:"INT · warm gold", card:"Card"}[f.env];
+  $("chips").innerHTML = `<span class="lens">${esc(f.lens)}</span><span class="env ${f.env}">${envTxt}</span>`;
+  $("dir").textContent = f.dir;
+  $("notes").innerHTML = (f.notes||[]).map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join("");
+  $("dlg").innerHTML = (f.dlg||[]).map(([w,p,l])=>`<div class="dlg"><span class="who">${esc(w)}</span><span class="par">(${esc(p)})</span><span class="line">“${esc(l)}”</span></div>`).join("");
+  const last = state.fi===s.frames.length-1;
+  $("trans").innerHTML = last && s.trans ? `<div class="trans">Transition: <b>${esc(s.trans)} →</b></div>` : "";
+  $("done").setAttribute("aria-pressed", done.has(k));
+  $("prev").disabled = globalIdx===0;
+  $("next").disabled = globalIdx===TOTAL-1;
+  $("next").textContent = last && state.si<SUBJECTS.length-1 ? `${SUBJECTS[state.si+1].name} →` : "Next →";
+  $("strip").innerHTML = s.frames.map((fr,fi)=>`<button class="thumb${done.has(key(state.si,fi))?" isdone":""}" type="button" data-fi="${fi}" aria-current="${fi===state.fi}"><img src="img/${fr.img}.jpg" alt=""><span>Shot ${fr.id}</span></button>`).join("");
+}
+function go(delta){
+  let i = FLAT.findIndex(x=>x.si===state.si&&x.fi===state.fi)+delta;
+  if(i<0||i>=TOTAL) return;
+  state = {si:FLAT[i].si, fi:FLAT[i].fi}; render();
+}
+$("chain").innerHTML = "Order: " + SUBJECTS.map(s=>`<span>${esc(s.name)}</span>`).join(" → ");
+$("open").onclick = ()=>{ $("home").hidden=true; $("board").hidden=false; render(); window.scrollTo(0,0); };
+$("back").onclick = ()=>{ $("board").hidden=true; $("home").hidden=false; renderCounts(); };
+$("prev").onclick = ()=>go(-1);
+$("next").onclick = ()=>go(1);
+$("tabs").onclick = e=>{ const b=e.target.closest(".tab"); if(!b) return; state={si:+b.dataset.si, fi:0}; render(); };
+$("strip").onclick = e=>{ const b=e.target.closest(".thumb"); if(!b) return; state.fi=+b.dataset.fi; render(); };
+$("done").onclick = async ()=>{
+  const k = key(state.si,state.fi), on = !done.has(k);
+  if(on) done.add(k); else done.delete(k);
+  saveLocal(); render();
+  if(db){ try{ const ref=db.collection("done").doc(k); if(on) await ref.set({done:true}); else await ref.delete(); }catch(e){ $("persist").textContent="Couldn't save to the shared board. Saved on this device only."; } }
+};
+document.addEventListener("keydown", e=>{
+  if($("board").hidden) return;
+  if(e.key==="ArrowRight") go(1); else if(e.key==="ArrowLeft") go(-1);
+});
+renderCounts();
+
+(async ()=>{
+  try{
+    db = await window.claude?.use?.("db");
+    if(!db) return;
+    db.collection("done").onSnapshot(snap=>{
+      done = new Set(snap.docs.map(d=>d.id));
+      saveLocal();
+      $("persist").textContent = "Ticks are shared with everyone on this board.";
+      if(!$("board").hidden) render(); else renderCounts();
+    }, ()=>{ $("persist").textContent = "Saved on this device only."; });
+  }catch(e){}
+})();
+</script>
+
+</body></html>
