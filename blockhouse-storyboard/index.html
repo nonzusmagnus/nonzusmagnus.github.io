@@ -1,0 +1,337 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Blockhouse Is Back Shotboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: one film, night-dark board. Home tile -> scene tabs -> frame viewer + info panel, thumb strip below. Single dark look by choice (party at night, frames read best on black). */
+:root{
+  --ink:#0a0a0a; --panel:#141312; --line:#2a2826; --paper:#f3f1ea; --muted:#a39e94;
+  --ember:#c43b23; --ember-soft:rgba(196,59,35,.14); --done:#2e9e57; --frost:#9fb7d4; --gold:#d9a85b; --mag:#d46bb8;
+  --display:"Bebas Neue",Impact,"Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --label:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{background:var(--ink);color:var(--paper)}
+body{font-family:var(--body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,.tab:focus-visible,.thumb:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.lbl{font-family:var(--label);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+
+/* Home */
+#home{padding-block:56px 64px;display:flex;flex-direction:column;gap:28px}
+#home h1{font-family:var(--display);font-weight:400;font-size:clamp(64px,13vw,150px);line-height:.88;margin:0;letter-spacing:.01em;text-wrap:balance}
+#home .sub{max-width:62ch;color:var(--muted);margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px}
+.facts div{display:flex;flex-direction:column}
+.facts b{font-family:var(--label);font-weight:600;font-size:17px;color:var(--paper);letter-spacing:.04em}
+.tile{display:grid;grid-template-columns:1.4fr 1fr;align-items:stretch;border:1px solid var(--line);background:var(--panel);padding:0;text-align:left;overflow:hidden;min-height:44px}
+.tile img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;display:block}
+.tile .t{padding:24px;display:flex;flex-direction:column;gap:10px;justify-content:center;min-width:0}
+.tile .t strong{font-family:var(--display);font-weight:400;font-size:52px;line-height:.95}
+.tile .go{font-family:var(--label);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ember)}
+.tile:hover{border-color:var(--ember)}
+.chain{font-family:var(--label);font-size:15px;letter-spacing:.06em;color:var(--muted)}
+.chain span{color:var(--paper)}
+.cast{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:20px;align-items:center;border-top:1px solid var(--line);padding-top:24px}
+.cast img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border:1px solid var(--line)}
+.cast p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+@media (max-width:760px){.tile,.cast{grid-template-columns:1fr}}
+
+/* Board */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:14px;min-height:60px;flex-wrap:wrap;padding-block:6px}
+.back{background:none;border:1px solid var(--line);min-height:44px;padding:0 14px;font-family:var(--label);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.bar .title{font-family:var(--display);font-size:28px;line-height:1;flex:1;min-width:0}
+.bar .title small{font-family:var(--label);font-size:13px;letter-spacing:.12em;color:var(--muted);margin-left:8px}
+.count{font-family:var(--label);font-weight:600;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.count b{color:var(--done)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-block:14px;scrollbar-width:thin}
+.tab{flex:0 0 auto;min-height:44px;padding:0 14px;border:1px solid var(--line);background:none;font-family:var(--label);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;display:flex;gap:8px;align-items:center}
+.tab .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.tab[aria-selected="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.tab[aria-selected="true"] .n{color:#5a564f}
+.subhead{display:flex;flex-direction:column;gap:2px;padding-block:6px 18px}
+.subhead h2{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;margin:0}
+.subhead p{margin:0;color:var(--muted);max-width:70ch}
+.viewer{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:760px){.viewer{grid-template-columns:1fr}}
+.frame{position:relative;background:#000;border:1px solid var(--line)}
+.frame img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;max-width:100%}
+.endcard{aspect-ratio:4/3;display:grid;place-items:center;text-align:center;padding:24px;font-family:var(--display);font-size:clamp(32px,5vw,58px);line-height:1;letter-spacing:.02em;max-width:100%}
+.badge{position:absolute;top:12px;left:12px;background:rgba(10,10,10,.82);padding:4px 10px;font-family:var(--label);font-weight:700;letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.tc{position:absolute;top:12px;right:12px;background:rgba(10,10,10,.82);padding:4px 10px;font-family:var(--label);font-weight:600;letter-spacing:.08em;color:var(--frost)}
+.info{display:flex;flex-direction:column;gap:16px;min-width:0}
+.scene{font-family:var(--label);font-weight:700;letter-spacing:.16em;color:var(--ember);text-transform:uppercase;font-size:14px}
+.info h3{font-family:var(--display);font-weight:400;font-size:42px;line-height:.95;margin:0;padding-bottom:10px;border-bottom:4px solid var(--paper);text-wrap:balance}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.lens{background:var(--paper);color:var(--ink);font-family:var(--label);font-weight:700;letter-spacing:.06em;padding:5px 10px;font-size:15px}
+.rig{border:1px solid var(--paper);font-family:var(--label);font-weight:700;letter-spacing:.06em;padding:5px 10px;font-size:15px}
+.env{border:1px solid var(--line);font-family:var(--label);font-weight:600;letter-spacing:.1em;padding:5px 10px;font-size:14px}
+.env.ext{color:var(--frost);border-color:#3a4a5e}
+.env.int{color:var(--gold);border-color:#5e4a2c}
+.env.venue{color:var(--mag);border-color:#5e2c52}
+.env.card{color:var(--muted)}
+.dir{font-size:17px;line-height:1.55;margin:0}
+.notes{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:15px}
+.notes dt{font-family:var(--label);font-weight:700;letter-spacing:.12em;color:var(--gold);font-size:13px;text-transform:uppercase;padding-top:2px}
+.notes dd{margin:0;color:#d8d4cb}
+.dlgs{display:flex;flex-direction:column;gap:8px}
+.dlg{background:var(--ember-soft);border-left:4px solid var(--ember);padding:12px 16px;display:flex;flex-direction:column;gap:4px}
+.dlg.vo{background:rgba(159,183,212,.1);border-left-color:var(--frost)}
+.dlg .who{font-family:var(--label);font-weight:700;letter-spacing:.16em;color:var(--ember);font-size:13px;text-transform:uppercase}
+.dlg.vo .who{color:var(--frost)}
+.dlg .par{font-style:italic;color:var(--muted);font-size:14px}
+.dlg .line{font-weight:700;font-size:19px;line-height:1.35}
+.trans{border:1px dashed var(--line);padding:10px 14px;font-family:var(--label);font-weight:600;letter-spacing:.06em;color:var(--muted)}
+.trans b{color:var(--paper)}
+.donebtn{min-height:48px;border:1px solid var(--line);background:none;display:flex;align-items:center;gap:12px;padding:0 16px;font-family:var(--label);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.donebtn .box{width:22px;height:22px;border:2px solid var(--muted);display:grid;place-items:center}
+.donebtn[aria-pressed="true"]{border-color:var(--done);color:var(--done)}
+.donebtn[aria-pressed="true"] .box{background:var(--done);border-color:var(--done)}
+.donebtn[aria-pressed="true"] .box::after{content:"";width:6px;height:11px;border:solid var(--ink);border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.nav{display:flex;gap:10px}
+.nav button{flex:1;min-height:48px;border:1px solid var(--line);background:none;font-family:var(--label);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.nav button.next{background:var(--ember);border-color:var(--ember);color:#fff}
+.nav button:disabled{opacity:.35;cursor:default}
+.persist{font-size:13px;color:var(--muted)}
+.strip{display:flex;gap:10px;overflow-x:auto;padding-block:22px 48px}
+.thumb{flex:0 0 150px;position:relative;border:2px solid transparent;background:none;padding:0;text-align:left}
+.thumb img,.thumb .tcard{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.thumb .tcard{background:#000;display:grid;place-items:center;font-family:var(--display);font-size:20px;color:var(--paper)}
+.thumb span{display:block;font-family:var(--label);font-weight:600;font-size:13px;letter-spacing:.08em;color:var(--muted);padding:4px 2px}
+.thumb[aria-current="true"]{border-color:var(--ember)}
+.thumb.isdone img,.thumb.isdone .tcard{opacity:.4}
+.thumb.isdone::after{content:"✓";position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:var(--done);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+@media (prefers-reduced-motion:no-preference){.frame img{animation:fade .25s ease}@keyframes fade{from{opacity:.4}to{opacity:1}}}
+</style>
+
+<section id="home" class="wrap">
+  <div class="lbl">Blockhouse Dublin · Magnus Forever</div>
+  <h1>Blockhouse Is Back</h1>
+  <p class="sub">Promo film for the Blockhouse all-white party on 1 January 2027. Humble freezes mid-call, thaws out, and the crew get dressed in white and head to the venue for midnight. 25 frames generated from the final-draft script and the cast, apartment and venue references.</p>
+  <div class="facts">
+    <div><span class="lbl">Runtime</span><b>About 45s</b></div>
+    <div><span class="lbl">Frame</span><b>4:3</b></div>
+    <div><span class="lbl">Lens kit</span><b>16 · 25 · 50mm</b></div>
+    <div><span class="lbl">Rig</span><b>Mostly tripod · 6 gimbal</b></div>
+    <div><span class="lbl">Shoot</span><b>Sun 29 or Mon 30 Nov (TBC)</b></div>
+    <div><span class="lbl">Cast</span><b>Humble · Jones · Girl · Caller (V.O.)</b></div>
+  </div>
+  <button class="tile" id="open" type="button">
+    <img src="img/s1-03.jpg" alt="Jones and the Girl lean in to inspect a frozen Humble in the kitchen">
+    <span class="t"><strong>Open the board</strong><span id="homecount" class="count">0 / 26 shots done</span><span class="go">Start at shot 1 →</span></span>
+  </button>
+  <div class="chain" id="chain"></div>
+  <div class="cast">
+    <img src="img/s0-00.jpg" alt="Character sheet for the Girl: braids, gold hoops, cream knit cardigan, black top, dark jeans">
+    <div><span class="lbl">Look reference · the Girl</span>
+      <p>No photo was supplied for the Girl, so this look was generated and held across every frame. Swap in the real cast member's styling on the day.</p></div>
+  </div>
+</section>
+
+<section id="board" hidden>
+  <div class="bar"><div class="wrap">
+    <button class="back" id="back" type="button">← Home</button>
+    <div class="title">Blockhouse Is Back<small>All-white · 1.1.27</small></div>
+    <div class="count" id="count"></div>
+  </div></div>
+  <div class="wrap">
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="subhead"><h2 id="subTitle"></h2><p id="subLog"></p></div>
+    <div class="viewer">
+      <div class="frame" id="frame"><img id="img" alt=""><div class="endcard" id="card" hidden></div><div class="badge" id="badge"></div><div class="tc" id="tc"></div></div>
+      <div class="info">
+        <div class="scene" id="sceneNo"></div>
+        <h3 id="sceneName"></h3>
+        <div class="chips" id="chips"></div>
+        <p class="dir" id="dir"></p>
+        <dl class="notes" id="notes"></dl>
+        <div class="dlgs" id="dlg"></div>
+        <div id="trans"></div>
+        <button class="donebtn" id="done" type="button" aria-pressed="false"><span class="box"></span><span>Mark shot done</span></button>
+        <div class="nav"><button id="prev" type="button">← Back</button><button id="next" class="next" type="button">Next →</button></div>
+        <div class="persist" id="persist"></div>
+      </div>
+    </div>
+    <div class="strip" id="strip"></div>
+  </div>
+</section>
+
+<script>
+const SUBJECTS = [
+  { name:"1 · Frozen", log:"Apartment, snowy evening. Humble is frozen solid mid-call. The Girl and Jones find him.", frames:[
+    {id:"1.1", img:"s1-01", env:"int", rig:"Tripod", name:"Frozen close-up", lens:"50mm · close-up",
+     dir:"Humble's face, frozen solid. Frost on his lashes, brows and goatee. Eyes fixed, phone at his ear. Hold still and let the frost read.",
+     notes:[["Make-up","Frost on lashes, brows and beard. Glycerine and salt or fake snow powder."],["Note","Humble must not blink. Short take."]]},
+    {id:"1.2", img:"s1-02", env:"int", rig:"Tripod (or slow gimbal pull-out)", name:"Pull back", lens:"25mm · medium-wide",
+     dir:"Pull back: Humble stands frozen, facing left. Phone to his ear in his left hand, a cup in his right. Behind him, snow falls past the window.",
+     notes:[["Blocking","Check hands: phone in LEFT hand, cup in RIGHT (the frame has them swapped)."],["VFX","Snow layer on the window if it isn't snowing on the day."]]},
+    {id:"1.3", img:"s1-03", env:"int", rig:"Tripod", name:"They lean in", lens:"25mm · three-shot",
+     dir:"The Girl and Jones walk in from the right of frame and lean in to look at him.",
+     dlg:[["Girl","","Is he frozen?"],["Jones","","He's a cool guy."]]},
+    {id:"1.4", img:"s1-04", env:"int", rig:"Tripod", name:"The tap", lens:"50mm · insert",
+     dir:"The Girl taps his shoulder. The ice cracks off.",
+     notes:[["Practical","Sugar-glass or ice-effect flakes on the shoulder; shoot high frame rate."],["VFX","Crack and shatter enhancement."]]}
+  ], trans:"Ice cracks, straight into the call"},
+  { name:"2 · The call", log:"Humble shakes off the cold and carries on the call like nothing happened. The Caller is voice only.", frames:[
+    {id:"2.1", img:"s2-01", env:"int", rig:"Tripod", name:"Shake it off", lens:"25mm · medium",
+     dir:"Humble shivers, shakes off the cold, flakes flying, and carries on the call like nothing happened. The Girl and Jones flinch back behind him.",
+     notes:[["Practical","Toss fake snow off-frame on action."]]},
+    {id:"2.2", img:"s2-02", env:"int", rig:"Tripod", name:"The call", lens:"50mm · medium close-up",
+     dir:"Humble on the phone, relaxed and deadpan.",
+     dlg:[["Caller","V.O.","Huh? Four months just to hear from you?"],["Humble","","Don't vex."],["Caller","V.O.","That's it?"],["Humble","","Nah, there's more. We've been curating something special for you."],["Caller","V.O.","Like what?"],["Humble","","New Year's Eve. All-white party."],["Caller","V.O., huffs","I can't even stay mad at you guys."]],
+     notes:[["Sound","Record the Caller wild or off-set so Humble has someone to react to."]]},
+    {id:"2.3", img:"s2-03", env:"int", rig:"Tripod", name:"Hang up", lens:"25mm · three-shot",
+     dir:"Humble hangs up, pleased with himself. The Girl and Jones look on."}
+  ], trans:"The Girl reacts"},
+  { name:"3 · Getting ready", log:"Excitement, the white outfit, then the locked-off before and after match cut.", frames:[
+    {id:"3.1", img:"s3-01", env:"int", rig:"Tripod", name:"Girl claps", lens:"50mm · medium close-up",
+     dir:"The Girl claps her hands in glee.",
+     dlg:[["Girl","","Ooh, all right!"]]},
+    {id:"3.2", img:"s3-02", env:"int", rig:"Tripod", name:"Jones, arms crossed", lens:"50mm · medium close-up",
+     dir:"Jones stands with his arms crossed, smiling.",
+     dlg:[["Jones","","Guess we better get ready then."]]},
+    {id:"3.3", img:"s3-03", env:"int", rig:"Tripod", name:"The white dress", lens:"25mm · medium",
+     dir:"Cut: the Girl holds up a white shirt or dress in front of her, looking it over. Living room, teal sofa behind."},
+    {id:"3.4", img:"s3-04", env:"int", rig:"Tripod · locked off", name:"Before", lens:"16mm · wide, centred",
+     dir:"Cut: all three standing side by side in their normal clothes.",
+     notes:[["Camera","Do not touch the tripod between 3.4 and 3.5. Mark feet with tape."]]},
+    {id:"3.5", img:"s3-05", env:"int", rig:"Tripod · locked off", name:"After (match cut)", lens:"16mm · same frame",
+     dir:"Match cut: same frame, now all three fully dressed in white.",
+     notes:[["Continuity","Same marks, same poses, same expressions. Only the outfits change."]]}
+  ], trans:"Out the front door"},
+  { name:"4 · The car", log:"Outside, night, snow falling. All three in white, into the car to the venue.", frames:[
+    {id:"4.1", img:"s4-01", env:"ext", rig:"Gimbal", name:"Out the door", lens:"16mm · wide",
+     dir:"Outside, night, snow falling. All three walk out in their whites towards the car.",
+     notes:[["VFX","Falling snow if needed."],["Wardrobe","White coats over the party looks."]]},
+    {id:"4.2", img:"s4-02", env:"ext", rig:"Tripod", name:"The car pulls off", lens:"25mm · wide, across the street",
+     dir:"They get into the car taking them to the venue. The car pulls off."}
+  ], trans:"Cut to the venue entrance"},
+  { name:"5 · Midnight", log:"Venue, about one hour on location. Entrance, postcard lines to camera, 23:59, then the drop.", frames:[
+    {id:"5.1", img:"s5-01", env:"ext", rig:"Gimbal · follow", name:"The entrance", lens:"16mm · wide",
+     dir:"Outside the venue, snow falling. The three push through the entrance doors."},
+    {id:"5.2", img:"s5-02", env:"venue", rig:"Tripod", name:"Go time", lens:"16mm · wide",
+     dir:"Inside the big hall. The doors swing open, they step in and stop just inside the entrance. They turn straight to the lens and smile. It's go time."},
+    {id:"5.3", img:"s5-03", env:"venue", rig:"Tripod", name:"Postcard: Humble", lens:"50mm · portrait",
+     dir:"Postcard shot: framed portrait, straight down the lens. The Girl ad-libs and moves around in the background.",
+     dlg:[["Humble","","Four months was long enough."]]},
+    {id:"5.4", img:"s5-04", env:"venue", rig:"Tripod", name:"Postcard: Jones", lens:"50mm · portrait",
+     dir:"Postcard shot: framed portrait, straight down the lens. The Girl ad-libs in the background.",
+     dlg:[["Jones","","We've been building this for you."]]},
+    {id:"5.5", img:"s5-05", env:"venue", rig:"Tripod", name:"Postcard: Humble 2", lens:"50mm · portrait",
+     dir:"Postcard shot in front of the stage and chandelier, straight down the lens.",
+     dlg:[["Humble","","New Year's Eve."]]},
+    {id:"5.6", img:"s5-06", env:"venue", rig:"Tripod", name:"Postcard: Jones 2", lens:"50mm · portrait",
+     dir:"Postcard shot by the booths, straight down the lens.",
+     dlg:[["Jones","","And guess what? It's an all-white party."]]},
+    {id:"5.7", img:"s5-07", env:"venue", rig:"Tripod", name:"23:59", lens:"50mm · insert, low angle",
+     dir:"The clock above the booth reads 23:59.",
+     notes:[["Practical","Put 23:59 on the stage screen, or add the clock in post."]]},
+    {id:"5.8", img:"s5-08", env:"venue", rig:"Tripod", name:"All three", lens:"25mm · three-shot",
+     dir:"All three together, straight to the lens.",
+     dlg:[["All three","","Blockhouse is back. See you there."]]},
+    {id:"5.9", img:"s5-09", env:"venue", rig:"Gimbal", name:"00:00", lens:"16mm · wide",
+     dir:"00:00: the ice cracks on a bass hit. The lights burst red and the snow turns to confetti. The Girl throws her hands up first.",
+     notes:[["Lighting","Venue rig to full red on the drop."],["Practical","Confetti cannon on cue."],["VFX","Ice crack overlay on the bass hit."]]},
+    {id:"5.10", img:"s5-10", env:"venue", rig:"Gimbal", name:"Cups clinking", lens:"50mm · insert",
+     dir:"Quick cut: cups clinking."},
+    {id:"5.11", img:"s5-11", env:"venue", rig:"Gimbal", name:"Sofas, dancing, DJ", lens:"25mm · wide",
+     dir:"Quick cuts: sofas, dancing, a DJ in silhouette.",
+     notes:[["Camera","Grab several 1–2s cutaways here: sofas, dancing, DJ hands."]]},
+    {id:"End", card:"1.1.27 · All white · Tickets in bio", env:"card", rig:"Post", name:"End card", lens:"End card",
+     dir:"End card on black.",
+     notes:[["On screen","1.1.27 · All white · Tickets in bio"]]}
+  ]}
+];
+const FLAT = SUBJECTS.flatMap((s,si)=>s.frames.map((f,fi)=>({...f,si,fi})));
+const TOTAL = FLAT.length;
+const key = (si,fi)=>`bh_${si}_${fi}`;
+let state = {si:0, fi:0};
+let done = new Set();
+let db = null;
+const $ = id=>document.getElementById(id);
+
+function loadLocal(){ try{ const v=JSON.parse(localStorage.getItem("bhDone")||"[]"); done=new Set(v);}catch(e){} }
+function saveLocal(){ try{ localStorage.setItem("bhDone",JSON.stringify([...done])); }catch(e){} }
+loadLocal();
+$("persist").textContent = "Saved on this device only.";
+
+function esc(s){ const d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+function renderCounts(){
+  const n = done.size;
+  $("count").innerHTML = `<b>${n}</b> / ${TOTAL} shots done`;
+  $("homecount").textContent = `${n} / ${TOTAL} shots done`;
+}
+function renderTabs(){
+  $("tabs").innerHTML = SUBJECTS.map((s,si)=>{
+    const d = s.frames.filter((_,fi)=>done.has(key(si,fi))).length;
+    return `<button class="tab" role="tab" type="button" data-si="${si}" aria-selected="${si===state.si}">${esc(s.name)}<span class="n">${d}/${s.frames.length}</span></button>`;
+  }).join("");
+}
+function render(){
+  const s = SUBJECTS[state.si], f = s.frames[state.fi], k = key(state.si,state.fi);
+  const globalIdx = FLAT.findIndex(x=>x.si===state.si&&x.fi===state.fi);
+  renderTabs(); renderCounts();
+  $("subTitle").textContent = s.name; $("subLog").textContent = s.log;
+  if(f.card){ $("img").hidden=true; $("card").hidden=false; $("card").textContent=f.card; }
+  else { $("card").hidden=true; $("img").hidden=false; $("img").src=`img/${f.img}.jpg`; $("img").alt=`Shot ${f.id}: ${f.name}`; }
+  $("badge").textContent = `${state.fi+1} / ${s.frames.length}`;
+  $("tc").textContent = f.rig;
+  $("sceneNo").textContent = `Shot ${f.id}`;
+  $("sceneName").textContent = f.name;
+  const envTxt = {ext:"EXT · Street, night", int:"INT · Apartment", venue:"INT · Venue", card:"Card"}[f.env];
+  $("chips").innerHTML = `<span class="lens">${esc(f.lens)}</span><span class="rig">${esc(f.rig)}</span><span class="env ${f.env}">${envTxt}</span>`;
+  $("dir").textContent = f.dir;
+  $("notes").innerHTML = (f.notes||[]).map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join("");
+  $("dlg").innerHTML = (f.dlg||[]).map(([w,p,l])=>`<div class="dlg${/V\.O\./.test(p)?" vo":""}"><span class="who">${esc(w)}</span>${p?`<span class="par">(${esc(p)})</span>`:""}<span class="line">“${esc(l)}”</span></div>`).join("");
+  const last = state.fi===s.frames.length-1;
+  $("trans").innerHTML = last && s.trans ? `<div class="trans">Transition: <b>${esc(s.trans)} →</b></div>` : "";
+  $("done").setAttribute("aria-pressed", done.has(k));
+  $("prev").disabled = globalIdx===0;
+  $("next").disabled = globalIdx===TOTAL-1;
+  $("next").textContent = last && state.si<SUBJECTS.length-1 ? `${SUBJECTS[state.si+1].name.replace(/^\d+ · /,"")} →` : "Next →";
+  $("strip").innerHTML = s.frames.map((fr,fi)=>`<button class="thumb${done.has(key(state.si,fi))?" isdone":""}" type="button" data-fi="${fi}" aria-current="${fi===state.fi}">${fr.card?`<div class="tcard">End card</div>`:`<img src="img/${fr.img}.jpg" alt="">`}<span>Shot ${fr.id}</span></button>`).join("");
+}
+function go(delta){
+  let i = FLAT.findIndex(x=>x.si===state.si&&x.fi===state.fi)+delta;
+  if(i<0||i>=TOTAL) return;
+  state = {si:FLAT[i].si, fi:FLAT[i].fi}; render();
+}
+$("chain").innerHTML = "Order: " + SUBJECTS.map(s=>`<span>${esc(s.name)}</span>`).join(" → ");
+$("open").onclick = ()=>{ $("home").hidden=true; $("board").hidden=false; render(); window.scrollTo(0,0); };
+$("back").onclick = ()=>{ $("board").hidden=true; $("home").hidden=false; renderCounts(); };
+$("prev").onclick = ()=>go(-1);
+$("next").onclick = ()=>go(1);
+$("tabs").onclick = e=>{ const b=e.target.closest(".tab"); if(!b) return; state={si:+b.dataset.si, fi:0}; render(); };
+$("strip").onclick = e=>{ const b=e.target.closest(".thumb"); if(!b) return; state.fi=+b.dataset.fi; render(); };
+$("done").onclick = async ()=>{
+  const k = key(state.si,state.fi), on = !done.has(k);
+  if(on) done.add(k); else done.delete(k);
+  saveLocal(); render();
+  if(db){ try{ const ref=db.collection("done").doc(k); if(on) await ref.set({done:true}); else await ref.delete(); }catch(e){ $("persist").textContent="Couldn't save to the shared board. Saved on this device only."; } }
+};
+document.addEventListener("keydown", e=>{
+  if($("board").hidden) return;
+  if(e.key==="ArrowRight") go(1); else if(e.key==="ArrowLeft") go(-1);
+});
+renderCounts();
+
+(async ()=>{
+  try{
+    db = await window.claude?.use?.("db");
+    if(!db) return;
+    db.collection("done").onSnapshot(snap=>{
+      done = new Set(snap.docs.map(d=>d.id));
+      saveLocal();
+      $("persist").textContent = "Ticks are shared with everyone on this board.";
+      if(!$("board").hidden) render(); else renderCounts();
+    }, ()=>{ $("persist").textContent = "Saved on this device only."; });
+  }catch(e){}
+})();
+</script>
+</body></html>
