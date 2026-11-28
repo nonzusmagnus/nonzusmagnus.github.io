@@ -112,31 +112,31 @@ button:focus-visible,.tab:focus-visible,.thumb:focus-visible{outline:2px solid v
 <section id="home" class="wrap">
   <div class="lbl">Blockhouse Dublin · Magnus Forever</div>
   <h1>Blockhouse Is Back</h1>
-  <p class="sub">Promo film for the Blockhouse all-white party on 1 January 2027. Humble freezes mid-call, thaws out, and the crew get dressed in white and head to the venue for midnight. 25 frames generated from the final-draft script and the cast, apartment and venue references.</p>
+  <p class="sub">Promo film for the Blockhouse all-white New Year's Eve party. Humble freezes mid-call and thaws out, then the four of them change into white, pitch the night straight down the lens, and leave in the car. Shot entirely at the apartment. 21 frames generated from the script and the cast and apartment references.</p>
   <div class="facts">
     <div><span class="lbl">Runtime</span><b>About 45s</b></div>
     <div><span class="lbl">Frame</span><b>4:3</b></div>
     <div><span class="lbl">Lens kit</span><b>16 · 25 · 50mm</b></div>
-    <div><span class="lbl">Rig</span><b>Mostly tripod · 6 gimbal</b></div>
+    <div><span class="lbl">Rig</span><b>Mostly tripod · 1 gimbal</b></div>
     <div><span class="lbl">Shoot</span><b>Sun 29 or Mon 30 Nov (TBC)</b></div>
-    <div><span class="lbl">Cast</span><b>Humble · Jones · Girl · Caller (V.O.)</b></div>
+    <div><span class="lbl">Cast</span><b>Humble · Jones · Girl 1 · Girl 2 · Caller (V.O.)</b></div>
   </div>
   <button class="tile" id="open" type="button">
     <img src="img/s1-03.jpg" alt="Jones and the Girl lean in to inspect a frozen Humble in the kitchen">
-    <span class="t"><strong>Open the board</strong><span id="homecount" class="count">0 / 26 shots done</span><span class="go">Start at shot 1 →</span></span>
+    <span class="t"><strong>Open the board</strong><span id="homecount" class="count">0 / 22 shots done</span><span class="go">Start at shot 1 →</span></span>
   </button>
   <div class="chain" id="chain"></div>
   <div class="cast">
-    <img src="img/s0-00.jpg" alt="Character sheet for the Girl: braids, gold hoops, cream knit cardigan, black top, dark jeans">
-    <div><span class="lbl">Look reference · the Girl</span>
-      <p>No photo was supplied for the Girl, so this look was generated and held across every frame. Swap in the real cast member's styling on the day.</p></div>
+    <img src="img/s0-01.jpg" alt="Girl 1 in a pink zip hoodie and grey joggers beside Girl 2 with a copper bob in a cream jumper and black trousers">
+    <div><span class="lbl">Look reference · Girl 1 and Girl 2</span>
+      <p>Girl 1 (left): dark wavy hair, pink zip hoodie, then a white satin slip dress. Girl 2 (right): copper bob, cream jumper, then a white strapless beaded dress. Shots 1.3 to 2.1 still show the earlier generated Girl; frames from 2.2 on use the real looks.</p></div>
   </div>
 </section>
 
 <section id="board" hidden>
   <div class="bar"><div class="wrap">
     <button class="back" id="back" type="button">← Home</button>
-    <div class="title">Blockhouse Is Back<small>All-white · 1.1.27</small></div>
+    <div class="title">Blockhouse Is Back<small>All-white · New Year's Eve</small></div>
     <div class="count" id="count"></div>
   </div></div>
   <div class="wrap">
@@ -163,7 +163,7 @@ button:focus-visible,.tab:focus-visible,.thumb:focus-visible{outline:2px solid v
 
 <script>
 const SUBJECTS = [
-  { name:"1 · Frozen", log:"Apartment, snowy evening. Humble is frozen solid mid-call. The Girl and Jones find him.", frames:[
+  { name:"1 · Frozen", log:"Apartment, snowy evening. Humble is frozen solid mid-call. Girl 1 and Jones find him.", frames:[
     {id:"1.1", img:"s1-01", env:"int", rig:"Tripod", name:"Frozen close-up", lens:"50mm · close-up",
      dir:"Humble's face, frozen solid. Frost on his lashes, brows and goatee. Eyes fixed, phone at his ear. Hold still and let the frost read.",
      notes:[["Make-up","Frost on lashes, brows and beard. Glycerine and salt or fake snow powder."],["Note","Humble must not blink. Short take."]]},
@@ -171,92 +171,82 @@ const SUBJECTS = [
      dir:"Pull back: Humble stands frozen, facing left. Phone to his ear in his left hand, a cup in his right. Behind him, snow falls past the window.",
      notes:[["Blocking","Check hands: phone in LEFT hand, cup in RIGHT (the frame has them swapped)."],["VFX","Snow layer on the window if it isn't snowing on the day."]]},
     {id:"1.3", img:"s1-03", env:"int", rig:"Tripod", name:"They lean in", lens:"25mm · three-shot",
-     dir:"The Girl and Jones walk in from the right of frame and lean in to look at him.",
-     dlg:[["Girl","","Is he frozen?"],["Jones","","He's a cool guy."]]},
+     dir:"Girl 1 and Jones walk in from the right of frame and lean in to look at him.",
+     dlg:[["Girl 1","","Is he frozen?"],["Jones","","He's a cool guy."]]},
     {id:"1.4", img:"s1-04", env:"int", rig:"Tripod", name:"The tap", lens:"50mm · insert",
-     dir:"The Girl taps his shoulder. The ice cracks off.",
+     dir:"Girl 1 taps his shoulder. The ice cracks off.",
      notes:[["Practical","Sugar-glass or ice-effect flakes on the shoulder; shoot high frame rate."],["VFX","Crack and shatter enhancement."]]}
   ], trans:"Ice cracks, straight into the call"},
-  { name:"2 · The call", log:"Humble shakes off the cold and carries on the call like nothing happened. The Caller is voice only.", frames:[
+  { name:"2 · The call", log:"Humble carries on the call like nothing happened. Both girls eavesdrop. The Caller is voice only.", frames:[
     {id:"2.1", img:"s2-01", env:"int", rig:"Tripod", name:"Shake it off", lens:"25mm · medium",
-     dir:"Humble shivers, shakes off the cold, flakes flying, and carries on the call like nothing happened. The Girl and Jones flinch back behind him.",
-     notes:[["Practical","Toss fake snow off-frame on action."]]},
+     dir:"Humble shivers, shakes off the cold, flakes flying, and carries on the call like nothing happened.",
+     notes:[["Practical","Toss fake snow off-frame on action."],["Continuity","Frame shows the earlier Girl look. On the day this is Girl 1 in her pink hoodie."]]},
     {id:"2.2", img:"s2-02", env:"int", rig:"Tripod", name:"The call", lens:"50mm · medium close-up",
-     dir:"Humble on the phone, relaxed and deadpan.",
+     dir:"Humble on the phone, relaxed and deadpan. Girl 1 and Girl 2 lean on the island behind him, eavesdropping.",
      dlg:[["Caller","V.O.","Huh? Four months just to hear from you?"],["Humble","","Don't vex."],["Caller","V.O.","That's it?"],["Humble","","Nah, there's more. We've been curating something special for you."],["Caller","V.O.","Like what?"],["Humble","","New Year's Eve. All-white party."],["Caller","V.O., huffs","I can't even stay mad at you guys."]],
      notes:[["Sound","Record the Caller wild or off-set so Humble has someone to react to."]]},
-    {id:"2.3", img:"s2-03", env:"int", rig:"Tripod", name:"Hang up", lens:"25mm · three-shot",
-     dir:"Humble hangs up, pleased with himself. The Girl and Jones look on."}
-  ], trans:"The Girl reacts"},
-  { name:"3 · Getting ready", log:"Excitement, the white outfit, then the locked-off before and after match cut.", frames:[
-    {id:"3.1", img:"s3-01", env:"int", rig:"Tripod", name:"Girl claps", lens:"50mm · medium close-up",
-     dir:"The Girl claps her hands in glee.",
-     dlg:[["Girl","","Ooh, all right!"]]},
+    {id:"2.3", img:"s2-03", env:"int", rig:"Tripod", name:"That's how we come back", lens:"25mm · four-shot",
+     dir:"Humble hangs up, pleased with himself. Girl 2 folds her arms, eyebrow up. Humble grins back at her.",
+     dlg:[["Girl 2","arms folded","Four months, and that's how you come back?"],["Humble","grins","That's how we come back."]],
+     notes:[["Story","Plants the payoff line: Blockhouse is back."]]}
+  ], trans:"Girl 1 is sold"},
+  { name:"3 · Getting ready", log:"Everyone gets changed into white. Each person hands the pitch on to the next, straight down the lens, then the match cut.", frames:[
+    {id:"3.1", img:"s3-01", env:"int", rig:"Tripod", name:"Girl 1 claps", lens:"50mm · medium close-up",
+     dir:"Girl 1 claps her hands in glee. Girl 2 laughs beside her.",
+     dlg:[["Girl 1","","Ooh, all right!"]]},
     {id:"3.2", img:"s3-02", env:"int", rig:"Tripod", name:"Jones, arms crossed", lens:"50mm · medium close-up",
      dir:"Jones stands with his arms crossed, smiling.",
      dlg:[["Jones","","Guess we better get ready then."]]},
-    {id:"3.3", img:"s3-03", env:"int", rig:"Tripod", name:"The white dress", lens:"25mm · medium",
-     dir:"Cut: the Girl holds up a white shirt or dress in front of her, looking it over. Living room, teal sofa behind."},
-    {id:"3.4", img:"s3-04", env:"int", rig:"Tripod · locked off", name:"Before", lens:"16mm · wide, centred",
-     dir:"Cut: all three standing side by side in their normal clothes.",
-     notes:[["Camera","Do not touch the tripod between 3.4 and 3.5. Mark feet with tape."]]},
-    {id:"3.5", img:"s3-05", env:"int", rig:"Tripod · locked off", name:"After (match cut)", lens:"16mm · same frame",
-     dir:"Match cut: same frame, now all three fully dressed in white.",
-     notes:[["Continuity","Same marks, same poses, same expressions. Only the outfits change."]]}
+    {id:"3.3", img:"s3-03", env:"int", rig:"Tripod", name:"Humble: why now", lens:"50mm · medium close-up",
+     dir:"Dining nook under the skylights. Humble buttons a white shirt, straight down the lens.",
+     dlg:[["Humble","buttoning a white shirt","Four months was long enough."]],
+     notes:[["Edit","Quick relay cuts from here to 3.7. Each line hands on to the next."]]},
+    {id:"3.4", img:"s3-04", env:"int", rig:"Tripod", name:"Jones: who it's for", lens:"50mm · medium close-up",
+     dir:"Hallway by the stairs. Jones puts on his white bucket hat, straight down the lens.",
+     dlg:[["Jones","white hat on","We've been building this for you."]]},
+    {id:"3.5", img:"s3-05", env:"int", rig:"Tripod", name:"Girl 1: when", lens:"50mm · over the shoulder, in the mirror",
+     dir:"Girl 1 in her white dress puts in an earring, talking to the lens through the mirror.",
+     dlg:[["Girl 1","earrings in, in the mirror","New Year's Eve. Last party of the year."]],
+     notes:[["Camera","Hide the camera's reflection. Shoot at an angle to the mirror."]]},
+    {id:"3.6", img:"s3-06", env:"int", rig:"Tripod", name:"Jones: what", lens:"25mm · medium-wide",
+     dir:"Living room. Jones spins round to camera with the reveal. The girls get ready behind him.",
+     dlg:[["Jones","turns back to camera","And guess what? It's an all-white party."]]},
+    {id:"3.7", img:"s3-07", env:"int", rig:"Tripod", name:"Girl 2: the call to action", lens:"50mm · low angle",
+     dir:"On the edge of the teal sofa. Girl 2 fastens her white heel, then looks up straight down the lens.",
+     dlg:[["Girl 2","heels on, looking up","So come dressed for it."]],
+     notes:[["Edit","Her line hands straight into the before and after."]]},
+    {id:"3.8", img:"s3-08", env:"int", rig:"Tripod · locked off", name:"Before", lens:"16mm · wide, centred",
+     dir:"All four side by side in their normal clothes. Girl 1, Humble, Jones, Girl 2.",
+     notes:[["Camera","Do not touch the tripod between 3.8 and 3.9. Mark feet with tape."]]},
+    {id:"3.9", img:"s3-09", env:"int", rig:"Tripod · locked off", name:"After (match cut)", lens:"16mm · same frame",
+     dir:"Match cut: same frame, now all four fully dressed in white.",
+     notes:[["Continuity","Same marks, same poses, same expressions. Only the outfits change."]]},
+    {id:"3.10", img:"s3-10", env:"int", rig:"Tripod", name:"Blockhouse is back", lens:"25mm · four-shot",
+     dir:"All four break into smiles, straight down the lens.",
+     dlg:[["All four","","Blockhouse is back. See you there."]]}
   ], trans:"Out the front door"},
-  { name:"4 · The car", log:"Outside, night, snow falling. All three in white, into the car to the venue.", frames:[
+  { name:"4 · The car", log:"Outside, night, snow falling. All four in white, into the car. The film ends on the car pulling away.", frames:[
     {id:"4.1", img:"s4-01", env:"ext", rig:"Gimbal", name:"Out the door", lens:"16mm · wide",
-     dir:"Outside, night, snow falling. All three walk out in their whites towards the car.",
+     dir:"Outside, night, snow falling. All four walk out in their whites towards the waiting car.",
      notes:[["VFX","Falling snow if needed."],["Wardrobe","White coats over the party looks."]]},
     {id:"4.2", img:"s4-02", env:"ext", rig:"Tripod", name:"The car pulls off", lens:"25mm · wide, across the street",
-     dir:"They get into the car taking them to the venue. The car pulls off."}
-  ], trans:"Cut to the venue entrance"},
-  { name:"5 · Midnight", log:"Venue, about one hour on location. Entrance, postcard lines to camera, 23:59, then the drop.", frames:[
-    {id:"5.1", img:"s5-01", env:"ext", rig:"Gimbal · follow", name:"The entrance", lens:"16mm · wide",
-     dir:"Outside the venue, snow falling. The three push through the entrance doors."},
-    {id:"5.2", img:"s5-02", env:"venue", rig:"Tripod", name:"Go time", lens:"16mm · wide",
-     dir:"Inside the big hall. The doors swing open, they step in and stop just inside the entrance. They turn straight to the lens and smile. It's go time."},
-    {id:"5.3", img:"s5-03", env:"venue", rig:"Tripod", name:"Postcard: Humble", lens:"50mm · portrait",
-     dir:"Postcard shot: framed portrait, straight down the lens. The Girl ad-libs and moves around in the background.",
-     dlg:[["Humble","","Four months was long enough."]]},
-    {id:"5.4", img:"s5-04", env:"venue", rig:"Tripod", name:"Postcard: Jones", lens:"50mm · portrait",
-     dir:"Postcard shot: framed portrait, straight down the lens. The Girl ad-libs in the background.",
-     dlg:[["Jones","","We've been building this for you."]]},
-    {id:"5.5", img:"s5-05", env:"venue", rig:"Tripod", name:"Postcard: Humble 2", lens:"50mm · portrait",
-     dir:"Postcard shot in front of the stage and chandelier, straight down the lens.",
-     dlg:[["Humble","","New Year's Eve."]]},
-    {id:"5.6", img:"s5-06", env:"venue", rig:"Tripod", name:"Postcard: Jones 2", lens:"50mm · portrait",
-     dir:"Postcard shot by the booths, straight down the lens.",
-     dlg:[["Jones","","And guess what? It's an all-white party."]]},
-    {id:"5.7", img:"s5-07", env:"venue", rig:"Tripod", name:"23:59", lens:"50mm · insert, low angle",
-     dir:"The clock above the booth reads 23:59.",
-     notes:[["Practical","Put 23:59 on the stage screen, or add the clock in post."]]},
-    {id:"5.8", img:"s5-08", env:"venue", rig:"Tripod", name:"All three", lens:"25mm · three-shot",
-     dir:"All three together, straight to the lens.",
-     dlg:[["All three","","Blockhouse is back. See you there."]]},
-    {id:"5.9", img:"s5-09", env:"venue", rig:"Gimbal", name:"00:00", lens:"16mm · wide",
-     dir:"00:00: the ice cracks on a bass hit. The lights burst red and the snow turns to confetti. The Girl throws her hands up first.",
-     notes:[["Lighting","Venue rig to full red on the drop."],["Practical","Confetti cannon on cue."],["VFX","Ice crack overlay on the bass hit."]]},
-    {id:"5.10", img:"s5-10", env:"venue", rig:"Gimbal", name:"Cups clinking", lens:"50mm · insert",
-     dir:"Quick cut: cups clinking."},
-    {id:"5.11", img:"s5-11", env:"venue", rig:"Gimbal", name:"Sofas, dancing, DJ", lens:"25mm · wide",
-     dir:"Quick cuts: sofas, dancing, a DJ in silhouette.",
-     notes:[["Camera","Grab several 1–2s cutaways here: sofas, dancing, DJ hands."]]},
+     dir:"Girl 2 is last in, glancing back at the lens with a smile. The door shuts and the car pulls away into the snow.",
+     notes:[["Edit","Final image. Hold on the tail lights, then cut to the end card."]]},
     {id:"End", card:"1.1.27 · All white · Tickets in bio", env:"card", rig:"Post", name:"End card", lens:"End card",
      dir:"End card on black.",
-     notes:[["On screen","1.1.27 · All white · Tickets in bio"]]}
+     notes:[["On screen","1.1.27 · All white · Tickets in bio"],["Check","The dialogue now says New Year's Eve. Confirm the date on the card."]]}
   ]}
 ];
 const FLAT = SUBJECTS.flatMap((s,si)=>s.frames.map((f,fi)=>({...f,si,fi})));
 const TOTAL = FLAT.length;
-const key = (si,fi)=>`bh_${si}_${fi}`;
+const key = (si,fi)=>`bh2_${si}_${fi}`;
 let state = {si:0, fi:0};
 let done = new Set();
 let db = null;
 const $ = id=>document.getElementById(id);
 
-function loadLocal(){ try{ const v=JSON.parse(localStorage.getItem("bhDone")||"[]"); done=new Set(v);}catch(e){} }
-function saveLocal(){ try{ localStorage.setItem("bhDone",JSON.stringify([...done])); }catch(e){} }
+function loadLocal(){ try{ const v=JSON.parse(localStorage.getItem("bh2Done")||"[]"); done=new Set(v);}catch(e){} }
+function saveLocal(){ try{ localStorage.setItem("bh2Done",JSON.stringify([...done])); }catch(e){} }
 loadLocal();
 $("persist").textContent = "Saved on this device only.";
 
@@ -326,7 +316,7 @@ renderCounts();
     db = await window.claude?.use?.("db");
     if(!db) return;
     db.collection("done").onSnapshot(snap=>{
-      done = new Set(snap.docs.map(d=>d.id));
+      done = new Set(snap.docs.map(d=>d.id).filter(id=>id.startsWith("bh2_")));
       saveLocal();
       $("persist").textContent = "Ticks are shared with everyone on this board.";
       if(!$("board").hidden) render(); else renderCounts();
